@@ -1,0 +1,1 @@
+ci-eye is a continuous integration monitor that talks to many different CI servers through their public APIs, allowing for a consistent build radiator regardless of your CI infrastructure.
