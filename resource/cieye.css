@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
 }
-#chatlog, #entry {
+#radiator, #entry {
     width: 100%;
     height: 100%;
     color: #ffff99;
@@ -15,7 +15,7 @@ body {
     font-family: monospace;
     font-size: 14px;
 }
-#chatlog {
+#radiator {
     height: 400px;;
     color: #ffff99;
     margin: auto;

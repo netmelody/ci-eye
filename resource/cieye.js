@@ -1,9 +1,6 @@
-// Socket reference.
-var ws;
-
 // Log text to main window.
 function logText(msg) {
-    var textArea = document.getElementById('chatlog');
+    var textArea = document.getElementById('radiator');
     textArea.value = textArea.value + msg + '\n';
     textArea.scrollTop = textArea.scrollHeight; // scroll into view
 }
