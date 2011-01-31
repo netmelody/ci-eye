@@ -23,10 +23,10 @@ public final class JenkinsWitness implements Witness {
     }
 
     public static void main(String[] args) {
-        JenkinsWitness witness = new JenkinsWitness("http://deadlock.netbeans.org/hudson");
+        JenkinsWitness witness = new JenkinsWitness("http://ccmain:8080");
         View view = filter(witness.views(), new Predicate<View>() {
             @Override public boolean apply(View view) {
-                return view.name.startsWith("Push");
+                return view.name.startsWith("HIP Hawk");
             }}).iterator().next();
         
         final Collection<Job> failedJobs = witness.failedJobsFor(view);
@@ -59,8 +59,8 @@ public final class JenkinsWitness implements Witness {
         
         if (job.lastBuild != null) {
             Build build = json.fromJson(makeJenkinsRestCall(job.lastBuild.url), Build.class);
-            if (build.building && build.buildOn != null) {
-                agentDetails(build.buildOn);
+            if (build.building && build.builtOn != null) {
+                agentDetails(build.builtOn);
             }
         }
         
@@ -68,7 +68,7 @@ public final class JenkinsWitness implements Witness {
     }
     
     private Collection<String> agentDetails(String agentName) {
-        Computer computer = json.fromJson(makeJenkinsRestCall("/computer/" + agentName), Computer.class);
+        Computer computer = json.fromJson(makeJenkinsRestCall(endpoint + "/computer/" + agentName), Computer.class);
         return null;
     }
     
@@ -155,7 +155,7 @@ public final class JenkinsWitness implements Witness {
         boolean keepLog;
         String result;
         long timestamp;
-        String buildOn;
+        String builtOn;
         List<User> culprits;
         List<Action> actions;
         //changeset
