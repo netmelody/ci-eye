@@ -3,7 +3,7 @@ package org.netmelody.cii;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import org.netmelody.cii.response.HelloWorld;
+import org.netmelody.cii.response.FileResponder;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.FileContext;
@@ -28,8 +28,7 @@ public final class Cieye {
 
         @Override
         public Resource resolve(Address target) {
-            fileContext.getFile(target.toString());
-            return new HelloWorld();
+            return new FileResponder(fileContext.getIndex(target.getPath().getPath()));
         }
     }
 }
