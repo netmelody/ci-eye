@@ -1,8 +1,8 @@
 // Log text to main window.
 function logText(msg) {
-    var textArea = document.getElementById('radiator');
-    textArea.value = textArea.value + msg + '\n';
-    textArea.scrollTop = textArea.scrollHeight; // scroll into view
+    var radiatorDiv = document.getElementById('radiator');
+    radiatorDiv.value = radiatorDiv.value + msg + '\n';
+    radiatorDiv.scrollTop = radiatorDiv.scrollHeight; // scroll into view
 }
 
 // Perform login: Ask user for name, and send message to socket.
@@ -35,7 +35,7 @@ function onMessage(incoming) {
 }
 
 function connect() {
-  $.getJSON('test.json', function(data) { logText("Success") });
+  $.getJSON('joblist.json', function(data) { logText("Success") });
 }
 
 // Connect on load.
