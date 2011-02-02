@@ -13,10 +13,10 @@ function login() {
         if (window.localStorage) { // store in browser localStorage, so we remember next next
             window.localStorage.username = username;
         }
-        send({action:'LOGIN', loginUsername:username});
-        document.getElementById('entry').focus();
+//        send({action:'LOGIN', loginUsername:username});
+//        document.getElementById('entry').focus();
     } else {
-        ws.close();
+//        ws.close();
     }
 }
 
@@ -34,35 +34,8 @@ function onMessage(incoming) {
     }
 }
 
-// Connect to socket and setup events.
 function connect() {
-    // clear out any cached content
-    document.getElementById('chatlog').value = '';
-
-    // connect to socket
-    logText('* Connecting...');
-    ws = new WebSocket('ws://' + document.location.host + '/chatsocket');
-    ws.onopen    = function(e) { logText('* Connected!'); login(); };
-    ws.onclose   = function(e) { logText('* Disconnected'); };
-    ws.onerror   = function(e) { logText('* Unexpected error'); };
-    ws.onmessage = function(e) { onMessage(JSON.parse(e.data)); };
-
-    // wire up text input event
-    var entry = document.getElementById('entry');
-    entry.onkeypress = function(e) {
-        if (e.keyCode == 13) { // enter key pressed
-            var text = entry.value;
-            if (text) {
-                send({action:'SAY', message:text});
-            }
-            entry.value = '';
-        }
-    };
-}
-
-// Send message to server over socket.
-function send(outgoing) {
-    ws.send(JSON.stringify(outgoing));
+  $.getJSON('test.json', function(data) { logText("Success") });
 }
 
 // Connect on load.
