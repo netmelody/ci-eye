@@ -1,8 +1,11 @@
-// Log text to main window.
-function logText(msg) {
-    var radiatorDiv = document.getElementById('radiator');
-    radiatorDiv.value = radiatorDiv.value + msg + '\n';
-    radiatorDiv.scrollTop = radiatorDiv.scrollHeight; // scroll into view
+
+function addEntry(build) {
+    var radiatorDiv = document.getElementById('radiator'),
+        newdiv = document.createElement('div');
+  
+    newdiv.setAttribute('class','entry');
+    newdiv.innerHTML = '<span>' + build.name + '</span>';
+    radiatorDiv.appendChild(newdiv);
 }
 
 // Perform login: Ask user for name, and send message to socket.
@@ -20,22 +23,11 @@ function login() {
     }
 }
 
-function onMessage(incoming) {
-    switch (incoming.action) {
-        case 'JOIN':
-            logText("* User '" + incoming.username +"' joined.");
-            break;
-        case 'LEAVE':
-            logText("* User '" + incoming.username +"' left.");
-            break;
-        case 'SAY':
-            logText("[" + incoming.username +"] " + incoming.message);
-            break;
-    }
-}
-
 function connect() {
-  $.getJSON('joblist.json', function(data) { logText("Success") });
+    $.getJSON('joblist.json', function(buildList) {
+        addEntry({"name":"HIP"});
+        addEntry({"name":"IDS-HIP"});
+    });
 }
 
 // Connect on load.
