@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cii.RestRequest;
+import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.witness.Witness;
 
@@ -30,9 +31,14 @@ public final class JenkinsWitness implements Witness {
                 return view.name.startsWith("HIP Hawk");
             }}).iterator().next();
         
-        final Collection<Job> jobsFor = jobsFor(view);
+        final Collection<Target> targets =
+            transform(jobsFor(view), new Function<Job, Target>() {
+                @Override public Target apply(Job job) {
+                    return new Target(job.name);
+                }
+            });
         
-        return new TargetGroup();
+        return new TargetGroup(targets);
     }
     
     

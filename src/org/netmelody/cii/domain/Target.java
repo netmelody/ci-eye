@@ -2,6 +2,14 @@ package org.netmelody.cii.domain;
 
 public final class Target {
 
-    private String name;
+    private final String name;
+    
+    public Target(String name) {
+        this.name = name;
+    }
+    
+    public String name() {
+        return name;
+    }
     
 }
