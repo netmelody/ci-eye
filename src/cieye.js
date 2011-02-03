@@ -3,8 +3,8 @@ function addEntry(target) {
     var radiatorDiv = document.getElementById('radiator'),
         newdiv = document.createElement('div');
   
-    newdiv.setAttribute('class','entry');
-    newdiv.innerHTML = '<span>' + target.name + '</span>';
+    newdiv.setAttribute('class','entry ' + target.status);
+    newdiv.innerHTML = '<span>' + target.name + ' - ' + target.status + '</span>';
     radiatorDiv.appendChild(newdiv);
 }
 

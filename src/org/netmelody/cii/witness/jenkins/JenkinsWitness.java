@@ -1,12 +1,13 @@
 package org.netmelody.cii.witness.jenkins;
 
-import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cii.RestRequest;
+import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.witness.Witness;
@@ -34,7 +35,7 @@ public final class JenkinsWitness implements Witness {
         final Collection<Target> targets =
             transform(jobsFor(view), new Function<Job, Target>() {
                 @Override public Target apply(Job job) {
-                    return new Target(job.name);
+                    return new Target(job.name, "blue".equals(job.color) ? Status.GREEN : Status.BROKEN);
                 }
             });
         
