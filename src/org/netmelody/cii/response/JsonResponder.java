@@ -38,7 +38,6 @@ public final class JsonResponder implements Resource {
             
             System.out.println(json.toJson(witness.targetList()));
             body.println(json.toJson(witness.targetList()));
-//            body.println("{\"targets\":[{\"name\":\"HIP\"},{\"name\":\"IDS-HIP\"},{\"name\":\"DataType\"}]}");
             
             body.close();        
         } catch (IOException e) {
