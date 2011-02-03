@@ -4,7 +4,7 @@ function addEntry(target) {
         newdiv = document.createElement('div');
   
     newdiv.setAttribute('class','entry ' + target.status);
-    newdiv.innerHTML = '<span>' + target.name + ' - ' + target.status + '</span>';
+    newdiv.innerHTML = '<span>' + target.name + '</span>';
     radiatorDiv.appendChild(newdiv);
 }
 

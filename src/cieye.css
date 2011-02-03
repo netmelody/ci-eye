@@ -16,3 +16,9 @@ body {
     font-size: 14px;
     margin: auto;
 }
+div.GREEN {
+	color: #00ff00
+}
+div.BROKEN {
+	color: #ff0000
+}
