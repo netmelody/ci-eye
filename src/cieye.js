@@ -1,10 +1,10 @@
 
-function addEntry(build) {
+function addEntry(target) {
     var radiatorDiv = document.getElementById('radiator'),
         newdiv = document.createElement('div');
   
     newdiv.setAttribute('class','entry');
-    newdiv.innerHTML = '<span>' + build.name + '</span>';
+    newdiv.innerHTML = '<span>' + target.name + '</span>';
     radiatorDiv.appendChild(newdiv);
 }
 
@@ -24,9 +24,10 @@ function login() {
 }
 
 function connect() {
-    $.getJSON('joblist.json', function(buildList) {
-        addEntry({"name":"HIP"});
-        addEntry({"name":"IDS-HIP"});
+    $.getJSON('joblist.json', function(targetList) {
+        for (i in targetList.targets) {
+            addEntry(targetList.targets[i]);
+        }
     });
 }
 

@@ -30,7 +30,7 @@ public final class JsonResponder implements Resource {
             response.setDate("Last-Modified", time);
             response.setDate("Expires", time + 10000);
             
-            body.println("{\"jobs\":[{\"name\":\"HIP\"},{\"name\":\"IDS-HIP\"}]}");
+            body.println("{\"targets\":[{\"name\":\"HIP\"},{\"name\":\"IDS-HIP\"},{\"name\":\"DataType\"}]}");
             body.close();        
         } catch (IOException e) {
             response.setCode(500);

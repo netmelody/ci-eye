@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cii.RestRequest;
+import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.witness.Witness;
 
 import com.google.common.base.Function;
@@ -22,6 +23,19 @@ public final class JenkinsWitness implements Witness {
         this.endpoint = endpoint;
     }
 
+    @Override
+    public TargetGroup targetList() {
+        View view = filter(views(), new Predicate<View>() {
+            @Override public boolean apply(View view) {
+                return view.name.startsWith("HIP Hawk");
+            }}).iterator().next();
+        
+        final Collection<Job> jobsFor = jobsFor(view);
+        
+        return new TargetGroup();
+    }
+    
+    
     public static void main(String[] args) {
         JenkinsWitness witness = new JenkinsWitness("http://ccmain:8080");
         View view = filter(witness.views(), new Predicate<View>() {
@@ -44,10 +58,14 @@ public final class JenkinsWitness implements Witness {
         JenkinsDetails detail = json.fromJson(makeJenkinsRestCall(endpoint), JenkinsDetails.class);
         return detail.views;
     }
+
+    private Collection<Job> jobsFor(View viewDigest) {
+        View view = json.fromJson(makeJenkinsRestCall(viewDigest.url), View.class);
+        return view.jobs;
+    }
     
     private Collection<Job> failedJobsFor(View viewDigest) {
-        View view = json.fromJson(makeJenkinsRestCall(viewDigest.url), View.class);
-        return filter(view.jobs, new Predicate<Job>() {
+        return filter(jobsFor(viewDigest), new Predicate<Job>() {
             @Override public boolean apply(Job job) {
                 return !"blue".equals(job.color);
             }
