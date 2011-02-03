@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.netmelody.cii.response.FileResponder;
-import org.netmelody.cii.response.JsonResponder;
+import org.netmelody.cii.response.TargetListResponder;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.Resource;
@@ -27,7 +27,7 @@ public final class Cieye {
         @Override
         public Resource resolve(Address target) {
             if ("json".equals(target.getPath().getExtension())) {
-                return new JsonResponder(target);
+                return new TargetListResponder();
             }
             return new FileResponder(target.getPath());
         }
