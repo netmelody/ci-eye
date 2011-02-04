@@ -172,6 +172,9 @@ public final class JenkinsWitness implements Witness {
             if (null == color || color.startsWith("blue")) {
                 return Status.GREEN;
             }
+            if ("disabled".equals(color)) {
+                return Status.DISABLED;
+            }
             return Status.BROKEN;
         }
     }
