@@ -35,7 +35,7 @@ public final class JenkinsWitness implements Witness {
         final Collection<Target> targets =
             transform(jobsFor(view), new Function<Job, Target>() {
                 @Override public Target apply(Job job) {
-                    return new Target(job.name, "blue".equals(job.color) ? Status.GREEN : Status.BROKEN);
+                    return new Target(job.name, job.status());
                 }
             });
         
@@ -167,6 +167,13 @@ public final class JenkinsWitness implements Witness {
         //scm
         //property
         //queueItem
+        
+        public Status status() {
+            if (null == color || color.startsWith("blue")) {
+                return Status.GREEN;
+            }
+            return Status.BROKEN;
+        }
     }
     
     static class Build {
