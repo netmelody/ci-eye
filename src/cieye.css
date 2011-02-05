@@ -13,12 +13,32 @@ body {
     border: 0;
     font-weight: bold;
     font-family: monospace;
-    font-size: 14px;
+    font-size: 50px;
     margin: auto;
 }
+div.target {
+    border: 1px solid #000;
+    width: 98%;
+    margin: 2px 5px 2px 0;
+    padding: 1px;
+}
 div.GREEN {
-	color: #00ff00
+    color: #ffffff;
+    background-color: #00aa00;
 }
 div.BROKEN {
-	color: #ff0000
+    color: #ffffff;
+    background-color: #aa0000;
+}
+div.DISABLED {
+    color: #dddddd;
+}
+div.progress-bar {
+    border: 1px solid #ccc;
+    margin: 2px 5px 2px 0;
+    padding: 1px;
+}
+div.progress-bar > div {
+    background-color: #9de96f;
+    height: 12px;
 }

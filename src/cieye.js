@@ -1,11 +1,24 @@
 
-function addEntry(target) {
-    var radiatorDiv = document.getElementById('radiator'),
-        newdiv = document.createElement('div');
+function addTarget(radiatorDiv, target) {
+    var targetDiv = document.createElement('div');
   
-    newdiv.setAttribute('class','entry ' + target.status);
-    newdiv.innerHTML = '<span>' + target.name + '</span>';
-    radiatorDiv.appendChild(newdiv);
+    targetDiv.setAttribute('class', 'target ' + target.status);
+    targetDiv.innerHTML = '<span>' + target.name + '</span>';
+    
+    for (i in target.builds) {
+        addBuild(targetDiv, target.builds[i]);
+    }
+    radiatorDiv.appendChild(targetDiv);
+}
+
+function addBuild(targetDiv, build) {
+     var buildDiv = document.createElement('div'),
+         barDiv   = document.createElement('div');
+     
+     buildDiv.setAttribute('class', 'progress-bar');
+     barDiv.setAttribute('style', 'width: ' + build.progress + '%');
+     buildDiv.appendChild(barDiv);
+     targetDiv.appendChild(buildDiv);
 }
 
 // Perform login: Ask user for name, and send message to socket.
@@ -24,9 +37,10 @@ function login() {
 }
 
 function connect() {
+    var radiatorDiv = document.getElementById('radiator');
     $.getJSON('joblist.json', function(targetList) {
         for (i in targetList.targets) {
-            addEntry(targetList.targets[i]);
+            addTarget(radiatorDiv, targetList.targets[i]);
         }
     });
 }
