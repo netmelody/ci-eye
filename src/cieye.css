@@ -20,7 +20,7 @@ div.target {
     border: 1px solid #000;
     width: 98%;
     margin: 2px 5px 2px 0;
-    padding: 1px;
+    padding: 1px 1px 1px 5px;
 }
 div.GREEN {
     color: #ffffff;
@@ -31,7 +31,7 @@ div.BROKEN {
     background-color: #aa0000;
 }
 div.DISABLED {
-    color: #dddddd;
+    color: #444444;
 }
 div.progress-bar {
     border: 1px solid #ccc;
