@@ -7,11 +7,9 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
 
-import com.google.gson.Gson;
-
 public abstract class BaseJsonResponder implements Resource {
 
-    private final Gson json = new Gson();
+    private final JsonTranslator json = new JsonTranslator();
 
     @Override
     public final void handle(Request request, Response response) {
