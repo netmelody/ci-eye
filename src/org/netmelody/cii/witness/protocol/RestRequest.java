@@ -1,4 +1,4 @@
-package org.netmelody.cii;
+package org.netmelody.cii.witness.protocol;
 
 import java.io.IOException;
 

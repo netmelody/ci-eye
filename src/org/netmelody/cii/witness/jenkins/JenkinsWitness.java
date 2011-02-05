@@ -6,11 +6,11 @@ import static com.google.common.collect.Collections2.transform;
 import java.util.Collection;
 import java.util.List;
 
-import org.netmelody.cii.RestRequest;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.witness.Witness;
+import org.netmelody.cii.witness.protocol.RestRequest;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
