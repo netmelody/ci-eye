@@ -11,4 +11,10 @@ public final class LandscapeGroup {
     public LandscapeGroup(Collection<Landscape> landscapes) {
         this.landscapes.addAll(landscapes);
     }
+
+    public LandscapeGroup add(Landscape landscape) {
+        final LandscapeGroup result = new LandscapeGroup(landscapes);
+        result.landscapes.add(landscape);
+        return result;
+    }
 }

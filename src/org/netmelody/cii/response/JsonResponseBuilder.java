@@ -1,6 +1,7 @@
 package org.netmelody.cii.response;
 
+
 public interface JsonResponseBuilder {
     
-    JsonResponse buildResponse();
+    JsonResponse buildResponse(String requestContent);
 }

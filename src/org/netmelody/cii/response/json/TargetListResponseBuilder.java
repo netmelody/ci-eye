@@ -13,7 +13,7 @@ public final class TargetListResponseBuilder implements JsonResponseBuilder {
     }
     
     @Override
-    public JsonResponse buildResponse() {
+    public JsonResponse buildResponse(String requestContent) {
         return new JsonResponse(witness.targetList());
     }
 }
