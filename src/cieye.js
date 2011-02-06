@@ -1,9 +1,30 @@
 
-function addTarget(radiatorDiv, target) {
-    var targetDiv = document.createElement('div');
+function start() {
+    var radiatorDiv = document.getElementById('radiator');
+    refreshTargets(radiatorDiv);
+    setInterval(function(){ refreshTargets(radiatorDiv); }, 1000);
+}
+
+function refreshTargets(radiatorDiv) {
+    $.getJSON('joblist.json', function(targetList) {
+        for (i in targetList.targets) {
+            updateTarget(radiatorDiv, targetList.targets[i]);
+        }
+    });
+}
+
+function updateTarget(radiatorDiv, target) {
+    var targetDivId = 'target_' + target.id,
+        targetDiv = document.getElementById(targetDivId);
+    
+    if (!targetDiv) {
+        targetDiv = document.createElement('div');
+        targetDiv.setAttribute('id', targetDivId);
+        targetDiv.innerHTML = '<span>' + target.name + '</span>';
+    }
   
     targetDiv.setAttribute('class', 'target ' + target.status);
-    targetDiv.innerHTML = '<span>' + target.name + '</span>';
+    $(targetDiv).children('.progress-bar').remove();
     
     for (i in target.builds) {
         addBuild(targetDiv, target.builds[i]);
@@ -36,14 +57,5 @@ function login() {
     }
 }
 
-function connect() {
-    var radiatorDiv = document.getElementById('radiator');
-    $.getJSON('joblist.json', function(targetList) {
-        for (i in targetList.targets) {
-            addTarget(radiatorDiv, targetList.targets[i]);
-        }
-    });
-}
-
 // Connect on load.
-window.onload = connect;
+window.onload = start;

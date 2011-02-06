@@ -7,6 +7,7 @@ import java.util.List;
 
 public final class Target {
 
+    private final String id;
     private final String name;
     private final Status status;
     private final List<Build> builds = new ArrayList<Build>();
@@ -16,6 +17,11 @@ public final class Target {
     }
 
     public Target(String name, Status status, Build... builds) {
+        this(name, name, status, builds);
+    }
+    
+    public Target(String id, String name, Status status, Build... builds) {
+        this.id = id;
         this.name = name;
         this.status = status;
         
@@ -24,6 +30,10 @@ public final class Target {
         }
     }
 
+    public String id() {
+        return id;
+    }
+    
     public String name() {
         return name;
     }

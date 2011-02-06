@@ -4,6 +4,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
+import java.util.Random;
+
+import org.netmelody.cii.domain.Build;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
@@ -12,10 +15,19 @@ public final class DummyWitness implements Witness {
 
     @Override
     public TargetGroup targetList() {
-        return new TargetGroup(newArrayList(new Target("Smoke", Status.GREEN),
-                                            new Target("Integration", Status.BROKEN),
-                                            new Target("Legacy", Status.DISABLED),
-                                            new Target("Active", Status.GREEN, buildAt(percentageOf(12)))));
+        return new TargetGroup(newArrayList(randomTarget("Smoke"),
+                                            randomTarget("Integration"),
+                                            randomTarget("Browser"),
+                                            randomTarget("Release")));
     }
-
+    
+    private Target randomTarget(String name) {
+        final Random random = new Random();
+        
+        Build builds[] = new Build[0];
+        if (random.nextBoolean()) {
+            builds = new Build[]{ buildAt(percentageOf(random.nextInt(101))) };
+        }
+        return new Target(name, Status.values()[random.nextInt(3)], builds);
+    }
 }
