@@ -13,10 +13,12 @@ import org.simpleframework.http.resource.Resource;
 
 public final class FileResponder implements Resource {
 
-    private final Path path;
+    private final String name;
+    private final String extension;
 
     public FileResponder(Path path) {
-        this.path = path;
+        this.name = defaultString(path.getName(), "cieye.html");
+        this.extension = defaultString(path.getExtension(), "html");
         System.out.println(path.getPath());
     }
 
@@ -25,10 +27,10 @@ public final class FileResponder implements Resource {
         InputStream input = null;
         OutputStream body = null;
         try {
-            input = getClass().getResourceAsStream("/" + path.getName());
+            input = getClass().getResourceAsStream("/" + name);
             body = response.getOutputStream();
             long time = System.currentTimeMillis();
-            response.set("Content-Type", contentTypeOf(path.getExtension()));
+            response.set("Content-Type", contentTypeOf(extension));
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
@@ -43,7 +45,12 @@ public final class FileResponder implements Resource {
         }
     }
 
-    private String contentTypeOf(String extension) {
+    private static String contentTypeOf(String extension) {
         return ResourceBundle.getBundle(FileResponder.class.getName()).getString(extension);
     }
+    
+    private static String defaultString(String value, String defaultValue) {
+        return (null == value || value.isEmpty()) ? defaultValue : value;
+    }
 }
+
