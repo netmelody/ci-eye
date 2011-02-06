@@ -16,6 +16,18 @@ body {
     font-size: 50px;
     margin: auto;
 }
+#configuration {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    text-align: right;
+}
+#configuration > a {
+    color: #555555;
+}
+#configuration > a:hover {
+    color: #ffffff;
+}
 div.target {
     border: 1px solid #000;
     width: 98%;
