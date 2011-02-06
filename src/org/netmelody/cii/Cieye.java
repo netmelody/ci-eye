@@ -4,7 +4,11 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.netmelody.cii.response.FileResponder;
-import org.netmelody.cii.response.TargetListResponder;
+import org.netmelody.cii.response.JsonResponder;
+import org.netmelody.cii.response.JsonResponseBuilder;
+import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
+import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
+import org.netmelody.cii.response.json.TargetListResponseBuilder;
 import org.netmelody.cii.witness.DummyWitness;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.core.Container;
@@ -17,20 +21,34 @@ import org.simpleframework.transport.connect.SocketConnection;
 public final class Cieye {
 
     public static void main(String[] list) throws Exception {
-        Container container = new ResourceContainer(new StaticResourceEngine());
+        Container container = new ResourceContainer(new CiEyeResourceEngine());
         Connection connection = new SocketConnection(container);
         SocketAddress address = new InetSocketAddress(8888);
 
         connection.connect(address);
     }
 
-    private static final class StaticResourceEngine implements ResourceEngine {
+    private static final class CiEyeResourceEngine implements ResourceEngine {
         @Override
         public Resource resolve(Address target) {
             if ("json".equals(target.getPath().getExtension())) {
-                return new TargetListResponder(new DummyWitness());
+                return new JsonResponder(jsonResponseTo(target));
             }
             return new FileResponder(target.getPath());
+        }
+
+        private JsonResponseBuilder jsonResponseTo(Address target) {
+            final String name = target.getPath().getName();
+            
+            if ("landscapelist.json".equals(name)) {
+                return new LandscapeListResponseBuilder();
+            }
+            
+            if ("createLandscape.json".equals(name)) {
+                return new CreateLandscapeResponseBuilder();
+            }
+            
+            return new TargetListResponseBuilder(new DummyWitness());
         }
     }
 }

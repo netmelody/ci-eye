@@ -7,9 +7,14 @@ import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
 
-public abstract class BaseJsonResponder implements Resource {
+public final class JsonResponder implements Resource {
 
     private final JsonTranslator json = new JsonTranslator();
+    private final JsonResponseBuilder responseBuilder;
+
+    public JsonResponder(JsonResponseBuilder responseBuilder) {
+        this.responseBuilder = responseBuilder;
+    }
 
     @Override
     public final void handle(Request request, Response response) {
@@ -25,13 +30,12 @@ public abstract class BaseJsonResponder implements Resource {
             response.setDate("Last-Modified", time);
             response.setDate("Expires", time + 10000);
             
-            body.println(json.toJson(jsonResponseObject()));
+            JsonResponse jsonResponse = responseBuilder.buildResponse();
+            body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (IOException e) {
             response.setCode(500);
         }
     }
 
-    protected abstract Object jsonResponseObject();
-    
 }

@@ -4,18 +4,19 @@
         <title>CI Eye Configuration</title>
         <link rel="stylesheet" type="text/css" href="configure.css">
         <script type="text/javascript" src="jquery-1.5.js"></script>
-        <script type="text/javascript" src="cconfigure.js"></script>
+        <script type="text/javascript" src="configure.js"></script>
     </head>
     <body>
         <div id="configuration">
-            <div id="landscapes">
+            <div>
                 <span>Landscape:</span>
-                <select name="landscape"></select>
-                <button name="addLandscape">Add</button>
+                <select id="landscapeSelector" name="selectLandscape"></select>
+                <button id="addLandscapeButton" name="addLandscape">Add</button>
             </div>
             
-            <div id="targets">
+            <div>
                 <span>Targets</span>
+                <div id="targetList"></div>
             </div>
         </div>
     </body>
