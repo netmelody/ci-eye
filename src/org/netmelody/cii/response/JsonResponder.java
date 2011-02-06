@@ -30,7 +30,7 @@ public final class JsonResponder implements Resource {
             response.setDate("Last-Modified", time);
             response.setDate("Expires", time + 10000);
             
-            JsonResponse jsonResponse = responseBuilder.buildResponse(request.getContent());
+            JsonResponse jsonResponse = responseBuilder.buildResponse(request.getQuery(), request.getContent());
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (IOException e) {

@@ -3,6 +3,7 @@ package org.netmelody.cii.response.json;
 import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
 import org.netmelody.cii.witness.Witness;
+import org.simpleframework.http.Query;
 
 public final class TargetListResponseBuilder implements JsonResponseBuilder {
 
@@ -13,7 +14,7 @@ public final class TargetListResponseBuilder implements JsonResponseBuilder {
     }
     
     @Override
-    public JsonResponse buildResponse(String requestContent) {
+    public JsonResponse buildResponse(Query query, String requestContent) {
         return new JsonResponse(witness.targetList());
     }
 }

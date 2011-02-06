@@ -17,4 +17,13 @@ public final class LandscapeGroup {
         result.landscapes.add(landscape);
         return result;
     }
+    
+    public Landscape landscapeNamed(String name) {
+        for (Landscape landscape : landscapes) {
+            if (name.equals(landscape.name())) {
+                return landscape;
+            }
+        }
+        return null;
+    }
 }

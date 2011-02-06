@@ -2,6 +2,9 @@
 function initialise() {
     var addLandscapeButton = document.getElementById('addLandscapeButton');
     addLandscapeButton.setAttribute('onclick', 'createLandscape();');
+    
+    var landscapeSelector = document.getElementById('landscapeSelector');
+    landscapeSelector.setAttribute('onchange', 'displayFeatures();');
     refreshLandscapes();
 }
 
@@ -14,15 +17,17 @@ function refreshLandscapes() {
 function fetchLandscapes(landscapeSelector) {
     $.getJSON('landscapelist.json', function(landscapeList) {
         for (i in landscapeList.landscapes) {
-            addLandscapeOption(landscapeSelector, landscapeList.landscapes[i].name);
+            addLandscapeOption(landscapeSelector, landscapeList.landscapes[i]);
         }
+        displayFeatures();
     });
 }
 
-function addLandscapeOption(landscapeSelector, landscapeName) {
+function addLandscapeOption(landscapeSelector, landscape) {
     var landscapeOption = document.createElement('option');
     
-    landscapeOption.innerHTML = landscapeName;
+    landscapeOption.innerHTML = landscape.name;
+    landscapeOption.setAttribute('value', landscape.name);
     landscapeSelector.appendChild(landscapeOption);
 }
 
@@ -38,5 +43,28 @@ function createLandscape() {
     });
 }
 
-// Connect on load.
+function displayFeatures() {
+    var landscapeName = document.getElementById('landscapeSelector').value;
+    
+    $.getJSON('landscape.json', { name: landscapeName }, function(landscape) {
+        refreshFeatures(landscape);
+    });
+}
+
+function refreshFeatures(landscape) {
+    var featuresDiv = document.getElementById('features');
+    
+    $(featuresDiv).empty();
+    for (i in landscape.features) {
+        addFeature(featuresDiv, landscape.features[i]);
+    }
+}
+
+function addFeature(featuresDiv, feature) {
+    var featureItem = document.createElement('span');
+    
+    featureItem.innerHTML = feature.endpoint + ' - ' + feature.name;
+    featuresDiv.appendChild(featureItem);
+}
+
 window.onload = initialise;
