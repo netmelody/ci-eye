@@ -12,6 +12,7 @@ import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeResponseBuilder;
 import org.netmelody.cii.response.json.TargetListResponseBuilder;
 import org.netmelody.cii.witness.DummyWitness;
+import org.netmelody.cii.witness.jenkins.JenkinsWitness;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.Resource;
@@ -56,7 +57,7 @@ public final class Cieye {
                 return new CreateLandscapeResponseBuilder(state);
             }
             
-            return new TargetListResponseBuilder(new DummyWitness());
+            return new TargetListResponseBuilder(new JenkinsWitness("http://ccmain:8080"));
         }
     }
 }

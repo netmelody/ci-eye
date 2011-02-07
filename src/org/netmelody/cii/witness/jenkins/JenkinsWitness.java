@@ -2,10 +2,14 @@ package org.netmelody.cii.witness.jenkins;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
+import static org.netmelody.cii.domain.Build.buildAt;
+import static org.netmelody.cii.domain.Percentage.percentageOf;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
@@ -35,23 +39,11 @@ public final class JenkinsWitness implements Witness {
         final Collection<Target> targets =
             transform(jobsFor(view), new Function<Job, Target>() {
                 @Override public Target apply(Job job) {
-                    return new Target(job.name, job.status());
+                    return targetFrom(job);
                 }
             });
         
         return new TargetGroup(targets);
-    }
-    
-    
-    public static void main(String[] args) {
-        JenkinsWitness witness = new JenkinsWitness("http://ccmain:8080");
-        View view = filter(witness.views(), new Predicate<View>() {
-            @Override public boolean apply(View view) {
-                return view.name.startsWith("HIP Hawk");
-            }}).iterator().next();
-        
-        final Collection<Job> failedJobs = witness.failedJobsFor(view);
-        System.out.println(witness.jobDetails(failedJobs.iterator().next()));
     }
     
     public Collection<String> users() {
@@ -71,31 +63,35 @@ public final class JenkinsWitness implements Witness {
         return view.jobs;
     }
     
-    private Collection<Job> failedJobsFor(View viewDigest) {
-        return filter(jobsFor(viewDigest), new Predicate<Job>() {
-            @Override public boolean apply(Job job) {
-                return !"blue".equals(job.color);
-            }
-        });
-    }
-    
-    private Collection<String> jobDetails(Job jobDigest) {
-        Job job = json.fromJson(makeJenkinsRestCall(jobDigest.url), Job.class);
-        
-        if (job.lastBuild != null) {
-            Build build = json.fromJson(makeJenkinsRestCall(job.lastBuild.url), Build.class);
-            if (build.building && build.builtOn != null) {
-                agentDetails(build.builtOn);
-            }
+    private Target targetFrom(Job jobDigest) {
+        if (null == jobDigest.color || !jobDigest.color.endsWith("_anime")) {
+            return new Target(jobDigest.name, jobDigest.status());
         }
         
-        return null;
+        Job job = json.fromJson(makeJenkinsRestCall(jobDigest.url), Job.class);
+        if (job.lastBuild == null || job.lastSuccessfulBuild == null) {
+            return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
+        }
+        
+        Build lastBuild = json.fromJson(makeJenkinsRestCall(job.lastBuild.url), Build.class);
+        Build lastSuccessfulBuild = json.fromJson(makeJenkinsRestCall(job.lastSuccessfulBuild.url), Build.class);
+        
+        return new Target(jobDigest.name,
+                          jobDigest.status(),
+                          buildAt(Percentage.percentageOf(new Date().getTime() - lastBuild.timestamp,
+                                                          lastSuccessfulBuild.duration)));
+        
+//        
+//        if (!build.building || build.builtOn == null) {
+//            return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
+//        }
+//        
+//        Computer agentDetails = agentDetails(build.builtOn);
     }
     
-    private Collection<String> agentDetails(String agentName) {
-        Computer computer = json.fromJson(makeJenkinsRestCall(endpoint + "/computer/" + agentName), Computer.class);
-        return null;
-    }
+//    private Computer agentDetails(String agentName) {
+//        return json.fromJson(makeJenkinsRestCall(endpoint + "/computer/" + agentName), Computer.class);
+//    }
     
     private void changeDescription(String jobName, String buildNumber, String newDescription) {
         //"/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
@@ -157,7 +153,7 @@ public final class JenkinsWitness implements Witness {
         Build lastBuild;
         Build lastFailedBuild;
         Build lastStableBuild;
-        Build lasSuccessfulBuild;
+        Build lastSuccessfulBuild;
         Build lastUnstableBuild;
         Build lastUnsuccessfulBuild;
         int nextBuildNumber;

@@ -1,5 +1,7 @@
 package org.netmelody.cii.domain;
 
+import static java.lang.Math.min;
+
 public final class Percentage {
 
     private final int value;
@@ -17,6 +19,10 @@ public final class Percentage {
 
     public static Percentage percentageOf(int value) {
         return new Percentage(value);
+    }
+    
+    public static Percentage percentageOf(long numerator, long denominator) {
+        return (denominator <= 0L) ? percentageOf(0) : percentageOf((int)min((((double)numerator) / denominator) * 100, 100));
     }
     
     public int value() {
