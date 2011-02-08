@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
@@ -30,37 +31,39 @@ public final class JenkinsWitness implements Witness {
     }
 
     @Override
-    public TargetGroup targetList() {
-        View view = filter(views(), new Predicate<View>() {
-            @Override public boolean apply(View view) {
-                return view.name.startsWith("HIP Hawk");
-            }}).iterator().next();
+    public TargetGroup statusOf(final Feature feature) {
+        if (!endpoint.equals(feature.endpoint())) {
+            return new TargetGroup();
+        }
         
-        final Collection<Target> targets =
-            transform(jobsFor(view), new Function<Job, Target>() {
-                @Override public Target apply(Job job) {
-                    return targetFrom(job);
-                }
-            });
+        final View view = filter(views(), new Predicate<View>() {
+            @Override public boolean apply(View view) {
+                return view.name.startsWith(feature.name());
+            }
+        }).iterator().next();
+        
+        final Collection<Target> targets = transform(jobsFor(view), new Function<Job, Target>() {
+            @Override public Target apply(Job job) {
+                return targetFrom(job);
+            }
+        });
         
         return new TargetGroup(targets);
     }
     
     public Collection<String> users() {
-        JenkinsUserDetails detail = json.fromJson(makeJenkinsRestCall(endpoint + "/people"), JenkinsUserDetails.class);
+        final JenkinsUserDetails detail = makeJenkinsRestCall(endpoint + "/people", JenkinsUserDetails.class);
         return transform(detail.users, new Function<UserDetail, String>() {
             @Override public String apply(UserDetail userDetail) { return userDetail.user.fullName; }
         });
     }
     
     private Collection<View> views() {
-        JenkinsDetails detail = json.fromJson(makeJenkinsRestCall(endpoint), JenkinsDetails.class);
-        return detail.views;
+        return makeJenkinsRestCall(endpoint, JenkinsDetails.class).views;
     }
 
     private Collection<Job> jobsFor(View viewDigest) {
-        View view = json.fromJson(makeJenkinsRestCall(viewDigest.url), View.class);
-        return view.jobs;
+        return makeJenkinsRestCall(viewDigest.url, View.class).jobs;
     }
     
     private Target targetFrom(Job jobDigest) {
@@ -68,13 +71,13 @@ public final class JenkinsWitness implements Witness {
             return new Target(jobDigest.name, jobDigest.status());
         }
         
-        Job job = json.fromJson(makeJenkinsRestCall(jobDigest.url), Job.class);
+        Job job = makeJenkinsRestCall(jobDigest.url, Job.class);
         if (job.lastBuild == null || job.lastSuccessfulBuild == null) {
             return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
         }
         
-        Build lastBuild = json.fromJson(makeJenkinsRestCall(job.lastBuild.url), Build.class);
-        Build lastSuccessfulBuild = json.fromJson(makeJenkinsRestCall(job.lastSuccessfulBuild.url), Build.class);
+        Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
+        Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
         
         return new Target(jobDigest.name,
                           jobDigest.status(),
@@ -90,15 +93,15 @@ public final class JenkinsWitness implements Witness {
     }
     
 //    private Computer agentDetails(String agentName) {
-//        return json.fromJson(makeJenkinsRestCall(endpoint + "/computer/" + agentName), Computer.class);
+//        return makeJenkinsRestCall(endpoint + "/computer/" + agentName, Computer.class);
 //    }
     
-    private void changeDescription(String jobName, String buildNumber, String newDescription) {
-        //"/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
-    }
+//    private void changeDescription(String jobName, String buildNumber, String newDescription) {
+//        "/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
+//    }
     
-    private String makeJenkinsRestCall(String url) {
-        return RestRequest.makeRequest(url + "/api/json");
+    private <T> T makeJenkinsRestCall(String url, Class<T> type) {
+        return json.fromJson(RestRequest.makeRequest(url + "/api/json"), type);
     }
     
     static class JenkinsDetails {

@@ -7,6 +7,7 @@ import static org.netmelody.cii.domain.Percentage.percentageOf;
 import java.util.Random;
 
 import org.netmelody.cii.domain.Build;
+import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
@@ -14,7 +15,7 @@ import org.netmelody.cii.domain.TargetGroup;
 public final class DummyWitness implements Witness {
 
     @Override
-    public TargetGroup targetList() {
+    public TargetGroup statusOf(Feature feature) {
         return new TargetGroup(newArrayList(randomTarget("Smoke"),
                                             randomTarget("Integration"),
                                             randomTarget("Browser"),
