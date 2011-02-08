@@ -8,14 +8,18 @@ public final class LandscapeGroup {
 
     private final List<Landscape> landscapes = new ArrayList<Landscape>();
     
+    public LandscapeGroup() {
+        this(new ArrayList<Landscape>());
+    }
+    
     public LandscapeGroup(Collection<Landscape> landscapes) {
         this.landscapes.addAll(landscapes);
     }
 
     public LandscapeGroup add(Landscape landscape) {
-        final LandscapeGroup result = new LandscapeGroup(landscapes);
-        result.landscapes.add(landscape);
-        return result;
+        final List<Landscape> newLandscapes = new ArrayList<Landscape>(landscapes);
+        newLandscapes.add(landscape);
+        return new LandscapeGroup(newLandscapes);
     }
     
     public Landscape landscapeNamed(String name) {

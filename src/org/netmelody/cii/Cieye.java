@@ -6,14 +6,16 @@ import java.net.SocketAddress;
 import org.netmelody.cii.persistence.State;
 import org.netmelody.cii.response.FileResponder;
 import org.netmelody.cii.response.JsonResponder;
+import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
 import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeResponseBuilder;
+import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
 import org.netmelody.cii.response.json.TargetListResponseBuilder;
-import org.netmelody.cii.witness.DummyWitness;
 import org.netmelody.cii.witness.jenkins.JenkinsWitness;
 import org.simpleframework.http.Address;
+import org.simpleframework.http.Query;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceContainer;
@@ -57,7 +59,20 @@ public final class Cieye {
                 return new CreateLandscapeResponseBuilder(state);
             }
             
-            return new TargetListResponseBuilder(new JenkinsWitness("http://ccmain:8080"));
+            if ("targetlist.json".equals(name)) {
+                return new TargetListResponseBuilder(new JenkinsWitness("http://ccmain:8080"));
+            }
+            
+            if ("landscapeobservation.json".endsWith(name)) {
+                return new LandscapeObservationResponseBuilder(state);
+            }
+            
+            return new JsonResponseBuilder() {
+                @Override
+                public JsonResponse buildResponse(Query query, String requestContent) {
+                    return new JsonResponse("");
+                }
+            };
         }
     }
 }

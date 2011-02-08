@@ -1,16 +1,29 @@
+"use strict";
 
-function start() {
-    var radiatorDiv = document.getElementById('radiator');
-    refreshTargets(radiatorDiv);
-    setInterval(function(){ refreshTargets(radiatorDiv); }, 1000);
+// Perform login: Ask user for name, and send message to socket.
+function login() {
+    var defaultUsername = (window.localStorage && window.localStorage.username) || 'yourname',
+        username = prompt('Choose a username', defaultUsername);
+    
+    if (username) {
+        if (window.localStorage) { // store in browser localStorage, so we remember next next
+            window.localStorage.username = username;
+        }
+//        send({action:'LOGIN', loginUsername:username});
+//        document.getElementById('entry').focus();
+    } else {
+//        ws.close();
+    }
 }
 
-function refreshTargets(radiatorDiv) {
-    $.getJSON('joblist.json', function(targetList) {
-        for (i in targetList.targets) {
-            updateTarget(radiatorDiv, targetList.targets[i]);
-        }
-    });
+function addBuild(targetDiv, build) {
+     var buildDiv = document.createElement('div'),
+         barDiv   = document.createElement('div');
+     
+     buildDiv.setAttribute('class', 'progress-bar');
+     barDiv.setAttribute('style', 'width: ' + build.progress + '%');
+     buildDiv.appendChild(barDiv);
+     targetDiv.appendChild(buildDiv);
 }
 
 function updateTarget(radiatorDiv, target) {
@@ -32,30 +45,18 @@ function updateTarget(radiatorDiv, target) {
     radiatorDiv.appendChild(targetDiv);
 }
 
-function addBuild(targetDiv, build) {
-     var buildDiv = document.createElement('div'),
-         barDiv   = document.createElement('div');
-     
-     buildDiv.setAttribute('class', 'progress-bar');
-     barDiv.setAttribute('style', 'width: ' + build.progress + '%');
-     buildDiv.appendChild(barDiv);
-     targetDiv.appendChild(buildDiv);
-}
-
-// Perform login: Ask user for name, and send message to socket.
-function login() {
-    var defaultUsername = (window.localStorage && window.localStorage.username) || 'yourname';
-    var username = prompt('Choose a username', defaultUsername);
-    if (username) {
-        if (window.localStorage) { // store in browser localStorage, so we remember next next
-            window.localStorage.username = username;
+function refreshTargets(radiatorDiv) {
+    $.getJSON('landscapeobservation.json', { landscapeName: 'Ci-eye Demo' }, function(targetList) {
+        for (i in targetList.targets) {
+            updateTarget(radiatorDiv, targetList.targets[i]);
         }
-//        send({action:'LOGIN', loginUsername:username});
-//        document.getElementById('entry').focus();
-    } else {
-//        ws.close();
-    }
+    });
 }
 
-// Connect on load.
+function start() {
+    var radiatorDiv = document.getElementById('radiator');
+    refreshTargets(radiatorDiv);
+    setInterval(function(){ refreshTargets(radiatorDiv); }, 1000);
+}
+
 window.onload = start;
