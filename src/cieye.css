@@ -29,10 +29,10 @@ body {
     color: #ffffff;
 }
 div.target {
-    border: 1px solid #000;
+    border: 1px solid #000000;
     width: 100%;
-    margin: 2px 5px 2px 0;
-    padding: 1px 1px 1px 5px;
+    margin: 2px 2px 2px 5px;
+    padding: 1px;
 }
 div.GREEN {
     color: #ffffff;
@@ -44,9 +44,10 @@ div.BROKEN {
 }
 div.DISABLED {
     color: #444444;
+    display: none;
 }
 div.progress-bar {
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     margin: 2px 5px 2px 5px;
     padding: 1px;
 }
