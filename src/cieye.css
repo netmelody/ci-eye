@@ -30,7 +30,7 @@ body {
 }
 div.target {
     border: 1px solid #000;
-    width: 98%;
+    width: 100%;
     margin: 2px 5px 2px 0;
     padding: 1px 1px 1px 5px;
 }
@@ -47,7 +47,7 @@ div.DISABLED {
 }
 div.progress-bar {
     border: 1px solid #ccc;
-    margin: 2px 5px 2px 0;
+    margin: 2px 5px 2px 5px;
     padding: 1px;
 }
 div.progress-bar > div {
