@@ -18,7 +18,7 @@ public final class DummyWitness implements Witness {
     public TargetGroup statusOf(Feature feature) {
         return new TargetGroup(newArrayList(randomTarget("Smoke"),
                                             randomTarget("Integration"),
-                                            randomTarget("Browser"),
+                                            randomTarget("Acceptance"),
                                             randomTarget("Release")));
     }
     
