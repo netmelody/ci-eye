@@ -8,12 +8,9 @@ import org.netmelody.cii.domain.LandscapeGroup;
 
 public final class State {
 
-    private LandscapeGroup landscapes;
+    private LandscapeGroup landscapes =
+        new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("HIP Hawk", "http://ccmain:8080"))));
 
-    public State() {
-        landscapes = new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("HIP Hawk", "http://ccmain:8080"))));
-    }
-    
     public LandscapeGroup landscapes() {
         return this.landscapes;
     }
