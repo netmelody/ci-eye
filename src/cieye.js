@@ -47,8 +47,18 @@ function updateTarget(radiatorDiv, target) {
 
 function refreshTargets(radiatorDiv) {
     $.getJSON('landscapeobservation.json', { landscapeName: 'Ci-eye Demo' }, function(targetList) {
-        for (i in targetList.targets) {
-            updateTarget(radiatorDiv, targetList.targets[i]);
+        var targets = targetList.targets.sort(function(a, b) {
+            if (a.status === b.status) {
+                return (a.builds.length > b.builds.length) ? -1 : (a.builds.length < b.builds.length) ? 1 : 0;
+            }
+            if (a.status === 'BROKEN') {
+                return -1;
+            }
+            return 1;
+        });
+        
+        for (i in targets) {
+            updateTarget(radiatorDiv, targets[i]);
         }
     });
 }
