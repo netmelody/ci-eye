@@ -1,19 +1,53 @@
 "use strict";
 
-// Perform login: Ask user for name, and send message to socket.
-function login() {
-    var defaultUsername = (window.localStorage && window.localStorage.username) || 'yourname',
-        username = prompt('Choose a username', defaultUsername);
-    
-    if (username) {
-        if (window.localStorage) { // store in browser localStorage, so we remember next next
-            window.localStorage.username = username;
-        }
-//        send({action:'LOGIN', loginUsername:username});
-//        document.getElementById('entry').focus();
-    } else {
-//        ws.close();
+function build(buildJson) {
+    var buildDiv = $('<div></div>').addClass('progress-bar'),
+        barDiv   = $('<div></div>');
+        
+    function updateProgress(percent) {
+        barDiv.setAttribute('style', 'width: ' + build.progress + '%');
     }
+    
+    function refresh(newBuildJson) {
+        updateProgress(newBuildJson.progress);
+    }
+    
+    buildDiv.appendChild(barDiv);
+    refresh(buildJson);
+    
+    return {
+        updateFrom: refresh,
+        getContent: function() { return buildDiv; },
+        getId: function() { return "buildId"; }
+    };
+}
+
+function target(targetJson) {
+    var currentTargetJson = {},
+        targetDiv = $('<div></div>').addClass('target');
+    
+    function refresh(newTargetJson) {
+        var lastTargetJson = currentTargetJson;
+        
+        currentTargetJson = newTargetJson;
+        if (lastTargetJson.status !== newTargetJson.status) {
+            targetDiv.removeClass(lastTargetJson.status);
+            targetDiv.addClass(newTargetJson.status);
+        }
+        
+        $(targetDiv).children('.progress-bar').remove();
+        for (i in newTargetJson.builds) {
+            targetDiv.appendChild(build(newTargetJson.builds[i]).getContent());
+        }
+    }
+    
+    refresh(targetJson);
+    
+    return {
+        updateFrom: refresh,
+        getContent: function() { return targetDiv; },
+        getId: function() { return targetJson.id; }
+    };
 }
 
 function addBuild(targetDiv, build) {
