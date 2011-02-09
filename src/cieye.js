@@ -46,7 +46,7 @@ function updateTarget(radiatorDiv, target) {
 }
 
 function refreshTargets(radiatorDiv) {
-    $.getJSON('landscapeobservation.json', { landscapeName: 'Ci-eye Demo' }, function(targetList) {
+    $.getJSON('landscapeobservation.json', { landscapeName: 'HIP' }, function(targetList) {
         var targets = targetList.targets.sort(function(a, b) {
             if (a.status === b.status) {
                 return (a.builds.length > b.builds.length) ? -1 : (a.builds.length < b.builds.length) ? 1 : 0;
