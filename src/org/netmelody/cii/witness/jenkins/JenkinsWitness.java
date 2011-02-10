@@ -14,7 +14,10 @@ import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
+import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
+import org.netmelody.cii.witness.jenkins.JenkinsWitness.ChangeSet;
+import org.netmelody.cii.witness.jenkins.JenkinsWitness.ChangeSetItem;
 import org.netmelody.cii.witness.protocol.RestRequest;
 
 import com.google.common.base.Function;
@@ -84,8 +87,13 @@ public final class JenkinsWitness implements Witness {
         Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
         Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
         
+        String changeText = analyseChanges(lastBuild);
+        List<org.netmelody.cii.domain.User> guilty = new Detective().guiltyFrom(changeText);
+        
         return new Target(jobDigest.name,
+                          jobDigest.name,
                           jobDigest.status(),
+                          guilty,
                           buildAt(Percentage.percentageOf(new Date().getTime() - lastBuild.timestamp,
                                                           lastSuccessfulBuild.duration)));
         
@@ -97,6 +105,20 @@ public final class JenkinsWitness implements Witness {
 //        Computer agentDetails = agentDetails(build.builtOn);
     }
     
+    private String analyseChanges(Build lastBuild) {
+        if (null == lastBuild.changeset || null == lastBuild.changeset.items) {
+            return "";
+        }
+        
+        final StringBuilder result = new StringBuilder();
+        for (ChangeSetItem changeSetItem : lastBuild.changeset.items) {
+            result.append(changeSetItem.user);
+            result.append(changeSetItem.msg);
+        }
+        
+        return result.toString();
+    }
+
 //    private Computer agentDetails(String agentName) {
 //        return makeJenkinsRestCall(endpoint + "/computer/" + agentName, Computer.class);
 //    }
@@ -197,8 +219,22 @@ public final class JenkinsWitness implements Witness {
         String builtOn;
         List<User> culprits;
         List<Action> actions;
-        //changeset
+        ChangeSet changeset;
         //artifacts
+    }
+    
+    static class ChangeSet {
+        String kind;
+        List<ChangeSetItem> items;
+        //revisions
+    }
+    
+    static class ChangeSetItem {
+        Date date;
+        String msg;
+        long revision;
+        String user;
+        //paths
     }
     
     static class View {

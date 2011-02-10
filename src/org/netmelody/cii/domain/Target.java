@@ -10,6 +10,7 @@ public final class Target {
     private final String id;
     private final String name;
     private final Status status;
+    private final List<User> guilty = new ArrayList<User>();
     private final List<Build> builds = new ArrayList<Build>();
     
     public Target(String name) {
@@ -21,9 +22,14 @@ public final class Target {
     }
     
     public Target(String id, String name, Status status, Build... builds) {
+        this(id, name, status, new ArrayList<User>(), builds);
+    }
+    
+    public Target(String id, String name, Status status, List<User> guilty, Build... builds) {
         this.id = id;
         this.name = name;
         this.status = status;
+        this.guilty.addAll(guilty);
         
         if (null != builds) {
             this.builds.addAll(asList(builds));
@@ -40,5 +46,9 @@ public final class Target {
     
     public Status status() {
         return status;
+    }
+    
+    public List<User> guilty() {
+        return new ArrayList<User>(guilty);
     }
 }
