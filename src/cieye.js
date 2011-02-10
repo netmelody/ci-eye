@@ -24,8 +24,7 @@ ORG.NETMELODY.newBuildWidget = function(buildJson) {
     
     return {
         updateFrom: refresh,
-        getContent: function() { return buildDiv; },
-        getId: function() { return "buildId"; }
+        getContent: function() { return buildDiv; }
     };
 };
 
@@ -65,13 +64,13 @@ ORG.NETMELODY.newTargetWidget = function(targetJson) {
     
     return {
         updateFrom: refresh,
-        getContent: function() { return targetDiv; },
-        getId: function() { return targetJson.id; }
+        getContent: function() { return targetDiv; }
     };
 };
 
 ORG.NETMELODY.newRadiatorWidget = function() {
-    var radiatorDiv = $('<div></div>');
+    var radiatorDiv = $('<div></div>'),
+        targetWidgets = {};
     
     function refresh(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(function(a, b) {
@@ -86,7 +85,13 @@ ORG.NETMELODY.newRadiatorWidget = function() {
         
         radiatorDiv.empty();
         $.each(targets, function(index, targetJson) {
-            radiatorDiv.append(ORG.NETMELODY.newTargetWidget(targetJson).getContent());
+            if (targetWidgets[targetJson.id]) {
+                targetWidgets[targetJson.id].updateFrom(targetJson);
+            }
+            else {
+                targetWidgets[targetJson.id] = ORG.NETMELODY.newTargetWidget(targetJson);
+            }
+            radiatorDiv.append(targetWidgets[targetJson.id].getContent());
         });
     }
     
