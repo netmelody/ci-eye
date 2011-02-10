@@ -51,6 +51,11 @@ public final class JenkinsWitness implements Witness {
         return new TargetGroup(targets);
     }
     
+    @Override
+    public long millisecondsUntilNextUpdate() {
+        return 0L;
+    }
+    
     public Collection<String> users() {
         final JenkinsUserDetails detail = makeJenkinsRestCall(endpoint + "/people", JenkinsUserDetails.class);
         return transform(detail.users, new Function<UserDetail, String>() {

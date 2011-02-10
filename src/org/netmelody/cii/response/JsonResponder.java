@@ -28,9 +28,9 @@ public final class JsonResponder implements Resource {
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
-            response.setDate("Expires", time + 10000);
             
             JsonResponse jsonResponse = responseBuilder.buildResponse(request.getQuery(), request.getContent());
+            response.setDate("Expires", time + jsonResponse.millisecondsUntilExpiry());
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (IOException e) {

@@ -14,4 +14,9 @@ public final class TeamCityWitness implements Witness {
         return new TargetGroup(new ArrayList<Target>());
     }
 
+    @Override
+    public long millisecondsUntilNextUpdate() {
+        return 0L;
+    }
+
 }

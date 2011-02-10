@@ -10,10 +10,8 @@ import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
 import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
-import org.netmelody.cii.response.json.LandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
-import org.netmelody.cii.response.json.TargetListResponseBuilder;
-import org.netmelody.cii.witness.jenkins.JenkinsWitness;
+import org.netmelody.cii.response.json.LandscapeResponseBuilder;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.Query;
 import org.simpleframework.http.core.Container;
@@ -57,10 +55,6 @@ public final class Cieye {
             
             if ("createLandscape.json".equals(name)) {
                 return new CreateLandscapeResponseBuilder(state);
-            }
-            
-            if ("targetlist.json".equals(name)) {
-                return new TargetListResponseBuilder(new JenkinsWitness("http://ccmain:8080"));
             }
             
             if ("landscapeobservation.json".endsWith(name)) {

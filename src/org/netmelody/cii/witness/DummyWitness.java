@@ -31,4 +31,9 @@ public final class DummyWitness implements Witness {
         }
         return new Target(name, Status.values()[random.nextInt(3)], builds);
     }
+
+    @Override
+    public long millisecondsUntilNextUpdate() {
+        return 0L;
+    }
 }
