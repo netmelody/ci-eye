@@ -8,7 +8,7 @@ ORG.NETMELODY.newBuildWidget = function(buildJson) {
         barDiv   = $('<div></div>');
         
     function updateProgress(percent) {
-        barDiv.setAttribute('style', 'width: ' + percent + '%');
+        barDiv.attr('style', 'width: ' + percent + '%');
     }
     
     function refresh(newBuildJson) {
@@ -16,7 +16,7 @@ ORG.NETMELODY.newBuildWidget = function(buildJson) {
     }
     
     function initialise() {
-        buildDiv.appendChild(barDiv);
+        buildDiv.append(barDiv);
         refresh(buildJson);
     }
     
@@ -30,8 +30,8 @@ ORG.NETMELODY.newBuildWidget = function(buildJson) {
 };
 
 ORG.NETMELODY.newTargetWidget = function(targetJson) {
-    var currentTargetJson = {},
-        targetDiv = $('<div></div>').addClass('target'),
+    var currentTargetJson = { builds:[] },
+        targetDiv = $('<div></div>'),
         buildsDiv = $('<div></div>');
     
     function refresh(newTargetJson) {
@@ -39,19 +39,25 @@ ORG.NETMELODY.newTargetWidget = function(targetJson) {
         
         currentTargetJson = newTargetJson;
         if (lastTargetJson.status !== newTargetJson.status) {
-            targetDiv.removeClass(lastTargetJson.status);
+            if (lastTargetJson.status) {
+                targetDiv.removeClass(lastTargetJson.status);
+            }
             targetDiv.addClass(newTargetJson.status);
         }
         
-        $(buildsDiv).empty();
-        $.each(newTargetJson.builds, function(buildJson) {
-            buildsDiv.appendChild(ORG.NETMELODY.newBuildWidget(buildJson).getContent());
+        buildsDiv.empty();
+        $.each(newTargetJson.builds, function(index, buildJson) {
+            buildsDiv.append(ORG.NETMELODY.newBuildWidget(buildJson).getContent());
         });
     }
     
     function initialise() {
-        targetDiv.innerHTML = '<span>' + targetJson.name + '</span>';
-        targetDiv.appendChild(buildsDiv);
+        var titleSpan = $('<span></span>');
+        
+        titleSpan.text(targetJson.name);
+        targetDiv.append(titleSpan);
+        targetDiv.append(buildsDiv);
+        targetDiv.addClass('target');
         refresh(targetJson);
     }
     
@@ -78,9 +84,9 @@ ORG.NETMELODY.newRadiatorWidget = function() {
             return 1;
         });
         
-        $(radiatorDiv).empty();
-        $.each(targets, function(targetJson) {
-            radiatorDiv.appendChild(ORG.NETMELODY.newTargetWidget(targetJson).getContent());
+        radiatorDiv.empty();
+        $.each(targets, function(index, targetJson) {
+            radiatorDiv.append(ORG.NETMELODY.newTargetWidget(targetJson).getContent());
         });
     }
     
@@ -100,7 +106,7 @@ ORG.NETMELODY.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
     }
     
     function startup() {
-        radiatorDiv.appendChild(radiatorWidget.getContent());
+        $(radiatorDiv).append(radiatorWidget.getContent());
     
         refresh();
         repeatingTaskProvider.setInterval(refresh, 1000);
@@ -111,4 +117,6 @@ ORG.NETMELODY.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
     };
 };
 
-window.onload = ORG.NETMELODY.newRadiator(document.getElementById('radiator'), window).start();
+window.onload = function() {
+    ORG.NETMELODY.newRadiator(document.getElementById('radiator'), window).start();
+}
