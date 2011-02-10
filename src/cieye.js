@@ -76,12 +76,12 @@ ORG.NETMELODY.newRadiatorWidget = function() {
     function refresh(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(function(a, b) {
             if (a.status === b.status) {
-                return (a.builds.length > b.builds.length) ? -1 : (a.builds.length < b.builds.length) ? 1 : 0;
+                if (a.builds.length === b.builds.length) {
+                    return (a.name < b.name) ? -1 : 1;
+                }
+                return (a.builds.length > b.builds.length) ? -1 : 1;
             }
-            if (a.status === 'BROKEN') {
-                return -1;
-            }
-            return 1;
+            return (a.status === 'BROKEN') ? -1 : 1;
         });
         
         radiatorDiv.empty();
@@ -119,4 +119,4 @@ ORG.NETMELODY.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
 
 window.onload = function() {
     ORG.NETMELODY.newRadiator(document.getElementById('radiator'), window).start();
-}
+};
