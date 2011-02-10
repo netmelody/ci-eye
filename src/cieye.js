@@ -2,8 +2,9 @@
 
 var ORG = (ORG) ? ORG : {};
 ORG.NETMELODY = {};
+ORG.NETMELODY.CIEYE = {};
 
-ORG.NETMELODY.newBuildWidget = function(buildJson) {
+ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
     var buildDiv = $('<div></div>').addClass('progress-bar'),
         barDiv   = $('<div></div>');
         
@@ -28,7 +29,7 @@ ORG.NETMELODY.newBuildWidget = function(buildJson) {
     };
 };
 
-ORG.NETMELODY.newTargetWidget = function(targetJson) {
+ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     var currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
         buildsDiv = $('<div></div>');
@@ -46,7 +47,7 @@ ORG.NETMELODY.newTargetWidget = function(targetJson) {
         
         buildsDiv.empty();
         $.each(newTargetJson.builds, function(index, buildJson) {
-            buildsDiv.append(ORG.NETMELODY.newBuildWidget(buildJson).getContent());
+            buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
         });
     }
     
@@ -68,7 +69,7 @@ ORG.NETMELODY.newTargetWidget = function(targetJson) {
     };
 };
 
-ORG.NETMELODY.newRadiatorWidget = function() {
+ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $('<div></div>'),
         targetWidgets = {};
     
@@ -89,7 +90,7 @@ ORG.NETMELODY.newRadiatorWidget = function() {
                 targetWidgets[targetJson.id].updateFrom(targetJson);
             }
             else {
-                targetWidgets[targetJson.id] = ORG.NETMELODY.newTargetWidget(targetJson);
+                targetWidgets[targetJson.id] = ORG.NETMELODY.CIEYE.newTargetWidget(targetJson);
             }
             radiatorDiv.append(targetWidgets[targetJson.id].getContent());
         });
@@ -101,8 +102,8 @@ ORG.NETMELODY.newRadiatorWidget = function() {
     };
 };
 
-ORG.NETMELODY.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
-    var radiatorWidget = ORG.NETMELODY.newRadiatorWidget();
+ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
+    var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget();
     
     function refresh() {
         $.getJSON('landscapeobservation.json', { landscapeName: 'HIP' }, function(targetList) {
@@ -123,5 +124,5 @@ ORG.NETMELODY.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
 };
 
 window.onload = function() {
-    ORG.NETMELODY.newRadiator(document.getElementById('radiator'), window).start();
+    ORG.NETMELODY.CIEYE.newRadiator(document.getElementById('radiator'), window).start();
 };
