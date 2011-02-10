@@ -1,6 +1,6 @@
 "use strict";
 
-function build(buildJson) {
+function newBuildWidget(buildJson) {
     var buildDiv = $('<div></div>').addClass('progress-bar'),
         barDiv   = $('<div></div>');
         
@@ -22,9 +22,10 @@ function build(buildJson) {
     };
 }
 
-function target(targetJson) {
+function newTargetWidget(targetJson) {
     var currentTargetJson = {},
-        targetDiv = $('<div></div>').addClass('target');
+        targetDiv = $('<div></div>').addClass('target'),
+        buildsDiv = $('<div></div>');
     
     function refresh(newTargetJson) {
         var lastTargetJson = currentTargetJson;
@@ -35,13 +36,19 @@ function target(targetJson) {
             targetDiv.addClass(newTargetJson.status);
         }
         
-        $(targetDiv).children('.progress-bar').remove();
-        for (i in newTargetJson.builds) {
-            targetDiv.appendChild(build(newTargetJson.builds[i]).getContent());
-        }
+        $(buildsDiv).empty();
+        $.each(newTargetJson.builds, function(buildJson) {
+            buildsDiv.appendChild(newBuildWidget(buildJson).getContent());
+        });
     }
     
-    refresh(targetJson);
+    function initialise() {
+        targetDiv.innerHTML = '<span>' + target.name + '</span>';
+        targetDiv.appendChild(buildsDiv);
+        refresh(targetJson);
+    }
+    
+    initialise();
     
     return {
         updateFrom: refresh,
