@@ -12,6 +12,8 @@ import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeResponseBuilder;
+import org.netmelody.cii.witness.DefaultWitnessProvider;
+import org.netmelody.cii.witness.WitnessProvider;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.Query;
 import org.simpleframework.http.core.Container;
@@ -33,6 +35,7 @@ public final class Cieye {
 
     private static final class CiEyeResourceEngine implements ResourceEngine {
         private final State state = new State();
+        private final WitnessProvider witnessProvider = new DefaultWitnessProvider();
 
         @Override
         public Resource resolve(Address target) {
@@ -58,7 +61,7 @@ public final class Cieye {
             }
             
             if ("landscapeobservation.json".endsWith(name)) {
-                return new LandscapeObservationResponseBuilder(state);
+                return new LandscapeObservationResponseBuilder(state, witnessProvider);
             }
             
             return new JsonResponseBuilder() {
