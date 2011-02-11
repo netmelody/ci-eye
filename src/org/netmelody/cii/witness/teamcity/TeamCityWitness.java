@@ -28,6 +28,7 @@ public final class TeamCityWitness implements Witness {
 
     public TeamCityWitness(String endpoint) {
         this.endpoint = endpoint;
+        //endpoint + "/guestLogin.html?guest=1"
     }
 
     @Override
@@ -113,6 +114,9 @@ public final class TeamCityWitness implements Witness {
     }
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
+        System.out.println(url);
+        System.out.println(RestRequest.makeRequest(url));
+        
         return json.fromJson(RestRequest.makeRequest(url), type);
     }
     
