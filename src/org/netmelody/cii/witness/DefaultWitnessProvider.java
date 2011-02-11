@@ -6,6 +6,7 @@ import java.util.Map;
 import org.netmelody.cii.domain.CiServerType;
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.witness.jenkins.JenkinsWitness;
+import org.netmelody.cii.witness.teamcity.TeamCityWitness;
 
 public final class DefaultWitnessProvider implements WitnessProvider {
 
@@ -20,6 +21,9 @@ public final class DefaultWitnessProvider implements WitnessProvider {
         Witness witness = new DummyWitness();
         if (CiServerType.JENKINS.equals(feature.type())) {
             witness = new BufferedWitness(new JenkinsWitness(feature.endpoint()));
+        }
+        else if (CiServerType.TEAMCITY.equals(feature.type())) {
+            witness = new BufferedWitness(new TeamCityWitness(feature.endpoint()));
         }
         witnesses.put(feature.endpoint(), witness);
         return witness;
