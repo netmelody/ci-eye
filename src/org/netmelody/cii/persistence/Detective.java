@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cii.domain.User;
+import org.netmelody.cii.domain.Sponsor;
 
 public final class Detective {
 
-    public Map<String, User> userMap = new HashMap<String, User>();
+    public Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
     public Detective() {
         registerUser("Ryan Alexander", "http://teamcity-server:8111/img/staffpics/ryan.jpg", "ralexander", "ryan");
@@ -26,15 +26,15 @@ public final class Detective {
     }
 
     private void registerUser(String name, String pictureUrl, String... keywords) {
-        final User user = new User(name, pictureUrl);
+        final Sponsor user = new Sponsor(name, pictureUrl);
         userMap.put(name.toUpperCase(), user);
         for (String keyword : keywords) {
             userMap.put(keyword.toUpperCase(), user);
         }
     }
     
-    public List<User> guiltyFrom(String changeText) {
-        final List<User> guilty = new ArrayList<User>();
+    public List<Sponsor> guiltyFrom(String changeText) {
+        final List<Sponsor> guilty = new ArrayList<Sponsor>();
         
         final String upperChangeText = changeText.toUpperCase();
         for (String keyword : userMap.keySet()) {

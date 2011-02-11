@@ -1,15 +1,15 @@
 package org.netmelody.cii.domain;
 
-public final class User {
+public final class Sponsor {
 
     private final String name;
     private final String picture;
     
-    public User(String name) {
+    public Sponsor(String name) {
         this(name, name);
     }
     
-    public User(String name, String picture) {
+    public Sponsor(String name, String picture) {
         this.name = name;
         this.picture = picture;
     }

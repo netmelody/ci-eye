@@ -88,7 +88,7 @@ public final class JenkinsWitness implements Witness {
         Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
         
         String changeText = analyseChanges(lastBuild);
-        List<org.netmelody.cii.domain.User> guilty = new Detective().guiltyFrom(changeText);
+        List<org.netmelody.cii.domain.Sponsor> guilty = new Detective().guiltyFrom(changeText);
         
         return new Target(jobDigest.name,
                           jobDigest.name,
