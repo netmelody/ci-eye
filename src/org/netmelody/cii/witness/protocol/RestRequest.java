@@ -22,10 +22,6 @@ public class RestRequest {
             ResponseHandler<String> responseHandler = new BasicResponseHandler();
             String responseBody = client.execute(httpget, responseHandler);
             
-            System.out.println("----------------------------------------");
-            System.out.println(responseBody);
-            System.out.println("----------------------------------------");
-            
             return responseBody;
         } catch (Exception e) {
             return "";

@@ -6,7 +6,6 @@ body {
     padding: 0;
 }
 #radiator {
-    width: 100%;
     height: 100%;
     color: #ffff99;
     background-color: #333333;
@@ -15,6 +14,7 @@ body {
     font-family: monospace;
     font-size: 50px;
     margin: auto;
+    overflow-y: hidden;
 }
 #configuration {
     position: absolute;
@@ -29,8 +29,8 @@ body {
     color: #ffffff;
 }
 div.target {
+    overflow: auto;
     border: 1px solid #000000;
-    width: 100%;
     margin: 2px 2px 2px 5px;
     padding: 1px;
 }
@@ -46,7 +46,15 @@ div.DISABLED {
     color: #444444;
     display: none;
 }
+div.sponsors {
+    float: right;
+    margin: 5px 5px 0 0;
+}
+div.sponsors > img {
+    padding-left: 5px;
+}
 div.progress-bar {
+    clear: right;
     border: 1px solid #cccccc;
     margin: 2px 5px 2px 5px;
     padding: 1px;

@@ -32,7 +32,7 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     var currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
-        sponsorDiv = $('<div></div>').addClass('sponsor'),
+        sponsorDiv = $('<div></div>').addClass('sponsors'),
         buildsDiv = $('<div></div>');
     
     function refresh(newTargetJson) {
