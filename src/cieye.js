@@ -115,10 +115,20 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
 };
 
 ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
-    var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget();
+    var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget(),
+        timeoutProtector;
     
+    function frozen() {
+        repeatingTaskProvider.location.reload();
+    }
+        
     function refresh() {
+        if (!timeoutProtector) {
+            timeoutProtector = repeatingTaskProvider.setTimeout(frozen, 30000);
+        }
         $.getJSON('landscapeobservation.json', { landscapeName: 'HIP' }, function(targetList) {
+            repeatingTaskProvider.clearTimeout(timeoutProtector);
+            timeoutProtector = null;
             radiatorWidget.updateFrom(targetList);
         });
     }
