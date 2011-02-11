@@ -16,11 +16,13 @@ public class RestRequest {
     }
 
     public static String makeRequest(String url) {
-        HttpClient client = new DefaultHttpClient();
+        final HttpClient client = new DefaultHttpClient();
         try {
-            HttpGet httpget = new HttpGet(url);
-            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            String responseBody = client.execute(httpget, responseHandler);
+            final HttpGet httpget = new HttpGet(url);
+            httpget.setHeader("Accept", "application/json");
+            
+            final ResponseHandler<String> responseHandler = new BasicResponseHandler();
+            final String responseBody = client.execute(httpget, responseHandler);
             
             return responseBody;
         } catch (Exception e) {
