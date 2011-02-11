@@ -10,7 +10,7 @@ public final class Target {
     private final String id;
     private final String name;
     private final Status status;
-    private final List<Sponsor> guilty = new ArrayList<Sponsor>();
+    private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
     private final List<Build> builds = new ArrayList<Build>();
     
     public Target(String name) {
@@ -25,11 +25,11 @@ public final class Target {
         this(id, name, status, new ArrayList<Sponsor>(), builds);
     }
     
-    public Target(String id, String name, Status status, List<Sponsor> guilty, Build... builds) {
+    public Target(String id, String name, Status status, List<Sponsor> sponsors, Build... builds) {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.guilty.addAll(guilty);
+        this.sponsors.addAll(sponsors);
         
         if (null != builds) {
             this.builds.addAll(asList(builds));
@@ -48,7 +48,7 @@ public final class Target {
         return status;
     }
     
-    public List<Sponsor> guilty() {
-        return new ArrayList<Sponsor>(guilty);
+    public List<Sponsor> sponsors() {
+        return new ArrayList<Sponsor>(sponsors);
     }
 }
