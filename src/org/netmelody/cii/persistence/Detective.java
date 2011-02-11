@@ -33,16 +33,16 @@ public final class Detective {
         }
     }
     
-    public List<Sponsor> guiltyFrom(String changeText) {
-        final List<Sponsor> guilty = new ArrayList<Sponsor>();
+    public List<Sponsor> sponsorsOf(String changeText) {
+        final List<Sponsor> sponsors = new ArrayList<Sponsor>();
         
         final String upperChangeText = changeText.toUpperCase();
         for (String keyword : userMap.keySet()) {
             if (upperChangeText.contains(keyword)) {
-                guilty.add(userMap.get(keyword));
+                sponsors.add(userMap.get(keyword));
             }
         }
-        return guilty;
+        return sponsors;
     }
 
 }

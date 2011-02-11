@@ -11,13 +11,12 @@ import java.util.List;
 
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Percentage;
+import org.netmelody.cii.domain.Sponsor;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.jenkins.JenkinsWitness.ChangeSet;
-import org.netmelody.cii.witness.jenkins.JenkinsWitness.ChangeSetItem;
 import org.netmelody.cii.witness.protocol.RestRequest;
 
 import com.google.common.base.Function;
@@ -79,16 +78,14 @@ public final class JenkinsWitness implements Witness {
             return new Target(jobDigest.name, jobDigest.status());
         }
         
-        Job job = makeJenkinsRestCall(jobDigest.url, Job.class);
+        final Job job = makeJenkinsRestCall(jobDigest.url, Job.class);
         if (job.lastBuild == null || job.lastSuccessfulBuild == null) {
             return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
         }
         
-        Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
-        Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
-        
-        String changeText = analyseChanges(lastBuild);
-        List<org.netmelody.cii.domain.Sponsor> guilty = new Detective().guiltyFrom(changeText);
+        final Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
+        final Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
+        final List<Sponsor> guilty = new Detective().sponsorsOf(analyseChanges(lastBuild));
         
         return new Target(jobDigest.name,
                           jobDigest.name,
