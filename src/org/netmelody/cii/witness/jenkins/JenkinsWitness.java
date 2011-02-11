@@ -75,7 +75,7 @@ public final class JenkinsWitness implements Witness {
     }
     
     private Target targetFrom(Job jobDigest) {
-        if (null == jobDigest.color || !jobDigest.color.endsWith("_anime")) {
+        if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
             return new Target(jobDigest.name, jobDigest.status());
         }
         
@@ -85,13 +85,18 @@ public final class JenkinsWitness implements Witness {
         }
         
         final Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
+        final List<Sponsor> sponsors = new Detective().sponsorsOf(analyseChanges(lastBuild));
+        
+        if (!jobDigest.building()) {
+            return new Target(jobDigest.name, jobDigest.name, jobDigest.status(), sponsors);
+        }
+        
         final Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
-        final List<Sponsor> guilty = new Detective().sponsorsOf(analyseChanges(lastBuild));
         
         return new Target(jobDigest.name,
                           jobDigest.name,
                           jobDigest.status(),
-                          guilty,
+                          sponsors,
                           buildAt(Percentage.percentageOf(new Date().getTime() - lastBuild.timestamp,
                                                           lastSuccessfulBuild.duration)));
         
@@ -103,15 +108,19 @@ public final class JenkinsWitness implements Witness {
 //        Computer agentDetails = agentDetails(build.builtOn);
     }
     
-    private String analyseChanges(Build lastBuild) {
-        if (null == lastBuild.changeSet || null == lastBuild.changeSet.items) {
+    private String analyseChanges(Build build) {
+        if (null == build.changeSet || null == build.changeSet.items) {
             return "";
         }
         
         final StringBuilder result = new StringBuilder();
-        for (ChangeSetItem changeSetItem : lastBuild.changeSet.items) {
+        for (ChangeSetItem changeSetItem : build.changeSet.items) {
             result.append(changeSetItem.user);
             result.append(changeSetItem.msg);
+        }
+        
+        for (User user : build.culprits) {
+            result.append(user.fullName);
         }
         
         return result.toString();
@@ -200,6 +209,10 @@ public final class JenkinsWitness implements Witness {
                 return Status.DISABLED;
             }
             return Status.BROKEN;
+        }
+        
+        public boolean building() {
+            return (null != color && color.endsWith("_anime"));
         }
     }
     
