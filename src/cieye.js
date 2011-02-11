@@ -1,7 +1,6 @@
 "use strict";
-
-var ORG = (ORG) ? ORG : {};
-ORG.NETMELODY = {};
+var ORG = window.ORG ? window.ORG : {};
+ORG.NETMELODY = ORG.NETMELODY ? ORG.NETMELODY : {};
 ORG.NETMELODY.CIEYE = {};
 
 ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
@@ -35,6 +34,12 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         sponsorDiv = $('<div></div>').addClass('sponsors'),
         buildsDiv = $('<div></div>');
     
+    function sortedSponsors(unsortedSponsors) {
+        return unsortedSponsors.sort(function(a, b) {
+            return (a.name === b.name) ? 0 : (a.name < b.name) ? -1 : 1;
+        });
+    }
+        
     function refresh(newTargetJson) {
         var lastTargetJson = currentTargetJson;
         
@@ -47,7 +52,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         }
         
         sponsorDiv.empty();
-        $.each(newTargetJson.sponsors, function(index, sponsorJson) {
+        $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
             sponsorDiv.append($('<img></img>').attr('src', sponsorJson.picture));
         });
         
@@ -130,6 +135,6 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
     };
 };
 
-window.onload = function() {
+$(document).ready(function() {
     ORG.NETMELODY.CIEYE.newRadiator(document.getElementById('radiator'), window).start();
-};
+});
