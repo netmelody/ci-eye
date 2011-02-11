@@ -22,10 +22,11 @@ import org.netmelody.cii.witness.protocol.RestRequest;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public final class JenkinsWitness implements Witness {
     
-    private final Gson json = new Gson();
+    private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     private final String endpoint;
 
     public JenkinsWitness(String endpoint) {
@@ -103,12 +104,12 @@ public final class JenkinsWitness implements Witness {
     }
     
     private String analyseChanges(Build lastBuild) {
-        if (null == lastBuild.changeset || null == lastBuild.changeset.items) {
+        if (null == lastBuild.changeSet || null == lastBuild.changeSet.items) {
             return "";
         }
         
         final StringBuilder result = new StringBuilder();
-        for (ChangeSetItem changeSetItem : lastBuild.changeset.items) {
+        for (ChangeSetItem changeSetItem : lastBuild.changeSet.items) {
             result.append(changeSetItem.user);
             result.append(changeSetItem.msg);
         }
@@ -216,7 +217,7 @@ public final class JenkinsWitness implements Witness {
         String builtOn;
         List<User> culprits;
         List<Action> actions;
-        ChangeSet changeset;
+        ChangeSet changeSet;
         //artifacts
     }
     
@@ -227,7 +228,7 @@ public final class JenkinsWitness implements Witness {
     }
     
     static class ChangeSetItem {
-        Date date;
+        //Date date;
         String msg;
         long revision;
         String user;

@@ -1,6 +1,5 @@
 package org.netmelody.cii.response;
 
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.simpleframework.http.Request;
@@ -33,7 +32,7 @@ public final class JsonResponder implements Resource {
             response.setDate("Expires", time + jsonResponse.millisecondsUntilExpiry());
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
-        } catch (IOException e) {
+        } catch (Exception e) {
             response.setCode(500);
         }
     }

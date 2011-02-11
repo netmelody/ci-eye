@@ -1,7 +1,9 @@
 package org.netmelody.cii.persistence;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public final class Detective {
     }
     
     public List<Sponsor> sponsorsOf(String changeText) {
-        final List<Sponsor> sponsors = new ArrayList<Sponsor>();
+        final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
         
         final String upperChangeText = changeText.toUpperCase();
         for (String keyword : userMap.keySet()) {
@@ -42,7 +44,7 @@ public final class Detective {
                 sponsors.add(userMap.get(keyword));
             }
         }
-        return sponsors;
+        return new ArrayList<Sponsor>(sponsors);
     }
 
 }

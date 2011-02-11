@@ -32,6 +32,7 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     var currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
+        sponsorDiv = $('<div></div>').addClass('sponsor'),
         buildsDiv = $('<div></div>');
     
     function refresh(newTargetJson) {
@@ -45,6 +46,11 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             targetDiv.addClass(newTargetJson.status);
         }
         
+        sponsorDiv.empty();
+        $.each(newTargetJson.sponsors, function(index, sponsorJson) {
+            sponsorDiv.append($('<img></img>').attr('src', sponsorJson.picture));
+        });
+        
         buildsDiv.empty();
         $.each(newTargetJson.builds, function(index, buildJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
@@ -56,6 +62,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         
         titleSpan.text(targetJson.name);
         targetDiv.append(titleSpan);
+        targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass('target');
         refresh(targetJson);
