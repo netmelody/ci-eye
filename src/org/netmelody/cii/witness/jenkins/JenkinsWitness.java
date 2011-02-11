@@ -5,6 +5,7 @@ import static com.google.common.collect.Collections2.transform;
 import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -85,7 +86,9 @@ public final class JenkinsWitness implements Witness {
         }
         
         final Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
-        final List<Sponsor> sponsors = new Detective().sponsorsOf(analyseChanges(lastBuild));
+        
+        
+        final List<Sponsor> sponsors = sponsorsOf(lastBuild);
         
         if (!jobDigest.building()) {
             return new Target(jobDigest.name, jobDigest.name, jobDigest.status(), sponsors);
@@ -108,6 +111,25 @@ public final class JenkinsWitness implements Witness {
 //        Computer agentDetails = agentDetails(build.builtOn);
     }
     
+    private List<Sponsor> sponsorsOf(Build build) {
+        final Detective detective = new Detective();
+        
+        final List<Sponsor> sponsors = detective.sponsorsOf(analyseChanges(build));
+        
+        if (!sponsors.isEmpty()) {
+            return sponsors;
+        }
+        
+        for (String buildUrl :  build.upstreamBuildUrls()) {
+            final Build upstreamBuild = makeJenkinsRestCall(endpoint + "/" + buildUrl, Build.class);
+            if (null == upstreamBuild) {
+                continue;
+            }
+            sponsors.addAll(sponsorsOf(upstreamBuild));
+        }
+        return sponsors;
+    }
+
     private String analyseChanges(Build build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
@@ -232,6 +254,19 @@ public final class JenkinsWitness implements Witness {
         List<Action> actions;
         ChangeSet changeSet;
         //artifacts
+        
+        public List<String> upstreamBuildUrls() {
+            final List<String> result = new ArrayList<String>();
+            
+            if (null != actions) {
+                for (Action action : actions) {
+                    if (null != action) {
+                        result.addAll(action.upstreamBuildUrls());
+                    }
+                }
+            }
+            return result;
+        }
     }
     
     static class ChangeSet {
@@ -279,8 +314,41 @@ public final class JenkinsWitness implements Witness {
         //monitorData
     }
     
+    static class Action {
+        List<Cause> causes;
+        int failCount;
+        int skipCount;
+        int totalCount;
+        String urlName;
+        
+        public List<String> upstreamBuildUrls() {
+            final List<String> result = new ArrayList<String>();
+            
+            if (null != causes) {
+                for (Cause cause : causes) {
+                    if (null != cause) {
+                        String upstreamBuildUrl = cause.upstreamBuildUrl();
+                        if (null != upstreamBuildUrl) {
+                            result.add(upstreamBuildUrl);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+    }
+    
+    static class Cause {
+        String shortDescription;
+        long upstreamBuild;
+        String upstreamProject;
+        String upstreamUrl;
+        
+        public String upstreamBuildUrl() {
+            return (null == upstreamUrl) ? "" : upstreamUrl + upstreamBuild;
+        }
+    }
     
     static class Label { }
     static class Load { }
-    static class Action { }
 }

@@ -33,6 +33,7 @@ public final class JsonResponder implements Resource {
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (Exception e) {
+            e.printStackTrace();
             response.setCode(500);
         }
     }
