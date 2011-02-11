@@ -21,4 +21,14 @@ public final class Sponsor {
     public String picture() {
         return picture;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof Sponsor) && ((Sponsor)obj).picture.equals(picture));
+    }
+    
+    @Override
+    public int hashCode() {
+        return picture.hashCode();
+    }
 }

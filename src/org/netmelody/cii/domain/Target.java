@@ -3,6 +3,7 @@ package org.netmelody.cii.domain;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public final class Target {
@@ -29,7 +30,7 @@ public final class Target {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.sponsors.addAll(sponsors);
+        this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
         
         if (null != builds) {
             this.builds.addAll(asList(builds));
