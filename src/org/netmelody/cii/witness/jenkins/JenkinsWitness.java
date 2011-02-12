@@ -6,23 +6,15 @@ import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 import org.netmelody.cii.domain.Feature;
-import org.netmelody.cii.domain.Percentage;
-import org.netmelody.cii.domain.Sponsor;
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
-import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.jenkins.jsondomain.Build;
-import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
 import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsDetails;
 import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsUserDetails;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
-import org.netmelody.cii.witness.jenkins.jsondomain.User;
 import org.netmelody.cii.witness.jenkins.jsondomain.UserDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
 import org.netmelody.cii.witness.protocol.RestRequester;
@@ -37,9 +29,11 @@ public final class JenkinsWitness implements Witness {
     private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
+    private final JobAnalyser jobAnalyser;
 
     public JenkinsWitness(String endpoint) {
         this.endpoint = endpoint;
+        this.jobAnalyser = new JobAnalyser(restRequester, endpoint);
     }
 
     @Override
@@ -93,67 +87,8 @@ public final class JenkinsWitness implements Witness {
             return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
         }
         
-        final Build lastBuild = fetchBuildData(job.lastBuild.url);
-        
-        
-        final List<Sponsor> sponsors = sponsorsOf(lastBuild);
-        
-        if (!jobDigest.building()) {
-            return new Target(jobDigest.name, jobDigest.name, jobDigest.status(), sponsors);
-        }
-        
-        final Build lastSuccessfulBuild = fetchBuildData(job.lastSuccessfulBuild.url);
-        
-        return new Target(jobDigest.name,
-                          jobDigest.name,
-                          jobDigest.status(),
-                          sponsors,
-                          buildAt(Percentage.percentageOf(new Date().getTime() - lastBuild.timestamp,
-                                                          lastSuccessfulBuild.duration)));
-        
-//        
-//        if (!build.building || build.builtOn == null) {
-//            return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
-//        }
-//        
-//        Computer agentDetails = agentDetails(build.builtOn);
-    }
-    
-    private List<Sponsor> sponsorsOf(Build build) {
-        final Detective detective = new Detective();
-        
-        final List<Sponsor> sponsors = detective.sponsorsOf(analyseChanges(build));
-        
-        if (!sponsors.isEmpty()) {
-            return sponsors;
-        }
-        
-        for (String buildUrl :  build.upstreamBuildUrls()) {
-            final Build upstreamBuild = fetchBuildData(endpoint + "/" + buildUrl);
-            if (null == upstreamBuild) {
-                continue;
-            }
-            sponsors.addAll(sponsorsOf(upstreamBuild));
-        }
-        return sponsors;
-    }
-
-    private String analyseChanges(Build build) {
-        if (null == build.changeSet || null == build.changeSet.items) {
-            return "";
-        }
-        
-        final StringBuilder result = new StringBuilder();
-        for (ChangeSetItem changeSetItem : build.changeSet.items) {
-            result.append(changeSetItem.user);
-            result.append(changeSetItem.msg);
-        }
-        
-        for (User user : build.culprits) {
-            result.append(user.fullName);
-        }
-        
-        return result.toString();
+        return new Target(jobDigest.name, jobDigest.name, jobDigest.status(),
+                          jobAnalyser.sponsorsOf(job), buildAt(jobAnalyser.progressOf(job)));
     }
 
 //    private Computer agentDetails(String agentName) {
@@ -163,10 +98,6 @@ public final class JenkinsWitness implements Witness {
 //    private void changeDescription(String jobName, String buildNumber, String newDescription) {
 //        "/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
 //    }
-    
-    private Build fetchBuildData(String buildUrl) {
-        return makeJenkinsRestCall(buildUrl, Build.class);
-    }
     
     private <T> T makeJenkinsRestCall(String url, Class<T> type) {
         return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
