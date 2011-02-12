@@ -14,7 +14,7 @@ import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.protocol.RestRequest;
+import org.netmelody.cii.witness.protocol.RestRequester;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 public final class TeamCityWitness implements Witness {
 
     private final Gson json = new GsonBuilder().create();
+    private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
 
     public TeamCityWitness(String endpoint) {
@@ -115,9 +116,8 @@ public final class TeamCityWitness implements Witness {
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
         System.out.println(url);
-        System.out.println(RestRequest.makeRequest(url));
-        
-        return json.fromJson(RestRequest.makeRequest(url), type);
+        System.out.println(restRequester.makeRequest(url));
+        return json.fromJson(restRequester.makeRequest(url), type);
     }
     
     static class TeamCityProjects {

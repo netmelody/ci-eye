@@ -18,7 +18,7 @@ import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.protocol.RestRequest;
+import org.netmelody.cii.witness.protocol.RestRequester;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 public final class JenkinsWitness implements Witness {
     
     private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+    private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
 
     public JenkinsWitness(String endpoint) {
@@ -157,7 +158,7 @@ public final class JenkinsWitness implements Witness {
 //    }
     
     private <T> T makeJenkinsRestCall(String url, Class<T> type) {
-        return json.fromJson(RestRequest.makeRequest(url + "/api/json"), type);
+        return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
     }
     
     static class JenkinsDetails {
