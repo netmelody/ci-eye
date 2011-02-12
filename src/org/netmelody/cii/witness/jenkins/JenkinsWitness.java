@@ -5,7 +5,6 @@ import static com.google.common.collect.Collections2.transform;
 import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,14 @@ import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
+import org.netmelody.cii.witness.jenkins.jsondomain.Build;
+import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
+import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsDetails;
+import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsUserDetails;
+import org.netmelody.cii.witness.jenkins.jsondomain.Job;
+import org.netmelody.cii.witness.jenkins.jsondomain.User;
+import org.netmelody.cii.witness.jenkins.jsondomain.UserDetail;
+import org.netmelody.cii.witness.jenkins.jsondomain.View;
 import org.netmelody.cii.witness.protocol.RestRequester;
 
 import com.google.common.base.Function;
@@ -122,7 +129,7 @@ public final class JenkinsWitness implements Witness {
         }
         
         for (String buildUrl :  build.upstreamBuildUrls()) {
-            final Build upstreamBuild = fetchBuildData(buildUrl);
+            final Build upstreamBuild = fetchBuildData(endpoint + "/" + buildUrl);
             if (null == upstreamBuild) {
                 continue;
             }
@@ -158,202 +165,10 @@ public final class JenkinsWitness implements Witness {
 //    }
     
     private Build fetchBuildData(String buildUrl) {
-        return makeJenkinsRestCall(endpoint + "/" + buildUrl, Build.class);
+        return makeJenkinsRestCall(buildUrl, Build.class);
     }
     
     private <T> T makeJenkinsRestCall(String url, Class<T> type) {
         return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
     }
-    
-    static class JenkinsDetails {
-        List<Label> assignedLabels;
-        String mode;
-        String nodeName;
-        String nodeDescription;
-        int numExecutors;
-        String description;
-        List<Job> jobs;
-        Load overallLoad;
-        View primaryView;
-        int slaveAgentPort;
-        boolean useCrumbs;
-        boolean useSecurity;
-        List<View> views;
-    }
-    
-    static class JenkinsUserDetails {
-        List<UserDetail> users;
-    }
-
-    static class UserDetail {
-        long lastChange;
-        Project project;
-        User user;
-    }
-    
-    static class Project {
-        String name;
-        String url;
-    }
-    
-    static class User {
-        String absoluteUrl;
-        String fullName;
-    }
-    
-    static class Job {
-        String name;
-        String url;
-        String displayName;
-        String description;
-        String color;
-        boolean buildable;
-        boolean inQueue;
-        boolean keepDependencies;
-        boolean concurrentBuild;
-        List<Build> builds;
-        List<Action> actions;
-        Build firstBuild;
-        Build lastBuild;
-        Build lastFailedBuild;
-        Build lastStableBuild;
-        Build lastSuccessfulBuild;
-        Build lastUnstableBuild;
-        Build lastUnsuccessfulBuild;
-        int nextBuildNumber;
-        List<Project> downstreamProjects;
-        List<Project> upstreamProjects;
-        List<HealthReport> healthReport;
-        //scm
-        //property
-        //queueItem
-        
-        public Status status() {
-            if (null == color || color.startsWith("blue")) {
-                return Status.GREEN;
-            }
-            if ("disabled".equals(color)) {
-                return Status.DISABLED;
-            }
-            return Status.BROKEN;
-        }
-        
-        public boolean building() {
-            return (null != color && color.endsWith("_anime"));
-        }
-    }
-    
-    static class Build {
-        int number;
-        String url;
-        String description;
-        boolean building;
-        long duration;
-        String fullDisplayName;
-        String id;
-        boolean keepLog;
-        String result;
-        long timestamp;
-        String builtOn;
-        List<User> culprits;
-        List<Action> actions;
-        ChangeSet changeSet;
-        //artifacts
-        
-        public List<String> upstreamBuildUrls() {
-            final List<String> result = new ArrayList<String>();
-            
-            if (null != actions) {
-                for (Action action : actions) {
-                    if (null != action) {
-                        result.addAll(action.upstreamBuildUrls());
-                    }
-                }
-            }
-            return result;
-        }
-    }
-    
-    static class ChangeSet {
-        String kind;
-        List<ChangeSetItem> items;
-        //revisions
-    }
-    
-    static class ChangeSetItem {
-        //Date date;
-        String msg;
-        long revision;
-        String user;
-        //paths
-    }
-    
-    static class View {
-        String name;
-        String url;
-        String description;
-        List<Job> jobs;
-    }
-    
-    static class HealthReport {
-        String description;
-        String iconUrl;
-        int score;
-    }
-    
-    static class Computer {
-        String displayName;
-        String icon;
-        boolean idle;
-        boolean jnlpAgent;
-        boolean launchSupported;
-        boolean manualLaunchAllowed;
-        List<Action> actions;
-        int numExecutors;
-        boolean offline;
-        boolean temporarilyOffline;
-        //oneOffExecutors
-        //offlineCause
-        //loadStatistics
-        //executors
-        //monitorData
-    }
-    
-    static class Action {
-        List<Cause> causes;
-        int failCount;
-        int skipCount;
-        int totalCount;
-        String urlName;
-        
-        public List<String> upstreamBuildUrls() {
-            final List<String> result = new ArrayList<String>();
-            
-            if (null != causes) {
-                for (Cause cause : causes) {
-                    if (null != cause) {
-                        String upstreamBuildUrl = cause.upstreamBuildUrl();
-                        if (null != upstreamBuildUrl) {
-                            result.add(upstreamBuildUrl);
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-    }
-    
-    static class Cause {
-        String shortDescription;
-        long upstreamBuild;
-        String upstreamProject;
-        String upstreamUrl;
-        
-        public String upstreamBuildUrl() {
-            return (null == upstreamUrl) ? "" : upstreamUrl + upstreamBuild;
-        }
-    }
-    
-    static class Label { }
-    static class Load { }
 }
