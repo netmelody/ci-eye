@@ -28,8 +28,7 @@ public final class TeamCityWitness implements Witness {
     private final String endpoint;
 
     public TeamCityWitness(String endpoint) {
-        this.endpoint = endpoint;
-        //endpoint + "/guestLogin.html?guest=1"
+        this.endpoint = endpoint + "/guestAuth";
     }
 
     @Override
