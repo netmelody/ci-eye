@@ -86,7 +86,7 @@ public final class JenkinsWitness implements Witness {
             return new Target(jobDigest.name, jobDigest.status(), buildAt(percentageOf(0)));
         }
         
-        final Build lastBuild = makeJenkinsRestCall(job.lastBuild.url, Build.class);
+        final Build lastBuild = fetchBuildData(job.lastBuild.url);
         
         
         final List<Sponsor> sponsors = sponsorsOf(lastBuild);
@@ -95,7 +95,7 @@ public final class JenkinsWitness implements Witness {
             return new Target(jobDigest.name, jobDigest.name, jobDigest.status(), sponsors);
         }
         
-        final Build lastSuccessfulBuild = makeJenkinsRestCall(job.lastSuccessfulBuild.url, Build.class);
+        final Build lastSuccessfulBuild = fetchBuildData(job.lastSuccessfulBuild.url);
         
         return new Target(jobDigest.name,
                           jobDigest.name,
@@ -122,7 +122,7 @@ public final class JenkinsWitness implements Witness {
         }
         
         for (String buildUrl :  build.upstreamBuildUrls()) {
-            final Build upstreamBuild = makeJenkinsRestCall(endpoint + "/" + buildUrl, Build.class);
+            final Build upstreamBuild = fetchBuildData(buildUrl);
             if (null == upstreamBuild) {
                 continue;
             }
@@ -156,6 +156,10 @@ public final class JenkinsWitness implements Witness {
 //    private void changeDescription(String jobName, String buildNumber, String newDescription) {
 //        "/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
 //    }
+    
+    private Build fetchBuildData(String buildUrl) {
+        return makeJenkinsRestCall(endpoint + "/" + buildUrl, Build.class);
+    }
     
     private <T> T makeJenkinsRestCall(String url, Class<T> type) {
         return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
