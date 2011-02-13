@@ -1,7 +1,5 @@
 package org.netmelody.cii.witness.jenkins;
 
-import static com.google.common.collect.Iterators.find;
-import static com.google.common.collect.Iterators.transform;
 import static java.util.Collections.unmodifiableList;
 import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
@@ -14,16 +12,12 @@ import java.util.Map;
 
 import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Sponsor;
-import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Build;
 import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.User;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 public class JobAnalyser {
     
@@ -41,24 +35,7 @@ public class JobAnalyser {
         if (job.lastBuild == null) {
             return new Target(job.name, job.status(), buildAt(percentageOf(0)));
         }
-        
-        final List<org.netmelody.cii.domain.Build> builds = buildsFor(job);
-        find(transform(builds.iterator(),
-                       new Function<org.netmelody.cii.domain.Build, Status>() {
-                           @Override
-                           public Status apply(org.netmelody.cii.domain.Build build) {
-                               return build.status();
-                           }
-                       }),
-             new Predicate<Status>() {
-                @Override
-                public boolean apply(Status status) {
-                    return Status.BROKEN.equals(status);
-                }
-             },
-             job.status());
-        
-        return new Target(job.name, job.name, job.status(), sponsorsOf(job), builds);
+        return new Target(job.name, job.name, job.status(), sponsorsOf(job), buildsFor(job));
     }
 
     private List<Sponsor> sponsorsOf(Job job) {
