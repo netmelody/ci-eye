@@ -1,5 +1,5 @@
 package org.netmelody.cii.domain;
 
 public enum Status {
-    GREEN, BROKEN, DISABLED
+    GREEN, BROKEN, DISABLED, UNKNOWN
 }

@@ -34,15 +34,15 @@ div.target {
     margin: 2px 2px 2px 5px;
     padding: 1px;
 }
-div.GREEN {
+div.target.GREEN {
     color: #ffffff;
     background-color: #00aa00;
 }
-div.BROKEN {
+div.target.BROKEN {
     color: #ffffff;
     background-color: #aa0000;
 }
-div.DISABLED {
+div.target.DISABLED {
     color: #444444;
     display: none;
 }
@@ -60,6 +60,15 @@ div.progress-bar {
     padding: 1px;
 }
 div.progress-bar > div {
-    background-color: #9de96f;
     height: 12px;
+    background-color: #9de96f;
+}
+div.progress-bar > div.GREEN {
+    background-color: #9de96f;
+}
+div.progress-bar > div.BROKEN {
+    background-color: #ba3838;
+}
+div.progress-bar > div.UNKNOWN {
+    background-color: #ffff66;
 }

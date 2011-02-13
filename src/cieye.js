@@ -11,8 +11,14 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
         barDiv.attr('style', 'width: ' + percent + '%');
     }
     
+    function updateStatus(status) {
+        barDiv.removeClass();
+        barDiv.addClass(status);
+    }
+    
     function refresh(newBuildJson) {
         updateProgress(newBuildJson.progress);
+        updateStatus(newBuildJson.status);
     }
     
     function initialise() {

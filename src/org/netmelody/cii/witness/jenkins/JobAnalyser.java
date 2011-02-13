@@ -30,24 +30,15 @@ public class JobAnalyser {
         this.jobEndpoint = jobEndpoint;
     }
     
-    public Percentage progressOf(Job job) {
-        if (!job.building()) {
-            return percentageOf(100);
+    public Target analyse() {
+        final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
+        if (job.lastBuild == null) {
+            return new Target(job.name, job.status(), buildAt(percentageOf(0)));
         }
-        
-        long lastGoodDuration = 300000L;
-        if (!(job.lastStableBuild == null)) {
-            lastGoodDuration = fetchBuildData(job.lastStableBuild.url).duration;
-        }
-        else if (!(job.lastSuccessfulBuild == null)) {
-            lastGoodDuration = fetchBuildData(job.lastSuccessfulBuild.url).duration;
-        }
-        
-        final Build currentBuild = fetchBuildData(job.lastBuild.url);
-        return percentageOf(new Date().getTime() - currentBuild.timestamp, lastGoodDuration);
+        return new Target(job.name, job.name, job.status(), sponsorsOf(job), buildsFor(job));
     }
-    
-    public List<Sponsor> sponsorsOf(Job job) {
+
+    private List<Sponsor> sponsorsOf(Job job) {
         final List<Sponsor> result = new ArrayList<Sponsor>();
         
         long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
@@ -75,7 +66,7 @@ public class JobAnalyser {
         }
         
         final Detective detective = new Detective();
-        final List<Sponsor> sponsors = detective.sponsorsOf(analyseChanges(buildData));
+        final List<Sponsor> sponsors = detective.sponsorsOf(changeTextOf(buildData));
         
         if (!sponsors.isEmpty()) {
             return sponsors;
@@ -93,7 +84,7 @@ public class JobAnalyser {
         return result;
     }
     
-    private String analyseChanges(Build build) {
+    private String changeTextOf(Build build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
         }
@@ -111,21 +102,32 @@ public class JobAnalyser {
         return result.toString();
     }
     
+    private List<org.netmelody.cii.domain.Build> buildsFor(final Job job) {
+        final List<org.netmelody.cii.domain.Build> result = new ArrayList<org.netmelody.cii.domain.Build>();
+        if (!job.building()) {
+            return result;
+        }
+        
+        final Build currentBuild = fetchBuildData(job.lastBuild.url);
+        final Percentage progress = percentageOf(new Date().getTime() - currentBuild.timestamp,
+                                                 lastGoodDurationOf(job));
+        result.add(buildAt(progress));
+        
+        return result;
+    }
+
+    private long lastGoodDurationOf(final Job job) {
+        long lastGoodDuration = 300000L;
+        if (!(job.lastStableBuild == null)) {
+            lastGoodDuration = fetchBuildData(job.lastStableBuild.url).duration;
+        }
+        else if (!(job.lastSuccessfulBuild == null)) {
+            lastGoodDuration = fetchBuildData(job.lastSuccessfulBuild.url).duration;
+        }
+        return lastGoodDuration;
+    }
+
     private Build fetchBuildData(String buildUrl) {
         return communicator.makeJenkinsRestCall(buildUrl, Build.class);
-    }
-    
-    public Target analyse() {
-        final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
-        if (job.lastBuild == null) {
-            return new Target(job.name, job.status(), buildAt(percentageOf(0)));
-        }
-        
-        org.netmelody.cii.domain.Build builds[] = new org.netmelody.cii.domain.Build[0];
-        if (job.building()) {
-            builds = new org.netmelody.cii.domain.Build[] { buildAt(progressOf(job)) };
-        }
-        
-        return new Target(job.name, job.name, job.status(), sponsorsOf(job), builds);
     }
 }

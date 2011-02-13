@@ -4,27 +4,31 @@ import static org.netmelody.cii.domain.Percentage.percentageOf;
 
 public final class Build {
     
-    private final boolean building;
     private final Percentage progress;
+    private final Status status;
 
     public Build() {
-        this(false, percentageOf(100));
+        this(percentageOf(100), Status.GREEN);
     }
 
-    public Build(boolean building, Percentage progress) {
-        this.building = building;
+    public Build(Percentage progress, Status status) {
         this.progress = progress;
+        this.status = status;
     }
     
     public static Build buildAt(Percentage progress) {
-        return new Build(true, progress);
+        return buildAt(progress, Status.UNKNOWN);
     }
     
-    public boolean isBuilding() {
-        return building;
+    public static Build buildAt(Percentage progress, Status status) {
+        return new Build(progress, status);
     }
     
     public Percentage progress() {
         return progress;
+    }
+    
+    public Status status() {
+        return status;
     }
 }

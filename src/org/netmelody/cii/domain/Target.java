@@ -27,14 +27,15 @@ public final class Target {
     }
     
     public Target(String id, String name, Status status, List<Sponsor> sponsors, Build... builds) {
+        this(id, name, status, sponsors, (null == builds) ? new ArrayList<Build>() : asList(builds));
+    }
+    
+    public Target(String id, String name, Status status, List<Sponsor> sponsors, List<Build> builds) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
-        
-        if (null != builds) {
-            this.builds.addAll(asList(builds));
-        }
+        this.builds.addAll(builds);
     }
 
     public String id() {

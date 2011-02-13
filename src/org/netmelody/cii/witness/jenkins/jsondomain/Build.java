@@ -3,6 +3,8 @@ package org.netmelody.cii.witness.jenkins.jsondomain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.netmelody.cii.domain.Status;
+
 
 public final class Build {
     public long number;
@@ -32,5 +34,22 @@ public final class Build {
             }
         }
         return result;
+    }
+    
+    public Status status() {
+        if (!building) {
+            return ("SUCCESS".equals(result)) ? Status.GREEN : Status.BROKEN;
+        }
+        
+        if (null != actions) {
+            for (Action action : actions) {
+                if (null != action) {
+                    if (action.failCount > 0) {
+                        return Status.BROKEN;
+                    }
+                }
+            }
+        }
+        return Status.UNKNOWN;
     }
 }
