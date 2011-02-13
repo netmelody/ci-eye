@@ -35,15 +35,29 @@ public class JobAnalyser {
             return percentageOf(100);
         }
         
-        final Build lastBuild = fetchBuildData(job.lastBuild.url);
-        final Build lastSuccessfulBuild = fetchBuildData(job.lastSuccessfulBuild.url);
+        long lastGoodDuration = 300000L;
+        if (!(job.lastStableBuild == null)) {
+            lastGoodDuration = fetchBuildData(job.lastStableBuild.url).duration;
+        }
+        else if (!(job.lastSuccessfulBuild == null)) {
+            lastGoodDuration = fetchBuildData(job.lastSuccessfulBuild.url).duration;
+        }
         
-        return percentageOf(new Date().getTime() - lastBuild.timestamp,
-                            lastSuccessfulBuild.duration);
+        final Build currentBuild = fetchBuildData(job.lastBuild.url);
+        return percentageOf(new Date().getTime() - currentBuild.timestamp, lastGoodDuration);
     }
     
     public List<Sponsor> sponsorsOf(Job job) {
-        return sponsorsOf(job.lastBuild.url);
+        final List<Sponsor> result = new ArrayList<Sponsor>();
+        
+        long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
+        for (Build build : job.builds) {
+            if (build.number > lastSuccessNumber) {
+                result.addAll(sponsorsOf(build.url));
+            }
+        }
+        
+        return result;
     }
     
     private List<Sponsor> sponsorsOf(String buildUrl) {
@@ -103,10 +117,10 @@ public class JobAnalyser {
     
     public Target analyse() {
         final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
-        if (job.lastBuild == null || job.lastSuccessfulBuild == null) {
+        if (job.lastBuild == null) {
             return new Target(job.name, job.status(), buildAt(percentageOf(0)));
         }
-
+        
         org.netmelody.cii.domain.Build builds[] = new org.netmelody.cii.domain.Build[0];
         if (job.building()) {
             builds = new org.netmelody.cii.domain.Build[] { buildAt(progressOf(job)) };
