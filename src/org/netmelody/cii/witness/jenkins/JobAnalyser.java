@@ -1,9 +1,13 @@
 package org.netmelody.cii.witness.jenkins;
 
+import static java.util.Collections.unmodifiableList;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Sponsor;
@@ -22,6 +26,8 @@ public class JobAnalyser {
     private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     private final RestRequester restRequester;
     private final String endpoint;
+    
+    private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
 
     public JobAnalyser(RestRequester restRequester, String endpoint) {
         this.restRequester = restRequester;
@@ -41,28 +47,42 @@ public class JobAnalyser {
     }
     
     public List<Sponsor> sponsorsOf(Job job) {
-        return sponsorsOf(fetchBuildData(job.lastBuild.url));
+        return sponsorsOf(job.lastBuild.url);
     }
     
-    private List<Sponsor> sponsorsOf(Build build) {
-        final Detective detective = new Detective();
+    private List<Sponsor> sponsorsOf(String buildUrl) {
+        if (null == buildUrl || buildUrl.isEmpty()) {
+            return new ArrayList<Sponsor>();
+        }
         
-        final List<Sponsor> sponsors = detective.sponsorsOf(analyseChanges(build));
+        if (sponsorCache.containsKey(buildUrl)) {
+            return sponsorCache.get(buildUrl);
+        }
+        
+        final Build buildData = fetchBuildData(buildUrl);
+        if (null == buildData) {
+            return new ArrayList<Sponsor>();
+        }
+        
+        final Detective detective = new Detective();
+        final List<Sponsor> sponsors = detective.sponsorsOf(analyseChanges(buildData));
         
         if (!sponsors.isEmpty()) {
             return sponsors;
         }
         
-        for (String buildUrl :  build.upstreamBuildUrls()) {
-            final Build upstreamBuild = fetchBuildData(endpoint + "/" + buildUrl);
-            if (null == upstreamBuild) {
-                continue;
-            }
-            sponsors.addAll(sponsorsOf(upstreamBuild));
+        for (String upstreamBuildUrl :  buildData.upstreamBuildUrls()) {
+            sponsors.addAll(sponsorsOf(endpoint + "/" + upstreamBuildUrl));
         }
-        return sponsors;
+        
+        final List<Sponsor> result = unmodifiableList(sponsors);
+        if (!buildData.building) {
+            sponsorCache.put(buildUrl, result);
+        }
+        
+        return result;
     }
-
+    
     private String analyseChanges(Build build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
