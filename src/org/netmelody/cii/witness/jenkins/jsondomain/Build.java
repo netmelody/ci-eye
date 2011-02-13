@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public final class Build {
-    public int number;
+    public long number;
     public String url;
     public String description;
     public boolean building;
