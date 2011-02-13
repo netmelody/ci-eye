@@ -1,6 +1,7 @@
 package org.netmelody.cii.witness.jenkins;
 
 import static java.util.Collections.unmodifiableList;
+import static org.netmelody.cii.domain.Build.buildAt;
 import static org.netmelody.cii.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
@@ -11,27 +12,22 @@ import java.util.Map;
 
 import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Sponsor;
+import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Build;
 import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.User;
-import org.netmelody.cii.witness.protocol.RestRequester;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class JobAnalyser {
     
-    private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-    private final RestRequester restRequester;
-    private final String endpoint;
-    
+    private final JenkinsCommunicator communicator;
+    private final String jobEndpoint;
     private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
 
-    public JobAnalyser(RestRequester restRequester, String endpoint) {
-        this.restRequester = restRequester;
-        this.endpoint = endpoint;
+    public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint) {
+        this.communicator = communicator;
+        this.jobEndpoint = jobEndpoint;
     }
     
     public Percentage progressOf(Job job) {
@@ -72,7 +68,7 @@ public class JobAnalyser {
         }
         
         for (String upstreamBuildUrl :  buildData.upstreamBuildUrls()) {
-            sponsors.addAll(sponsorsOf(endpoint + "/" + upstreamBuildUrl));
+            sponsors.addAll(sponsorsOf(communicator.endpoint() + "/" + upstreamBuildUrl));
         }
         
         final List<Sponsor> result = unmodifiableList(sponsors);
@@ -102,10 +98,20 @@ public class JobAnalyser {
     }
     
     private Build fetchBuildData(String buildUrl) {
-        return makeJenkinsRestCall(buildUrl, Build.class);
+        return communicator.makeJenkinsRestCall(buildUrl, Build.class);
     }
     
-    private <T> T makeJenkinsRestCall(String url, Class<T> type) {
-        return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
+    public Target analyse() {
+        final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
+        if (job.lastBuild == null || job.lastSuccessfulBuild == null) {
+            return new Target(job.name, job.status(), buildAt(percentageOf(0)));
+        }
+
+        org.netmelody.cii.domain.Build builds[] = new org.netmelody.cii.domain.Build[0];
+        if (job.building()) {
+            builds = new org.netmelody.cii.domain.Build[] { buildAt(progressOf(job)) };
+        }
+        
+        return new Target(job.name, job.name, job.status(), sponsorsOf(job), builds);
     }
 }
