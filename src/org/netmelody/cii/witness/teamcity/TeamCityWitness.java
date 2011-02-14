@@ -28,11 +28,12 @@ public final class TeamCityWitness implements Witness {
     private final String endpoint;
 
     public TeamCityWitness(String endpoint) {
-        this.endpoint = endpoint + "/guestAuth";
+        this.endpoint = endpoint;
     }
 
     @Override
     public TargetGroup statusOf(final Feature feature) {
+        restRequester.makeRequest(endpoint + "/guestAuth/");
         if (!endpoint.equals(feature.endpoint())) {
             return new TargetGroup();
         }
