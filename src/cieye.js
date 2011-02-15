@@ -132,7 +132,7 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
         if (!timeoutProtector) {
             timeoutProtector = repeatingTaskProvider.setTimeout(frozen, 30000);
         }
-        $.getJSON('landscapeobservation.json', { landscapeName: 'PubLive' }, function(targetList) {
+        $.getJSON('landscapeobservation.json', { landscapeName: 'HIP' }, function(targetList) {
             repeatingTaskProvider.clearTimeout(timeoutProtector);
             timeoutProtector = null;
             radiatorWidget.updateFrom(targetList);
@@ -140,8 +140,8 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
     }
     
     function startup() {
-        $(radiatorDiv).append(radiatorWidget.getContent());
-    
+        radiatorDiv.append(radiatorWidget.getContent());
+        
         refresh();
         repeatingTaskProvider.setInterval(refresh, 1000);
     }
@@ -152,5 +152,5 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
 };
 
 $(document).ready(function() {
-    ORG.NETMELODY.CIEYE.newRadiator(document.getElementById('radiator'), window).start();
+    ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), window).start();
 });

@@ -20,6 +20,7 @@ public class RestRequester {
 
             return responseBody;
         } catch (Exception e) {
+            System.out.println(url);
             e.printStackTrace();
             return "";
         }

@@ -12,7 +12,7 @@ public class BufferedWitness implements Witness {
     private final Witness delegate;
     private final long bufferTime;
     
-    private long lastRequestTime = 0L;
+    private volatile long lastRequestTime = 0L;
     private TargetGroup lastStatus;
 
     public BufferedWitness(Witness delegate) {
@@ -27,8 +27,12 @@ public class BufferedWitness implements Witness {
     @Override
     public TargetGroup statusOf(Feature feature) {
         if ((System.currentTimeMillis() - lastRequestTime) > bufferTime) {
-            lastRequestTime = System.currentTimeMillis();
-            lastStatus = delegate.statusOf(feature);
+            synchronized(delegate) {
+                if ((System.currentTimeMillis() - lastRequestTime) > bufferTime) {
+                    lastRequestTime = System.currentTimeMillis();
+                    lastStatus = delegate.statusOf(feature);
+                }
+            }
         }
         return lastStatus;
     }
