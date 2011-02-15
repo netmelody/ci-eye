@@ -99,7 +99,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                 }
                 return (a.builds.length > b.builds.length) ? -1 : 1;
             }
-            return (a.status === 'BROKEN') ? -1 : 1;
+            return (a.status === 'BROKEN' || b.status === 'GREEN') ? -1 : 1;
         });
         
         radiatorDiv.empty();

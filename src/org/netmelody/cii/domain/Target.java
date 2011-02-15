@@ -41,16 +41,13 @@ public final class Target {
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
         this.builds.addAll(builds);
         
-        this.status = find(transform(builds.iterator(),
-                               new Function<org.netmelody.cii.domain.Build, Status>() {
-                                   @Override
-                                   public Status apply(org.netmelody.cii.domain.Build build) {
-                                       return build.status();
-                                   }
-                               }),
+        this.status = find(transform(builds.iterator(), new Function<Build, Status>() {
+                                                            @Override public Status apply(Build build) {
+                                                                return build.status();
+                                                            }
+                                                        }),
                            new Predicate<Status>() {
-                               @Override
-                               public boolean apply(Status status) {
+                               @Override public boolean apply(Status status) {
                                    return Status.BROKEN.equals(status);
                                }
                            },
