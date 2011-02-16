@@ -20,6 +20,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 public final class TeamCityWitness implements Witness {
 
@@ -228,9 +229,12 @@ public final class TeamCityWitness implements Witness {
     }
     
     static class Change {
-        String /*@*/version;
-        String /*@*/id;
-        String /*@*/href;
+        @SerializedName("@version")
+        String version;
+        @SerializedName("@id")
+        String id;
+        @SerializedName("@href")
+        String href;
     }
     
     static class ChangeDetail {
