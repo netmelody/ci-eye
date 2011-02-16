@@ -31,6 +31,12 @@ public final class TeamCityWitness implements Witness {
         this.endpoint = endpoint;
     }
 
+    public static void main(String[] args) {
+        final Feature feature = new Feature("HIP - Trunk", "http://teamcity-server:8111");
+        final TeamCityWitness witness = new TeamCityWitness(feature.endpoint());
+        witness.statusOf(feature);
+    }
+    
     @Override
     public TargetGroup statusOf(final Feature feature) {
         restRequester.makeRequest(endpoint + "/guestAuth/");
@@ -222,9 +228,9 @@ public final class TeamCityWitness implements Witness {
     }
     
     static class Change {
-        String version;
-        String id;
-        String href;
+        String /*@*/version;
+        String /*@*/id;
+        String /*@*/href;
     }
     
     static class ChangeDetail {
