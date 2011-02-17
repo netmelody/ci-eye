@@ -15,6 +15,18 @@ import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
 import org.netmelody.cii.witness.protocol.RestRequester;
+import org.netmelody.cii.witness.teamcity.jsondomain.Build;
+import org.netmelody.cii.witness.teamcity.jsondomain.BuildDetail;
+import org.netmelody.cii.witness.teamcity.jsondomain.BuildType;
+import org.netmelody.cii.witness.teamcity.jsondomain.BuildTypeDetail;
+import org.netmelody.cii.witness.teamcity.jsondomain.Builds;
+import org.netmelody.cii.witness.teamcity.jsondomain.Change;
+import org.netmelody.cii.witness.teamcity.jsondomain.ChangeDetail;
+import org.netmelody.cii.witness.teamcity.jsondomain.ChangesMany;
+import org.netmelody.cii.witness.teamcity.jsondomain.ChangesOne;
+import org.netmelody.cii.witness.teamcity.jsondomain.Project;
+import org.netmelody.cii.witness.teamcity.jsondomain.ProjectDetail;
+import org.netmelody.cii.witness.teamcity.jsondomain.TeamCityProjects;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -122,125 +134,5 @@ public final class TeamCityWitness implements Witness {
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
         return json.fromJson(restRequester.makeRequest(url).replace("\"@", "\""), type);
-    }
-    
-    static class TeamCityProjects {
-        List<Project> project;
-    }
-    
-    static class Project {
-        String name;
-        String id;
-        String href;
-    }
-    
-    static class ProjectDetail extends Project {
-        String webUrl;
-        String description;
-        boolean archived;
-        BuildTypes buildTypes;
-    }
-    
-    static class BuildTypes {
-        List<BuildType> buildType;
-    }
-    
-    static class BuildType {
-        String id;
-        String name;
-        String href;
-        String projectName;
-        String projectId;
-        String webUrl;
-    }
-    
-    static class BuildTypeDetail extends BuildType {
-        String description;
-        boolean paused;
-        Project project;
-        BuildsHref builds;
-        //vcs-root
-        //parameters
-        //runParameters
-    }
-    
-    static class BuildsHref {
-        String href;
-    }
-    
-    static class Builds {
-        int count;
-        List<Build> build;
-    }
-    
-    static class Build {
-        long id;
-        String number;
-        String status;
-        String buildTypeId;
-        String href;
-        String webUrl;
-    }
-    
-    static class BuildDetail {
-        long id;
-        String number;
-        String status;
-        String href;
-        String webUrl;
-        boolean personal;
-        boolean history;
-        boolean pinned;
-        String statusText;
-        //buildType
-        //startDate
-        //finishDate
-        //agent
-        //tags
-        //properties
-        //revisions
-        ChangesHref changes;
-        //relatedIssues
-        
-        public Status status() {
-            if (status == null || "SUCCESS".equals(status)) {
-                return Status.GREEN;
-            }
-            return Status.BROKEN;
-        }
-    }
-    
-    static class ChangesHref {
-        String href;
-        int count;
-    }
-    
-    static class ChangesOne {
-        //String @count
-        Change change;
-    }
-    
-    static class ChangesMany {
-        //String @count
-        List<Change> change;
-    }
-    
-    static class Change {
-        //@SerializedName("@version")
-        String version;
-        //@SerializedName("@id")
-        String id;
-        //@SerializedName("@href")
-        String href;
-    }
-    
-    static class ChangeDetail {
-        String username;
-        //date
-        String version;
-        long id;
-        String href;
-        String comment;
-        //files
     }
 }
