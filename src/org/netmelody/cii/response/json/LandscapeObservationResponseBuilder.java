@@ -1,7 +1,10 @@
 package org.netmelody.cii.response.json;
 
+import static java.lang.Math.min;
+
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Landscape;
+import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.State;
 import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
@@ -21,9 +24,16 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
 
     @Override
     public JsonResponse buildResponse(Query query, String requestContent) {
+        TargetGroup response = new TargetGroup();
+        long timeToLive = Long.MAX_VALUE;
+        
         final Landscape landscape = state.landscapeNamed(query.get("landscapeName"));
-        final Feature feature = landscape.features().iterator().next();
-        final Witness witness = witnessProvider.witnessFor(feature);
-        return new JsonResponse(witness.statusOf(feature), witness.millisecondsUntilNextUpdate());
+        for (Feature feature : landscape.features()) {
+            final Witness witness = witnessProvider.witnessFor(feature);
+            response = response.add(witness.statusOf(feature));
+            timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate());
+        }
+        
+        return new JsonResponse(response, timeToLive);
     }
 }

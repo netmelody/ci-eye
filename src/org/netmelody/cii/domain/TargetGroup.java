@@ -16,4 +16,9 @@ public final class TargetGroup {
         this.targets.addAll(targets);
     }
 
+    public TargetGroup add(TargetGroup group) {
+        final TargetGroup result = new TargetGroup(targets);
+        result.targets.addAll(group.targets);
+        return result;
+    }
 }
