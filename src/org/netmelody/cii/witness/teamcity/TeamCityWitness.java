@@ -20,7 +20,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 
 public final class TeamCityWitness implements Witness {
 
@@ -113,7 +112,7 @@ public final class TeamCityWitness implements Witness {
         
         final StringBuilder result = new StringBuilder();
         for (Change change : changes) {
-            final ChangeDetail changeDetail = makeTeamCityRestCall(change.href, ChangeDetail.class);
+            final ChangeDetail changeDetail = makeTeamCityRestCall(endpoint + change.href, ChangeDetail.class);
             result.append(changeDetail.comment);
             result.append(changeDetail.username);
         }
@@ -122,9 +121,7 @@ public final class TeamCityWitness implements Witness {
     }
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
-        System.out.println(url);
-        System.out.println(restRequester.makeRequest(url));
-        return json.fromJson(restRequester.makeRequest(url), type);
+        return json.fromJson(restRequester.makeRequest(url).replace("\"@", "\""), type);
     }
     
     static class TeamCityProjects {
@@ -229,11 +226,11 @@ public final class TeamCityWitness implements Witness {
     }
     
     static class Change {
-        @SerializedName("@version")
+        //@SerializedName("@version")
         String version;
-        @SerializedName("@id")
+        //@SerializedName("@id")
         String id;
-        @SerializedName("@href")
+        //@SerializedName("@href")
         String href;
     }
     
