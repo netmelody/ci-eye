@@ -29,7 +29,7 @@ public final class DummyWitness implements Witness {
         if (random.nextBoolean()) {
             builds = new Build[]{ buildAt(percentageOf(random.nextInt(101))) };
         }
-        return new Target(name, Status.values()[random.nextInt(3)], builds);
+        return new Target(name, name, Status.values()[random.nextInt(3)], builds);
     }
 
     @Override

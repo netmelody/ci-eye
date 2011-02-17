@@ -33,9 +33,9 @@ public class JobAnalyser {
     public Target analyse() {
         final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
         if (job.lastBuild == null) {
-            return new Target(job.name, job.status(), buildAt(percentageOf(0)));
+            return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
         }
-        return new Target(job.name, job.name, job.status(), sponsorsOf(job), buildsFor(job));
+        return new Target(job.url, job.name, job.status(), sponsorsOf(job), buildsFor(job));
     }
 
     private List<Sponsor> sponsorsOf(Job job) {

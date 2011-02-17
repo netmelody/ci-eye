@@ -37,7 +37,7 @@ public class ViewAnalyser {
     private Target targetFrom(Job jobDigest) {
         if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
             analyserMap.remove(jobDigest.url);
-            return new Target(jobDigest.name, jobDigest.status());
+            return new Target(jobDigest.url, jobDigest.name, jobDigest.status());
         }
         
         if (!analyserMap.containsKey(jobDigest.url)) {

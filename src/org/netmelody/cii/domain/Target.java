@@ -19,14 +19,6 @@ public final class Target {
     private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
     private final List<Build> builds = new ArrayList<Build>();
     
-    public Target(String name) {
-        this(name, Status.GREEN);
-    }
-
-    public Target(String name, Status status, Build... builds) {
-        this(name, name, status, builds);
-    }
-    
     public Target(String id, String name, Status status, Build... builds) {
         this(id, name, status, new ArrayList<Sponsor>(), builds);
     }

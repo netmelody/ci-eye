@@ -88,13 +88,13 @@ public final class TeamCityWitness implements Witness {
         final BuildTypeDetail buildTypeDetail = makeTeamCityRestCall(endpoint + buildType.href, BuildTypeDetail.class);
         
         if (buildTypeDetail.paused) {
-            return new Target(buildType.id, buildType.name, Status.DISABLED);
+            return new Target(endpoint + buildType.href, buildType.name, Status.DISABLED);
         }
         
         final Builds builds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
 
         if (builds.build == null || builds.build.isEmpty()) {
-            return new Target(buildType.id, buildType.name, Status.GREEN);
+            return new Target(endpoint + buildType.href, buildType.name, Status.GREEN);
         }
         
         final Build lastBuild = builds.build.iterator().next();
@@ -102,7 +102,7 @@ public final class TeamCityWitness implements Witness {
         
         final List<Sponsor> sponsors = sponsorsOf(lastBuildDetail);
         
-        return new Target(buildType.id, buildType.name, lastBuildDetail.status(), sponsors);
+        return new Target(endpoint + buildType.href, buildType.name, lastBuildDetail.status(), sponsors);
     }
     
     private List<Sponsor> sponsorsOf(BuildDetail build) {
