@@ -57,14 +57,17 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             targetDiv.addClass(newTargetJson.status);
         }
         
-        sponsorDiv.empty();
-        $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
-            sponsorDiv.append($('<img></img>').attr('src', sponsorJson.picture));
-        });
-        
         buildsDiv.empty();
         $.each(newTargetJson.builds, function(index, buildJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
+        });
+        
+        sponsorDiv.empty();
+        if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
+            return;
+        }
+        $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
+            sponsorDiv.append($('<img></img>').attr('src', sponsorJson.picture));
         });
     }
     
