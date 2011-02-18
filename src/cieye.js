@@ -132,7 +132,7 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
         if (!timeoutProtector) {
             timeoutProtector = repeatingTaskProvider.setTimeout(frozen, 30000);
         }
-        $.getJSON('landscapeobservation.json', { landscapeName: 'HIP-TC' }, function(targetList) {
+        $.getJSON('landscapeobservation.json', { landscapeName: 'HIP' }, function(targetList) {
             repeatingTaskProvider.clearTimeout(timeoutProtector);
             timeoutProtector = null;
             radiatorWidget.updateFrom(targetList);
