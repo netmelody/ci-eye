@@ -1,18 +1,47 @@
 body {
     background-color: #333333;
-    color: #ffffff;
-    font-family: arial, sans-serif;
+    color: #ffff99;
+    font-family: serif;
     margin: 0;
     padding: 0;
 }
 #welcome {
-    width: 100%;
-    height: 100%;
-    color: #ffff99;
-    background-color: #333333;
-    border: 0;
+    width: 800px;
+    height: 600px;
+    background-image: url(cieye.jpg);
+    background-repeat: no-repeat;
+}
+#title {
+    padding: 10px;
     font-weight: bold;
-    font-family: monospace;
-    font-size: 16px;
-    margin: auto;
+    font-size: 30px;
+    margin: 0 auto;
+    display: table;
+    color: #777777
+}
+#landscapelist {
+    display: table;
+    margin: 0 auto;
+    width: 50%;
+}
+#landscapelist ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#landscapelist li {
+    margin: 0 0 3px 0;
+}
+#landscapelist a {
+    padding: 0px 0px 0px 15px;
+    display: block;
+    color: #ffffff;
+    opacity:0.2;
+    background-color: #000306;
+    text-decoration: none;
+}
+#landscapelist a:hover {
+    color: #ffffff;
+    background: none;
+    opacity:0.6;
 }

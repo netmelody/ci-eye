@@ -155,5 +155,5 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
 };
 
 $(document).ready(function() {
-    ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), window).start();
+    //ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), window).start();
 });
