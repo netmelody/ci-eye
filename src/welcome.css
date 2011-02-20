@@ -1,28 +1,47 @@
 body {
-    background-color: #333333;
-    color: #ffff99;
-    font-family: serif;
+    background: none repeat scroll 0 0 #333333;
+    font-family: verdana,sans-serif;
+    line-height: 24px;
+    min-width: 960px;
     margin: 0;
     padding: 0;
 }
-#welcome {
-    width: 800px;
-    height: 600px;
-    background-image: url(cieye.jpg);
-    background-repeat: no-repeat;
+#header {
+    clear: both;
+    margin: 0 auto;
+    width: 940px;
 }
 #title {
+    float: left;
     padding: 10px;
     font-weight: bold;
     font-size: 30px;
-    margin: 0 auto;
-    display: table;
     color: #777777
 }
+#content {
+    clear: both;
+    display: inline;
+    float: left;
+    width: 100%;
+}
+#banner {
+    margin: 0 auto;
+    text-align: left;
+    width: 940px;
+    height: 600px;
+    margin-bottom: 20px;
+    position: relative;
+    background: url("cieye.jpg") repeat scroll 0 0 transparent;
+    -moz-border-radius: 10px 10px 10px 10px;
+    display: block;
+    outline: medium none;
+    text-decoration: none;
+}
 #landscapelist {
+    padding: 20px 0 0 0;
     display: table;
     margin: 0 auto;
-    width: 50%;
+    width: 40%;
 }
 #landscapelist ul {
     margin: 0;
@@ -33,15 +52,15 @@ body {
     margin: 0 0 3px 0;
 }
 #landscapelist a {
+    font-size: 14px;
     padding: 0px 0px 0px 15px;
     display: block;
     color: #ffffff;
-    opacity:0.2;
     background-color: #000306;
+    opacity: 0.2;
     text-decoration: none;
 }
 #landscapelist a:hover {
-    color: #ffffff;
     background: none;
-    opacity:0.6;
+    opacity: 0.6;
 }
