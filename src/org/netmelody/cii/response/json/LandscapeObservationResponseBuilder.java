@@ -10,7 +10,7 @@ import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
 import org.netmelody.cii.witness.Witness;
 import org.netmelody.cii.witness.WitnessProvider;
-import org.simpleframework.http.Query;
+import org.simpleframework.http.Path;
 
 public final class LandscapeObservationResponseBuilder implements JsonResponseBuilder {
 
@@ -23,11 +23,12 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
     }
 
     @Override
-    public JsonResponse buildResponse(Query query, String requestContent) {
+    public JsonResponse buildResponse(Path path, String requestContent) {
         TargetGroup response = new TargetGroup();
         long timeToLive = Long.MAX_VALUE;
         
-        final Landscape landscape = state.landscapeNamed(query.get("landscapeName"));
+        final String[] segments = path.getSegments();
+        final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
         for (Feature feature : landscape.features()) {
             final Witness witness = witnessProvider.witnessFor(feature);
             response = response.add(witness.statusOf(feature));

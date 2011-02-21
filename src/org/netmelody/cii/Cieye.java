@@ -15,7 +15,7 @@ import org.netmelody.cii.response.json.LandscapeResponseBuilder;
 import org.netmelody.cii.witness.DefaultWitnessProvider;
 import org.netmelody.cii.witness.WitnessProvider;
 import org.simpleframework.http.Address;
-import org.simpleframework.http.Query;
+import org.simpleframework.http.Path;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceContainer;
@@ -66,7 +66,7 @@ public final class Cieye {
             
             return new JsonResponseBuilder() {
                 @Override
-                public JsonResponse buildResponse(Query query, String requestContent) {
+                public JsonResponse buildResponse(Path path, String requestContent) {
                     return new JsonResponse("");
                 }
             };

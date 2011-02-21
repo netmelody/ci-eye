@@ -1,9 +1,7 @@
 package org.netmelody.cii.response;
 
-import org.simpleframework.http.Query;
-
+import org.simpleframework.http.Path;
 
 public interface JsonResponseBuilder {
-    
-    JsonResponse buildResponse(Query query, String requestContent);
+    JsonResponse buildResponse(Path path, String requestContent);
 }

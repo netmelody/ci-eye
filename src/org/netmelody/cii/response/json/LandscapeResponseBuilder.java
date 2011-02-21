@@ -3,7 +3,7 @@ package org.netmelody.cii.response.json;
 import org.netmelody.cii.persistence.State;
 import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
-import org.simpleframework.http.Query;
+import org.simpleframework.http.Path;
 
 public final class LandscapeResponseBuilder implements JsonResponseBuilder {
 
@@ -14,8 +14,9 @@ public final class LandscapeResponseBuilder implements JsonResponseBuilder {
     }
 
     @Override
-    public JsonResponse buildResponse(Query query, String requestContent) {
-        return new JsonResponse(state.landscapes().landscapeNamed(query.get("name")));
+    public JsonResponse buildResponse(Path path, String requestContent) {
+        final String[] segments = path.getSegments();
+        return new JsonResponse(state.landscapeNamed(segments[segments.length - 1]));
     }
 
 }

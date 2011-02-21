@@ -31,7 +31,7 @@ body {
     height: 600px;
     margin-bottom: 20px;
     position: relative;
-    background: url("cieye.jpg") repeat scroll 0 0 transparent;
+    background: url("/cieye.jpg") repeat scroll 0 0 transparent;
     -moz-border-radius: 10px 10px 10px 10px;
     display: block;
     outline: medium none;
