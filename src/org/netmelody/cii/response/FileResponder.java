@@ -17,7 +17,7 @@ public final class FileResponder implements Resource {
     private final String extension;
 
     public FileResponder(Path path) {
-        this.name = defaultString(path.getName(), "cieye.html");
+        this.name = defaultString(path.getName(), (path.getSegments().length <= 1) ? "welcome.html" : "cieye.html");
         this.extension = defaultString(path.getExtension(), "html");
         System.out.println(path.getPath());
     }
