@@ -29,8 +29,8 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
     initialise();
     
     return {
-        updateFrom: refresh,
-        getContent: function() { return buildDiv; }
+        "updateFrom": refresh,
+        "getContent": function() { return buildDiv; }
     };
 };
 
@@ -85,8 +85,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     initialise();
     
     return {
-        updateFrom: refresh,
-        getContent: function() { return targetDiv; }
+        "updateFrom": refresh,
+        "getContent": function() { return targetDiv; }
     };
 };
 
@@ -118,42 +118,57 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     }
     
     return {
-        updateFrom: refresh,
-        getContent: function() { return radiatorDiv; }
+        "updateFrom": refresh,
+        "getContent": function() { return radiatorDiv; }
     };
 };
 
-ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, repeatingTaskProvider) {
-    var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget(),
-        timeoutProtector;
+ORG.NETMELODY.CIEYE.scheduler = function(window) {
+    var protector;
     
-    function frozen() {
-        repeatingTaskProvider.location.reload();
-    }
-        
-    function refresh() {
-        if (!timeoutProtector) {
-            timeoutProtector = repeatingTaskProvider.setTimeout(frozen, 30000);
+    function guard(timeout) {
+        if (!protector) {
+            protector = window.setTimeout(window.reload, timeout);
         }
-        $.getJSON('landscapeobservation.json', { landscapeName: 'Ci-eye Demo' }, function(targetList) {
-            repeatingTaskProvider.clearTimeout(timeoutProtector);
-            timeoutProtector = null;
+    }
+    
+    function relax() {
+        if (!protector) {
+            window.clearTimeout(protector);
+            protector = null;
+        }
+    }
+    
+    return {
+        "repeat": window.setInterval,
+        "guard": guard,
+        "relax": relax
+    };
+};
+
+ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
+    var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget();
+    
+    function refresh() {
+        scheduler.guard(30000);
+        $.getJSON('landscapeobservation.json', function(targetList) {
+            scheduler.relax();
             radiatorWidget.updateFrom(targetList);
         });
     }
     
     function startup() {
         radiatorDiv.append(radiatorWidget.getContent());
-        
         refresh();
-        repeatingTaskProvider.setInterval(refresh, 1000);
+        scheduler.repeat(refresh, 2000);
     }
     
     return {
-        start: startup
+        "start": startup
     };
 };
 
 $(document).ready(function() {
-    ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), window).start();
+    var scheduler = ORG.NETMELODY.CIEYE.scheduler(window);
+    ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), scheduler).start();
 });
