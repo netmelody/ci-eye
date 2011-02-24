@@ -56,11 +56,16 @@ public final class TeamCityWitness implements Witness {
             return new TargetGroup();
         }
         
-        final Project project = filter(projects(), new Predicate<Project>() {
+        Collection<Project> projects = filter(projects(), new Predicate<Project>() {
             @Override public boolean apply(Project project) {
                 return project.name.startsWith(feature.name());
             }
-        }).iterator().next();
+        });
+        if (projects.isEmpty()) {
+            return new TargetGroup();
+        }
+        
+        final Project project = projects.iterator().next();
         
         final Collection<Target> targets = transform(buildTypesFor(project), new Function<BuildType, Target>() {
             @Override public Target apply(BuildType buildType) {

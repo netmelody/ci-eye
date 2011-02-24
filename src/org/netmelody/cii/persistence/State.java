@@ -6,17 +6,10 @@ import static org.netmelody.cii.domain.CiServerType.JENKINS;
 import static org.netmelody.cii.domain.CiServerType.TEAMCITY;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Landscape;
 import org.netmelody.cii.domain.LandscapeGroup;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public final class State {
 
@@ -38,23 +31,19 @@ public final class State {
         final File settingsDir = new File(new File(userHome), ".ci-eye");
         settingsDir.mkdir();
         
-        final File viewsFile = new File(settingsDir, "views.json");
-        final File picturesFile = new File(settingsDir, "pictures.json");
-        try {
-            viewsFile.createNewFile();
-            picturesFile.createNewFile();
-            
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(landscapes);
-            Writer out = new OutputStreamWriter(new FileOutputStream(viewsFile));
-            out.write(jsonOutput);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final File viewsFile = new File(settingsDir, "views.txt");
+        landscapes = ViewsRepository.readLandscapesFrom(viewsFile);
         
-        final File picturesDir = new File(settingsDir, "pictures");
-        picturesDir.mkdir();
+//        final File picturesFile = new File(settingsDir, "pictures.json");
+//        try {
+//            viewsFile.createNewFile();
+//            picturesFile.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        
+//        final File picturesDir = new File(settingsDir, "pictures");
+//        picturesDir.mkdir();
     }
     
     
