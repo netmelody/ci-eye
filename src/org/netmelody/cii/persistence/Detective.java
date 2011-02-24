@@ -14,7 +14,7 @@ public final class Detective {
 
     public Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
-    public Detective() {
+    private Detective() {
         registerUser("Ryan Alexander", "http://teamcity-server:8111/img/staffpics/ryan.jpg", "ralexander", "ryan");
         registerUser("Graham Allan", "http://teamcity-server:8111/img/staffpics/graham.jpg", "gallan", "graham");
         registerUser("Andrew Booker", "http://teamcity-server:8111/img/staffpics/andyb.jpg", "andrew", "abooker", "andrewb", "andyb");
@@ -29,6 +29,7 @@ public final class Detective {
     }
 
     public Detective(File picturesFile) {
+        this();
     }
 
     private void registerUser(String name, String pictureUrl, String... keywords) {

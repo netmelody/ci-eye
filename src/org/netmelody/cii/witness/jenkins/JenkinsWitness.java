@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.TargetGroup;
+import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
 import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsDetails;
 import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsUserDetails;
@@ -21,9 +22,9 @@ public final class JenkinsWitness implements Witness {
     private final JenkinsCommunicator communicator;
     private final ViewAnalyser viewAnalsyer;
 
-    public JenkinsWitness(String endpoint) {
+    public JenkinsWitness(String endpoint, Detective detective) {
         this.communicator = new JenkinsCommunicator(endpoint);
-        this.viewAnalsyer = new ViewAnalyser(communicator);
+        this.viewAnalsyer = new ViewAnalyser(communicator, detective);
     }
 
     @Override

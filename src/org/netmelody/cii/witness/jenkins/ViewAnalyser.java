@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
+import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
 
@@ -17,9 +18,11 @@ public class ViewAnalyser {
 
     private final JenkinsCommunicator communicator;
     private final Map<String, JobAnalyser> analyserMap = new HashMap<String, JobAnalyser>();
+    private final Detective detective;
     
-    public ViewAnalyser(JenkinsCommunicator communicator) {
+    public ViewAnalyser(JenkinsCommunicator communicator, Detective detective) {
         this.communicator = communicator;
+        this.detective = detective;
     }
     
     public Collection<Target> analyse(View viewDigest) {
@@ -41,7 +44,7 @@ public class ViewAnalyser {
         }
         
         if (!analyserMap.containsKey(jobDigest.url)) {
-            analyserMap.put(jobDigest.url, new JobAnalyser(communicator, jobDigest.url));
+            analyserMap.put(jobDigest.url, new JobAnalyser(communicator, jobDigest.url, detective));
         }
         return analyserMap.get(jobDigest.url).analyse();
     }

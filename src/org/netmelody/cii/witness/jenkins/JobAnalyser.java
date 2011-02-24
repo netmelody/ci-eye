@@ -24,10 +24,12 @@ public class JobAnalyser {
     private final JenkinsCommunicator communicator;
     private final String jobEndpoint;
     private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
+    private final Detective detective;
 
-    public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint) {
+    public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, Detective detective) {
         this.communicator = communicator;
         this.jobEndpoint = jobEndpoint;
+        this.detective = detective;
     }
     
     public Target analyse() {
@@ -65,7 +67,6 @@ public class JobAnalyser {
             return new ArrayList<Sponsor>();
         }
         
-        final Detective detective = new Detective();
         final List<Sponsor> sponsors = detective.sponsorsOf(changeTextOf(buildData));
         
         if (!sponsors.isEmpty()) {

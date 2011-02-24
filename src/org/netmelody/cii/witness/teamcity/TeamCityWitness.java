@@ -38,17 +38,13 @@ public final class TeamCityWitness implements Witness {
     private final Gson json = new GsonBuilder().create();
     private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
+    private final Detective detective;
 
-    public TeamCityWitness(String endpoint) {
+    public TeamCityWitness(String endpoint, Detective detective) {
         this.endpoint = endpoint;
+        this.detective = detective;
     }
 
-    public static void main(String[] args) {
-        final Feature feature = new Feature("HIP - Trunk", "http://teamcity-server:8111");
-        final TeamCityWitness witness = new TeamCityWitness(feature.endpoint());
-        witness.statusOf(feature);
-    }
-    
     @Override
     public TargetGroup statusOf(final Feature feature) {
         restRequester.makeRequest(endpoint + "/guestAuth/");
@@ -111,7 +107,7 @@ public final class TeamCityWitness implements Witness {
     }
     
     private List<Sponsor> sponsorsOf(BuildDetail build) {
-        return new Detective().sponsorsOf(analyseChanges(build));
+        return detective.sponsorsOf(analyseChanges(build));
     }
 
     private String analyseChanges(BuildDetail build) {

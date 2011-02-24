@@ -35,7 +35,7 @@ public final class Cieye {
 
     private static final class CiEyeResourceEngine implements ResourceEngine {
         private final State state = new State();
-        private final WitnessProvider witnessProvider = new DefaultWitnessProvider();
+        private final WitnessProvider witnessProvider = new DefaultWitnessProvider(state);
 
         @Override
         public Resource resolve(Address target) {
