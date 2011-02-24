@@ -51,4 +51,8 @@ public final class SettingsInitialiser {
     public File viewsFile() {
         return viewsFile;
     }
+
+    public File picturesFile() {
+        return picturesFile;
+    }
 }

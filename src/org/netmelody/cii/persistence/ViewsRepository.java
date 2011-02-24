@@ -18,13 +18,19 @@ public final class ViewsRepository {
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
     
-    public static LandscapeGroup readLandscapesFrom(File file) {
-        if (!file.canRead()) {
+    private final File viewsFile;
+    
+    public ViewsRepository(File viewsFile) {
+        this.viewsFile = viewsFile;
+    }
+    
+    public LandscapeGroup landscapes() {
+        if (!viewsFile.canRead()) {
             return LandscapeGroup.demo();
         }
         
         try {
-            final List<String> content = FileUtils.readLines(file);
+            final List<String> content = FileUtils.readLines(viewsFile);
             return extractLandscapeFrom(content);
         } catch (IOException e) {
             e.printStackTrace();

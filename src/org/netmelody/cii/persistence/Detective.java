@@ -1,5 +1,6 @@
 package org.netmelody.cii.persistence;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +26,9 @@ public final class Detective {
         registerUser("Tony Tsui", "http://teamcity-server:8111/img/staffpics/tony.jpg", "ttsui", "tony");
         registerUser("Tom Westmacott", "http://teamcity-server:8111/img/staffpics/tomw.jpg", "tomw", "twestmacott");
         registerUser("Wendy Yip", "http://teamcity-server:8111/img/staffpics/wendy.jpg", "wendy", "wyip");
+    }
+
+    public Detective(File picturesFile) {
     }
 
     private void registerUser(String name, String pictureUrl, String... keywords) {

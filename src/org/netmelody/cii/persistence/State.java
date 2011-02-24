@@ -5,11 +5,13 @@ import org.netmelody.cii.domain.LandscapeGroup;
 
 public final class State {
 
+    private final Detective detective;
     private LandscapeGroup landscapes;
 
     public State() {
         SettingsInitialiser settings = new SettingsInitialiser();
-        landscapes = ViewsRepository.readLandscapesFrom(settings.viewsFile());
+        this.landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
+        this.detective = new Detective(settings.picturesFile());
     }
     
     public LandscapeGroup landscapes() {
@@ -17,7 +19,7 @@ public final class State {
     }
     
     public Detective detective() {
-        return new Detective();
+        return this.detective;
     }
 
     public void addLandscape(Landscape landscape) {
