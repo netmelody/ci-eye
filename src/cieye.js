@@ -6,7 +6,7 @@ ORG.NETMELODY.CIEYE = {};
 ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
     var buildDiv = $('<div></div>').addClass('progress-bar'),
         barDiv   = $('<div></div>');
-        
+    
     function updateProgress(percent) {
         barDiv.attr('style', 'width: ' + percent + '%');
     }
@@ -35,7 +35,8 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 };
 
 ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
-    var currentTargetJson = { builds:[] },
+    var MAX_IMAGE_SIZE = 90,
+        currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
         sponsorDiv = $('<div></div>').addClass('sponsors'),
         buildsDiv = $('<div></div>');
@@ -45,7 +46,22 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             return (a.name === b.name) ? 0 : (a.name < b.name) ? -1 : 1;
         });
     }
+    
+    function resizeImage() {
+        var image = $(this),
+            width = image.width(),
+            height = image.height();
         
+        if (width > height) {
+            image.height(height * MAX_IMAGE_SIZE / width);
+            image.width(MAX_IMAGE_SIZE);
+        }
+        else {
+            image.width(width * MAX_IMAGE_SIZE / height);
+            image.height(MAX_IMAGE_SIZE);
+        }
+    }
+    
     function refresh(newTargetJson) {
         var lastTargetJson = currentTargetJson;
         
@@ -67,7 +83,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             return;
         }
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
-            sponsorDiv.append($('<img></img>').attr('src', sponsorJson.picture));
+            var img = $('<img></img>').attr('src', sponsorJson.picture).load(resizeImage);
+            sponsorDiv.append(img);
         });
     }
     
