@@ -8,6 +8,7 @@ import org.netmelody.cii.response.FileResponder;
 import org.netmelody.cii.response.JsonResponder;
 import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
+import org.netmelody.cii.response.PictureResponder;
 import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
@@ -41,6 +42,9 @@ public final class Cieye {
         public Resource resolve(Address target) {
             if ("json".equals(target.getPath().getExtension())) {
                 return new JsonResponder(jsonResponseBuilderFor(target));
+            }
+            if ("pictures".equals(target.getPath().getPath(0, 1))) {
+                return new PictureResponder(state, target.getPath());
             }
             return new FileResponder(target.getPath());
         }

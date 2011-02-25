@@ -55,4 +55,8 @@ public final class SettingsInitialiser {
     public File picturesFile() {
         return picturesFile;
     }
+
+    public File pictureNamed(String name) {
+        return new File(picturesDir, name);
+    }
 }

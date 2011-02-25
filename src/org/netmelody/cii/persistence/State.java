@@ -1,19 +1,16 @@
 package org.netmelody.cii.persistence;
 
+import java.io.File;
+
 import org.netmelody.cii.domain.Landscape;
 import org.netmelody.cii.domain.LandscapeGroup;
 
 public final class State {
 
-    private final Detective detective;
-    private LandscapeGroup landscapes;
+    private final SettingsInitialiser settings = new SettingsInitialiser();
+    private final Detective detective = new Detective(settings.picturesFile());
+    private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
 
-    public State() {
-        SettingsInitialiser settings = new SettingsInitialiser();
-        this.landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
-        this.detective = new Detective(settings.picturesFile());
-    }
-    
     public LandscapeGroup landscapes() {
         return this.landscapes;
     }
@@ -28,5 +25,9 @@ public final class State {
 
     public Landscape landscapeNamed(String name) {
         return landscapes.landscapeNamed(name);
+    }
+
+    public File getPictureResource(String name) {
+        return settings.pictureNamed(name);
     }
 }

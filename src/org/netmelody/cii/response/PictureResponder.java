@@ -1,48 +1,51 @@
 package org.netmelody.cii.response;
 
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
+import org.netmelody.cii.persistence.State;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
 
-public final class FileResponder implements Resource {
+public final class PictureResponder implements Resource {
 
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
     
     private final String name;
     private final String extension;
+    private final State state;
 
-    public FileResponder(Path path) {
-        this.name = defaultString(path.getName(), (path.getSegments().length <= 1) ? "welcome.html" : "cieye.html");
-        this.extension = defaultString(path.getExtension(), "html");
+    public PictureResponder(State state, Path path) {
+        this.state = state;
+        this.name = defaultString(path.getName(), "vlad.jpg");
+        this.extension = defaultString(path.getExtension(), "jpg");
         System.out.println(path.getPath());
     }
 
     @Override
     public void handle(Request request, Response response) {
-        InputStream input = null;
+        FileReader picture = null;
         OutputStream body = null;
         try {
-            input = getClass().getResourceAsStream("/" + name);
+            picture = new FileReader(state.getPictureResource(name));
             body = response.getOutputStream();
             long time = System.currentTimeMillis();
             response.set("Content-Type", contentTypeOf(extension));
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
-            IOUtils.copy(input, body);
+            IOUtils.copy(picture, body);
         }
         catch (IOException e) {
             response.setCode(500);
         }
         finally {
-            IOUtils.closeQuietly(input);
+            IOUtils.closeQuietly(picture);
             IOUtils.closeQuietly(body);
         }
     }
