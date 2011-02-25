@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Ci-Eye" default="build" basedir=".">
+
+  <path id="project.compile.class.path">
+    <fileset dir="vendor/lib" includes="**/*.jar"/>
+  </path>
+
+  <target name="javac" description="Compile java source to bytecode">
+    <mkdir dir="build"/>
+    <mkdir dir="build/main"/>
+    <javac srcdir="src" includes="**" encoding="utf-8"
+        destdir="build/main"
+        source="1.6" target="1.6" nowarn="true"
+        debug="true" debuglevel="lines,vars,source">
+      <classpath refid="project.compile.class.path"/>
+    </javac>
+    
+    <copy todir="build/main">
+      <fileset dir="src" excludes="**/*.java"/>
+    </copy>
+  </target>
+
+  <target name="build" depends="javac" description="Build this project" />
+
+  <target name="clean" description="Cleans this project">
+    <delete dir="build" failonerror="false" />
+  </target>
+
+  <target name="jar" depends="clean,build" description="Create a jar file">
+    <jar destfile="build/ci-eye.jar">
+      <fileset dir="build/main"/>
+      <zipgroupfileset dir="vendor/lib" includes="*.jar"/>
+
+      <manifest>
+        <attribute name="Main-Class" value="org.netmelody.cii.Cieye"/>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Implementation-Vendor" value="Netmelody"/>
+        <attribute name="Implementation-Title" value="Ci Eye"/>
+        <attribute name="Implementation-Version" value="0.0.1beta1"/>
+      </manifest>
+    </jar>
+  </target>
+</project>
