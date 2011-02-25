@@ -140,24 +140,28 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     };
 };
 
-ORG.NETMELODY.CIEYE.scheduler = function(window) {
+ORG.NETMELODY.CIEYE.scheduler = function(browser) {
     var protector;
+    
+    function repeat(callback, interval) {
+        browser.setInterval(callback, interval);
+    }
     
     function guard(timeout) {
         if (!protector) {
-            protector = window.setTimeout(window.location.reload, timeout);
+            protector = browser.setTimeout(browser.location.reload, timeout);
         }
     }
     
     function relax() {
         if (!protector) {
-            window.clearTimeout(protector);
+            browser.clearTimeout(protector);
             protector = null;
         }
     }
     
     return {
-        "repeat": window.setInterval,
+        "repeat": repeat,
         "guard": guard,
         "relax": relax
     };
