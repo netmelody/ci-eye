@@ -39,7 +39,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
         sponsorDiv = $('<div></div>').addClass('sponsors'),
-        buildsDiv = $('<div></div>');
+        buildsDiv = $('<div></div>'),
+        sponsorImages = {};
     
     function sortedSponsors(unsortedSponsors) {
         return unsortedSponsors.sort(function(a, b) {
@@ -60,7 +61,6 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             image.width(width * MAX_IMAGE_SIZE / height);
             image.height(MAX_IMAGE_SIZE);
         }
-        image.show();
     }
     
     function refresh(newTargetJson) {
@@ -79,14 +79,16 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
         });
         
-        sponsorDiv.empty();
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
+            sponsorDiv.empty();
             return;
         }
+        
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
-            var img = $('<img></img>').attr('src', sponsorJson.picture).load(resizeImage);
-            img.css("display", "none");
-            sponsorDiv.append(img);
+            if (!sponsorImages[sponsorJson.picture]) {
+                sponsorImages[sponsorJson.picture] = $('<img></img>').attr({ 'src': sponsorJson.picture, 'title': sponsorJson.name }).load(resizeImage);
+            }
+            sponsorDiv.append(sponsorImages[sponsorJson.picture]);
         });
     }
     
