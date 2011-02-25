@@ -60,6 +60,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             image.width(width * MAX_IMAGE_SIZE / height);
             image.height(MAX_IMAGE_SIZE);
         }
+        image.show();
     }
     
     function refresh(newTargetJson) {
@@ -84,6 +85,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         }
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
             var img = $('<img></img>').attr('src', sponsorJson.picture).load(resizeImage);
+            img.css("display", "none");
             sponsorDiv.append(img);
         });
     }

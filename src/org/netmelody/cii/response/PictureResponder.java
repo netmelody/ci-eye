@@ -1,5 +1,6 @@
 package org.netmelody.cii.response;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,12 +38,13 @@ public final class PictureResponder implements Resource {
         OutputStream body = null;
         try {
             body = response.getOutputStream();
-            picture = new FileInputStream(state.getPictureResource(name));
+            File file = state.getPictureResource(name);
+            picture = new FileInputStream(file);
             long time = System.currentTimeMillis();
             response.set("Content-Type", contentTypeOf(extension));
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
             response.setDate("Date", time);
-            response.setDate("Last-Modified", time);
+            response.setDate("Last-Modified", file.lastModified());
             IOUtils.copy(picture, body);
         }
         catch (IOException e) {
