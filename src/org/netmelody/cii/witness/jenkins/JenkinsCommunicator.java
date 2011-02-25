@@ -16,7 +16,7 @@ public class JenkinsCommunicator {
     }
     
     public <T> T makeJenkinsRestCallWithSuffix(String urlSuffix, Class<T> type) {
-        return makeJenkinsRestCall(endpoint + (urlSuffix.isEmpty() ? "" : ("/" + urlSuffix)), type);
+        return makeJenkinsRestCall(endpoint + ((urlSuffix.length() == 0) ? "" : ("/" + urlSuffix)), type);
     }
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {

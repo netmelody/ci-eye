@@ -51,7 +51,7 @@ public final class ViewsRepository {
         for (String line : content) {
             Matcher landscapeMatcher = LANDSCAPE_NAME_REGEX.matcher(line);
             if (landscapeMatcher.matches()) {
-                if (!landscapeName.isEmpty()) {
+                if (landscapeName.length() > 0) {
                     result = result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
                 }
                 landscapeName = landscapeMatcher.group(1);
@@ -65,7 +65,7 @@ public final class ViewsRepository {
             }
         }
         
-        if (!landscapeName.isEmpty()) {
+        if (landscapeName.length() > 0) {
             result = result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
         }
         

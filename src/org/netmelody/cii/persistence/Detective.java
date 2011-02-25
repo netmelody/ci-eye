@@ -48,7 +48,7 @@ public final class Detective {
         for (String line : content) {
             Matcher pictureFilenameMatcher = PICTURE_FILENAME_REGEX.matcher(line);
             if (pictureFilenameMatcher.matches()) {
-                if (!pictureFilename.isEmpty() && !aliases.isEmpty()) {
+                if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
                     registerUser(aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
                 }
                 pictureFilename = pictureFilenameMatcher.group(1);
@@ -56,12 +56,12 @@ public final class Detective {
                 continue;
             }
             
-            if (!line.isEmpty()) {
+            if (line.trim().length() > 0) {
                 aliases.add(line);
             }
         }
         
-        if (!pictureFilename.isEmpty() && !aliases.isEmpty()) {
+        if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
             registerUser(aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
         }
     }

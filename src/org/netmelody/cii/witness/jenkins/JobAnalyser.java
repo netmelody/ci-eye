@@ -54,7 +54,7 @@ public class JobAnalyser {
     }
     
     private List<Sponsor> sponsorsOf(String buildUrl) {
-        if (null == buildUrl || buildUrl.isEmpty()) {
+        if (null == buildUrl || buildUrl.length() == 0) {
             return new ArrayList<Sponsor>();
         }
         

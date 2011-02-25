@@ -62,7 +62,7 @@ public final class PictureResponder implements Resource {
     }
     
     private static String defaultString(String value, String defaultValue) {
-        return (null == value || value.isEmpty()) ? defaultValue : value;
+        return (null == value || value.length() == 0) ? defaultValue : value;
     }
 }
 
