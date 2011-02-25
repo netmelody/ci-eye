@@ -128,7 +128,7 @@ ORG.NETMELODY.CIEYE.scheduler = function(window) {
     
     function guard(timeout) {
         if (!protector) {
-            protector = window.setTimeout(window.reload, timeout);
+            protector = window.setTimeout(window.location.reload, timeout);
         }
     }
     

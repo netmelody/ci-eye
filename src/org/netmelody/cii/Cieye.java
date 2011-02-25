@@ -43,7 +43,7 @@ public final class Cieye {
             if ("json".equals(target.getPath().getExtension())) {
                 return new JsonResponder(jsonResponseBuilderFor(target));
             }
-            if ("pictures".equals(target.getPath().getPath(0, 1))) {
+            if ((target.getPath().getSegments().length > 0) && "pictures".equals(target.getPath().getPath(0, 1))) {
                 return new PictureResponder(state, target.getPath());
             }
             return new FileResponder(target.getPath());
