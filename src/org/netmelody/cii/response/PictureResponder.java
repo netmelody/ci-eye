@@ -1,13 +1,15 @@
 package org.netmelody.cii.response;
 
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.persistence.State;
+import org.netmelody.cii.persistence.ViewsRepository;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -15,6 +17,7 @@ import org.simpleframework.http.resource.Resource;
 
 public final class PictureResponder implements Resource {
 
+    private static final Log LOG = LogFactory.getLog(ViewsRepository.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
     
     private final String name;
@@ -25,7 +28,7 @@ public final class PictureResponder implements Resource {
         this.state = state;
         this.name = defaultString(path.getName(), "vlad.jpg");
         this.extension = defaultString(path.getExtension(), "jpg");
-        System.out.println(path.getPath());
+        LOG.info(path.getPath());
     }
 
     @Override

@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -13,6 +15,7 @@ import org.simpleframework.http.resource.Resource;
 
 public final class FileResponder implements Resource {
 
+    private static final Log LOG = LogFactory.getLog(FileResponder.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
     
     private final String name;
@@ -21,7 +24,7 @@ public final class FileResponder implements Resource {
     public FileResponder(Path path) {
         this.name = defaultString(path.getName(), (path.getSegments().length <= 1) ? "welcome.html" : "cieye.html");
         this.extension = defaultString(path.getExtension(), "html");
-        System.out.println(path.getPath());
+        LOG.info(path.getPath());
     }
 
     @Override

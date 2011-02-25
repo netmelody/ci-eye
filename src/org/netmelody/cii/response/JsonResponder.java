@@ -2,12 +2,16 @@ package org.netmelody.cii.response;
 
 import java.io.PrintStream;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
 
 public final class JsonResponder implements Resource {
 
+    private static final Log LOG = LogFactory.getLog(JsonResponder.class);
+    
     private final JsonTranslator json = new JsonTranslator();
     private final JsonResponseBuilder responseBuilder;
 
@@ -17,7 +21,7 @@ public final class JsonResponder implements Resource {
 
     @Override
     public final void handle(Request request, Response response) {
-        System.out.println(request.getAddress().getPath());
+        LOG.info(request.getAddress().getPath());
         
         PrintStream body;
         try {
@@ -33,7 +37,7 @@ public final class JsonResponder implements Resource {
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("failed to respond to json request", e);
             response.setCode(500);
         }
     }

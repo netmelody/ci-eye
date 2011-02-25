@@ -12,10 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.domain.Sponsor;
 
 public final class Detective {
     
+    private static final Log LOG = LogFactory.getLog(Detective.class);
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     
     public Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
@@ -34,7 +37,7 @@ public final class Detective {
             final List<String> content = FileUtils.readLines(picturesFile);
             extractPicuresFrom(content);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("failed to read picture settings file", e);
         }
     }
 

@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.domain.CiServerType;
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.Landscape;
@@ -15,6 +17,7 @@ import org.netmelody.cii.domain.LandscapeGroup;
 
 public final class ViewsRepository {
 
+    private static final Log LOG = LogFactory.getLog(ViewsRepository.class);
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
     
@@ -33,7 +36,7 @@ public final class ViewsRepository {
             final List<String> content = FileUtils.readLines(viewsFile);
             return extractLandscapeFrom(content);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("failed to read view settings file", e);
         }
         
         return LandscapeGroup.demo();
