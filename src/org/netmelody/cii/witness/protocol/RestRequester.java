@@ -28,14 +28,14 @@ public class RestRequester {
         catch (HttpResponseException e) {
             if (e.getStatusCode() == 404) {
                 LOG.info(url + " - 404 Not Found", e);
+                return "";
             }
             LOG.error(url, e);
-            return "";
         }
         catch (Exception e) {
             LOG.error(url, e);
-            return "";
         }
+        return "";
     }
 
     public void shutdown() {
