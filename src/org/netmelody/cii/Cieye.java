@@ -27,6 +27,7 @@ import org.simpleframework.transport.connect.SocketConnection;
 public final class Cieye {
     
     public static void main(String[] list) throws Exception {
+        System.setProperty("java.util.logging.config.file", "logging.properties");
         Container container = new ResourceContainer(new CiEyeResourceEngine());
         Connection connection = new SocketConnection(container);
         SocketAddress address = new InetSocketAddress(8888);

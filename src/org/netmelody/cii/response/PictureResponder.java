@@ -36,8 +36,8 @@ public final class PictureResponder implements Resource {
         FileInputStream picture = null;
         OutputStream body = null;
         try {
-            picture = new FileInputStream(state.getPictureResource(name));
             body = response.getOutputStream();
+            picture = new FileInputStream(state.getPictureResource(name));
             long time = System.currentTimeMillis();
             response.set("Content-Type", contentTypeOf(extension));
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
@@ -46,6 +46,7 @@ public final class PictureResponder implements Resource {
             IOUtils.copy(picture, body);
         }
         catch (IOException e) {
+            LOG.error("Failed to get picture " + this.name, e);
             response.setCode(500);
         }
         finally {
