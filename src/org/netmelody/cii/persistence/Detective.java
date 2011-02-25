@@ -46,7 +46,7 @@ public final class Detective {
             Matcher pictureFilenameMatcher = PICTURE_FILENAME_REGEX.matcher(line);
             if (pictureFilenameMatcher.matches()) {
                 if (!pictureFilename.isEmpty() && !aliases.isEmpty()) {
-                    registerUser(aliases.get(0), pictureFilename, aliases.toArray(new String[aliases.size()]));
+                    registerUser(aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
                 }
                 pictureFilename = pictureFilenameMatcher.group(1);
                 aliases.clear();

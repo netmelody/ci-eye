@@ -1,5 +1,6 @@
 package org.netmelody.cii.response;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,10 +30,10 @@ public final class PictureResponder implements Resource {
 
     @Override
     public void handle(Request request, Response response) {
-        FileReader picture = null;
+        FileInputStream picture = null;
         OutputStream body = null;
         try {
-            picture = new FileReader(state.getPictureResource(name));
+            picture = new FileInputStream(state.getPictureResource(name));
             body = response.getOutputStream();
             long time = System.currentTimeMillis();
             response.set("Content-Type", contentTypeOf(extension));
