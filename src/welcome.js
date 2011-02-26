@@ -38,6 +38,28 @@ ORG.NETMELODY.CIEYE.newLandscapeList = function(landscapeListDiv) {
     };
 };
 
+ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
+    var fadeIn, fadeOut;
+
+    fadeIn = function() {
+        content.fadeIn();
+        trigger.unbind('click');
+        trigger.click(fadeOut);
+    }
+    
+    fadeOut = function fadeOut() {
+        content.fadeOut();
+        trigger.unbind('click');
+        trigger.click(fadeIn);
+    }
+
+    fadeOut();
+    content.click(fadeOut);
+    return {
+    };
+};
+
 $(document).ready(function() {
     ORG.NETMELODY.CIEYE.newLandscapeList($('#landscapelist'));
+    ORG.NETMELODY.CIEYE.newPopup($('#help'), $('#helptext'));
 });

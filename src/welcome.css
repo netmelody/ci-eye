@@ -16,7 +16,28 @@ body {
     padding: 10px;
     font-weight: bold;
     font-size: 30px;
-    color: #777777
+    color: #777777;
+}
+#help {
+    float: right;
+    font-size: 10px;
+    color: #777777;
+    cursor: pointer;
+}
+#helptext {
+    display: none;
+    background: #aaaaaa;
+    border: 2px solid #ffffff;
+    opacity: 0.7;
+    font-size: 13px;
+    padding: 10px;
+    position: fixed;
+    z-index: 2;
+    height: 310px;
+    width: 410px;
+    margin-top: 46px;
+    margin-left: 504px;
+    -moz-border-radius: 10px 10px 10px 10px;
 }
 #content {
     clear: both;
@@ -25,11 +46,10 @@ body {
     width: 100%;
 }
 #banner {
-    margin: 0 auto;
+    margin: 0 auto 20px;
     text-align: left;
     width: 940px;
     height: 600px;
-    margin-bottom: 20px;
     position: relative;
     background: url("/cieye.jpg") repeat scroll 0 0 transparent;
     -moz-border-radius: 10px 10px 10px 10px;
