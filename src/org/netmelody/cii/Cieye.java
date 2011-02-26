@@ -9,7 +9,7 @@ import org.simpleframework.http.resource.ResourceContainer;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
-public final class Cieye {
+public final class CiEye {
     
     public static void main(String[] list) throws Exception {
         System.setProperty("java.util.logging.config.file", "logging.properties");
