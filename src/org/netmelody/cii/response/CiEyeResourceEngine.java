@@ -12,9 +12,14 @@ import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceEngine;
 
 public final class CiEyeResourceEngine implements ResourceEngine {
-    private final State state = new State();
-    private final WitnessProvider witnessProvider = new DefaultWitnessProvider(state);
+    private final State state;
+    private final WitnessProvider witnessProvider;
 
+    public CiEyeResourceEngine(State state) {
+        this.state = state;
+        this.witnessProvider = new DefaultWitnessProvider(state);
+    }
+    
     @Override
     public Resource resolve(Address target) {
         if ("json".equals(target.getPath().getExtension())) {

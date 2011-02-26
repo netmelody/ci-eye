@@ -24,10 +24,20 @@ public final class SettingsInitialiser {
         this.picturesDir = new File(homeDir, "pictures");
         
         try {
+            startLogger();
             terraform();
         } catch (IOException e) {
             throw new IllegalStateException("Unable to initialise ci-eye server", e);
         }
+    }
+
+    private void startLogger() throws IOException {
+        final File loggingPropertiesFile = new File(homeDir, "logging.properties");
+        if (!loggingPropertiesFile.exists()) {
+            FileUtils.copyInputStreamToFile(resource("logging.properties.template"), loggingPropertiesFile);
+            new File(homeDir, "logs").mkdir();
+        }
+        System.setProperty("java.util.logging.config.file", loggingPropertiesFile.getCanonicalPath());
     }
 
     private void terraform() throws IOException {

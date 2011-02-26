@@ -1,0 +1,14 @@
+# CI-Eye Logging Configuration File
+
+handlers= java.util.logging.ConsoleHandler
+#handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+
+.level= WARNING
+
+java.util.logging.FileHandler.pattern = %h/.ci-eye/logs/server%u.log
+java.util.logging.FileHandler.limit = 50000
+java.util.logging.FileHandler.count = 3
+java.util.logging.FileHandler.formatter = java.util.logging.XMLFormatter
+
+java.util.logging.ConsoleHandler.level = WARNING
+java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
