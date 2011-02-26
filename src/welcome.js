@@ -70,7 +70,7 @@ ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
         trigger.click(fadeIn);
     }
 
-    fadeOut();
+    trigger.click(fadeIn);
     content.click(fadeOut);
     return {
     };

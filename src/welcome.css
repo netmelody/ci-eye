@@ -22,6 +22,7 @@ body {
     cursor: pointer;
 }
 #helptext {
+    display: none;
     background: #aaaaaa;
     background: rgba(170, 170, 170, 0.7);
     border: 2px solid #ffffff;
