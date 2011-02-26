@@ -1,3 +1,3 @@
-ci-eye is a continuous integration build radiator that talks to many different CI servers through their public APIs, allowing for a single consolidated view regardless of your CI infrastructure.
+CI-Eye is a Continuous Integration build radiator that talks to many different CI servers through their public APIs, allowing for a single consolidated view regardless of your CI infrastructure.
 
-ci-eye runs as a standalone web application, providing a buffer between the radiator clients and CI.
+CI-Eye runs as a standalone web application, providing a buffer between the radiator clients and CI.

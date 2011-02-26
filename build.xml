@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Ci-Eye" default="build" basedir=".">
+<project name="CI-Eye" default="build" basedir=".">
 
     <path id="project.compile.class.path">
         <fileset dir="vendor/lib" includes="**/*.jar"/>
