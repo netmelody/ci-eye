@@ -9,10 +9,8 @@ import org.netmelody.cii.response.JsonResponder;
 import org.netmelody.cii.response.JsonResponse;
 import org.netmelody.cii.response.JsonResponseBuilder;
 import org.netmelody.cii.response.PictureResponder;
-import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
-import org.netmelody.cii.response.json.LandscapeResponseBuilder;
 import org.netmelody.cii.response.json.SettingsLocationResponseBuilder;
 import org.netmelody.cii.witness.DefaultWitnessProvider;
 import org.netmelody.cii.witness.WitnessProvider;
@@ -54,24 +52,16 @@ public final class Cieye {
         private JsonResponseBuilder jsonResponseBuilderFor(Address target) {
             final String name = target.getPath().getName();
             
+            if ("landscapeobservation.json".equals(name)) {
+                return new LandscapeObservationResponseBuilder(state, witnessProvider);
+            }
+            
             if ("landscapelist.json".equals(name)) {
                 return new LandscapeListResponseBuilder(state);
             }
             
-            if ("landscape.json".equals(name)) {
-                return new LandscapeResponseBuilder(state);
-            }
-            
             if ("settingslocation.json".equals(name)) {
                 return new SettingsLocationResponseBuilder(state);
-            }
-            
-            if ("createLandscape.json".equals(name)) {
-                return new CreateLandscapeResponseBuilder(state);
-            }
-            
-            if ("landscapeobservation.json".endsWith(name)) {
-                return new LandscapeObservationResponseBuilder(state, witnessProvider);
             }
             
             return new JsonResponseBuilder() {
