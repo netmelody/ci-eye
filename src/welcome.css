@@ -2,12 +2,9 @@ body {
     background: none repeat scroll 0 0 #333333;
     font-family: verdana,sans-serif;
     line-height: 24px;
-    min-width: 960px;
     margin: 0;
-    padding: 0;
 }
 #header {
-    clear: both;
     margin: 0 auto;
     width: 940px;
 }
@@ -25,7 +22,6 @@ body {
     cursor: pointer;
 }
 #helptext {
-    display: none;
     background: #aaaaaa;
     background: rgba(170, 170, 170, 0.7);
     border: 2px solid #ffffff;
@@ -43,27 +39,19 @@ body {
     background: #aabbbb;
     background: rgba(170, 187, 187, 0.7);
     font-family: monospace;
-    font-size: 1em;
     border: 1px solid #000000;
     padding: 5px;
 }
 #content {
-    clear: both;
-    display: inline;
     float: left;
     width: 100%;
 }
 #banner {
     margin: 0 auto 20px;
-    text-align: left;
     width: 940px;
     height: 600px;
-    position: relative;
     background: url("/cieye.jpg") repeat scroll 0 0 transparent;
     -moz-border-radius: 10px 10px 10px 10px;
-    display: block;
-    outline: medium none;
-    text-decoration: none;
 }
 #landscapelist {
     padding: 20px 0 0 0;
@@ -90,5 +78,4 @@ body {
 }
 #landscapelist a:hover {
     background: none;
-    opacity: 0.6;
 }
