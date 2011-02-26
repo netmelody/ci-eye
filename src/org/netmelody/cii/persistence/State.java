@@ -1,6 +1,7 @@
 package org.netmelody.cii.persistence;
 
 import java.io.File;
+import java.net.InetAddress;
 
 import org.netmelody.cii.domain.Landscape;
 import org.netmelody.cii.domain.LandscapeGroup;
@@ -29,5 +30,19 @@ public final class State {
 
     public File getPictureResource(String name) {
         return settings.pictureNamed(name);
+    }
+
+    public String settingsLocation() {
+        try {
+            return new StringBuilder()
+                            .append(InetAddress.getLocalHost().getHostName())
+                            .append(" (").append(InetAddress.getLocalHost().getHostAddress()).append(")")
+                            .append(" ")
+                            .append(settings.settingsLocation())
+                            .toString();
+        }
+        catch (Exception e) {
+            return "";
+        }
     }
 }

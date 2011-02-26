@@ -59,4 +59,12 @@ public final class SettingsInitialiser {
     public File pictureNamed(String name) {
         return new File(picturesDir, name);
     }
+
+    public String settingsLocation() {
+        try {
+            return homeDir.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to get settings directory", e);
+        }
+    }
 }

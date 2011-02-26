@@ -13,6 +13,7 @@ import org.netmelody.cii.response.json.CreateLandscapeResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeObservationResponseBuilder;
 import org.netmelody.cii.response.json.LandscapeResponseBuilder;
+import org.netmelody.cii.response.json.SettingsLocationResponseBuilder;
 import org.netmelody.cii.witness.DefaultWitnessProvider;
 import org.netmelody.cii.witness.WitnessProvider;
 import org.simpleframework.http.Address;
@@ -59,6 +60,10 @@ public final class Cieye {
             
             if ("landscape.json".equals(name)) {
                 return new LandscapeResponseBuilder(state);
+            }
+            
+            if ("settingslocation.json".equals(name)) {
+                return new SettingsLocationResponseBuilder(state);
             }
             
             if ("createLandscape.json".equals(name)) {

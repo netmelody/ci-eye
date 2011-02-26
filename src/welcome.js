@@ -3,7 +3,7 @@ var ORG = window.ORG ? window.ORG : {};
 ORG.NETMELODY = ORG.NETMELODY ? ORG.NETMELODY : {};
 ORG.NETMELODY.CIEYE = {};
 
-ORG.NETMELODY.CIEYE.newLandscapeList = function(landscapeListDiv) {
+ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
     var landscapeList = $('<ul></ul>');
     
     function displayListItem(landscapeListItemJson) {
@@ -30,11 +30,28 @@ ORG.NETMELODY.CIEYE.newLandscapeList = function(landscapeListDiv) {
         });
     }
     
-
-    landscapeListDiv.append(landscapeList);
     refresh();
-    
     return {
+        "getContent": function() { return landscapeList; }
+    };
+};
+
+ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function(landscapeListDiv) {
+    var settingsLocationSpan = $('<span></span>');
+    
+    function displayLocation(location) {
+        settingsLocationSpan.text(location);
+    }
+    
+    function refresh() {
+        $.getJSON('settingslocation.json', function(locationJson) {
+            displayLocation(locationJson);
+        });
+    }
+    
+    refresh();
+    return {
+        "getContent": function() { return settingsLocationSpan; }
     };
 };
 
@@ -60,6 +77,10 @@ ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
 };
 
 $(document).ready(function() {
-    ORG.NETMELODY.CIEYE.newLandscapeList($('#landscapelist'));
+    var landscapeListWidget = ORG.NETMELODY.CIEYE.newLandscapeListWidget(),
+        settingsLocationWidget = ORG.NETMELODY.CIEYE.newSettingsLocationWidget();
+    
+    $('#landscapelist').append(landscapeListWidget.getContent());
+    $('#settingsDir').append(settingsLocationWidget.getContent());
     ORG.NETMELODY.CIEYE.newPopup($('#help'), $('#helptext'));
 });
