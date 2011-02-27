@@ -17,6 +17,9 @@ public final class TargetGroup {
     }
 
     public TargetGroup add(TargetGroup group) {
+        if (null == group) {
+            return this;
+        }
         final TargetGroup result = new TargetGroup(targets);
         result.targets.addAll(group.targets);
         return result;
