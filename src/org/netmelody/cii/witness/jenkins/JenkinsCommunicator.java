@@ -20,7 +20,8 @@ public class JenkinsCommunicator {
     }
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {
-        return json.fromJson(restRequester.makeRequest(url + "/api/json"), type);
+        final String reqUrl = url + (url.endsWith("/") ? "" : "/") + "api/json";
+        return json.fromJson(restRequester.makeRequest(reqUrl), type);
     }
     
     public String endpoint() {
