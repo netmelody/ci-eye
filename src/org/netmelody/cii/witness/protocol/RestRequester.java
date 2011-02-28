@@ -16,6 +16,7 @@ public class RestRequester {
     private final HttpClient client = new DefaultHttpClient();
 
     public String makeRequest(String url) {
+        LOG.info(url);
         try {
             final HttpGet httpget = new HttpGet(url);
             httpget.setHeader("Accept", "application/json");
