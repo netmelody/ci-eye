@@ -25,11 +25,13 @@ public class JobAnalyser {
     private final String jobEndpoint;
     private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
     private final Detective detective;
+    private final BuildDurationFetcher durationFetcher;
 
     public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, Detective detective) {
         this.communicator = communicator;
         this.jobEndpoint = jobEndpoint;
         this.detective = detective;
+        this.durationFetcher = new BuildDurationFetcher(this.communicator);
     }
     
     public Target analyse() {
@@ -109,21 +111,10 @@ public class JobAnalyser {
         
         final Build currentBuild = fetchBuildData(job.lastBuild.url);
         final Percentage progress = percentageOf(new Date().getTime() - currentBuild.timestamp,
-                                                 lastGoodDurationOf(job));
+                                                 durationFetcher.lastGoodDurationOf(job));
         result.add(buildAt(progress));
         
         return result;
-    }
-
-    private long lastGoodDurationOf(final Job job) {
-        long lastGoodDuration = 300000L;
-        if (!(job.lastStableBuild == null)) {
-            lastGoodDuration = fetchBuildData(job.lastStableBuild.url).duration;
-        }
-        else if (!(job.lastSuccessfulBuild == null)) {
-            lastGoodDuration = fetchBuildData(job.lastSuccessfulBuild.url).duration;
-        }
-        return lastGoodDuration;
     }
 
     private Build fetchBuildData(String buildUrl) {
