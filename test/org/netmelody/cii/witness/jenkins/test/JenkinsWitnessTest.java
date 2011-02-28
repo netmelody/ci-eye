@@ -20,6 +20,7 @@ public class JenkinsWitnessTest {
         final JenkinsWitness witness = new JenkinsWitness("http://ci.jenkins-ci.org", new Detective(new File("")));
         
         TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
+        witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
         
         assertThat(group, is(notNullValue(TargetGroup.class)));
     }
