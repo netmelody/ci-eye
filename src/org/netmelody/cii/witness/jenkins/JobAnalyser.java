@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.netmelody.cii.domain.Percentage;
 import org.netmelody.cii.domain.Sponsor;
+import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Build;
@@ -39,9 +40,15 @@ public class JobAnalyser {
         if (job.lastBuild == null) {
             return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
         }
-        return new Target(job.url, job.name, job.status(), sponsorsOf(job), buildsFor(job));
+        return new Target(job.url, job.name, statusOf(job), sponsorsOf(job), buildsFor(job));
     }
 
+    private Status statusOf(Job job) {
+//        if (!Status.BROKEN.equals(job.status())) {
+            return job.status();
+//        }
+    }
+    
     private List<Sponsor> sponsorsOf(Job job) {
         final List<Sponsor> result = new ArrayList<Sponsor>();
         
@@ -69,7 +76,7 @@ public class JobAnalyser {
             return new ArrayList<Sponsor>();
         }
         
-        final List<Sponsor> sponsors = detective.sponsorsOf(changeTextOf(buildData));
+        final List<Sponsor> sponsors = detective.sponsorsOf(commitMessagesOf(buildData));
         
         if (sponsors.isEmpty()) {
             for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {
@@ -85,7 +92,7 @@ public class JobAnalyser {
         return result;
     }
     
-    private String changeTextOf(Build build) {
+    private String commitMessagesOf(Build build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
         }
