@@ -69,12 +69,10 @@ public class JobAnalyser {
         
         final List<Sponsor> sponsors = detective.sponsorsOf(changeTextOf(buildData));
         
-        if (!sponsors.isEmpty()) {
-            return sponsors;
-        }
-        
-        for (String upstreamBuildUrl :  buildData.upstreamBuildUrls()) {
-            sponsors.addAll(sponsorsOf(communicator.endpoint() + "/" + upstreamBuildUrl));
+        if (sponsors.isEmpty()) {
+            for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {
+                sponsors.addAll(sponsorsOf(communicator.endpoint() + "/" + upstreamBuildUrl));
+            }
         }
         
         final List<Sponsor> result = unmodifiableList(sponsors);
