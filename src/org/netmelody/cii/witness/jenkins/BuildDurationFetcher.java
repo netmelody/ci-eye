@@ -13,7 +13,7 @@ public final class BuildDurationFetcher {
     
     public BuildDurationFetcher(final BuildDetailFetcher detailFetcher) {
         durations = new MapMaker()
-            .maximumSize(100)
+            .maximumSize(10)
             .makeComputingMap(
                 new Function<String, Long>() {
                     public Long apply(String buildUrl) {

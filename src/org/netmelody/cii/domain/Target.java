@@ -16,6 +16,7 @@ public final class Target {
     private final String id;
     private final String name;
     private final Status status;
+    private final long lastStartTime;
     private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
     private final List<Build> builds = new ArrayList<Build>();
     
@@ -32,8 +33,13 @@ public final class Target {
     }
     
     public Target(String id, String name, Status status, List<Build> builds, List<Sponsor> sponsors) {
+        this(id, name, status, 0L, builds, sponsors);
+    }
+    
+    public Target(String id, String name, Status status, long lastStartTime, List<Build> builds, List<Sponsor> sponsors) {
         this.id = id;
         this.name = name;
+        this.lastStartTime = lastStartTime;
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
         this.builds.addAll(builds);
         
@@ -60,6 +66,10 @@ public final class Target {
     
     public Status status() {
         return status;
+    }
+    
+    public long lastStartTime() {
+        return lastStartTime;
     }
     
     public List<Sponsor> sponsors() {

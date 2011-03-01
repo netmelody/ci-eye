@@ -29,6 +29,7 @@ public class JobAnalyser {
     private final Detective detective;
     private final BuildDetailFetcher buildDetailFetcher;
     private final BuildDurationFetcher buildDurationFetcher;
+    private final BuildStartTimeFetcher buildStartTimeFetcher;
 
     public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, Detective detective) {
         this.communicator = communicator;
@@ -36,6 +37,7 @@ public class JobAnalyser {
         this.detective = detective;
         this.buildDetailFetcher = new BuildDetailFetcher(this.communicator);
         this.buildDurationFetcher = new BuildDurationFetcher(this.buildDetailFetcher);
+        this.buildStartTimeFetcher = new BuildStartTimeFetcher(this.buildDetailFetcher);
     }
     
     public Target analyse() {
@@ -43,7 +45,11 @@ public class JobAnalyser {
         if (job.lastBuild == null) {
             return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
         }
-        return new Target(job.url, job.name, statusOf(job), buildsFor(job), sponsorsOf(job));
+        return new Target(job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
+    }
+
+    private long startTimeOf(JobDetail job) {
+        return buildStartTimeFetcher.lastStartTimeOf(job);
     }
 
     private Status statusOf(JobDetail job) {
