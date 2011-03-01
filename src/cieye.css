@@ -1,7 +1,6 @@
 body {
     background-color: #333333;
     color: #ffffff;
-    font-family: arial, sans-serif;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -10,9 +9,9 @@ body {
 #radiator {
     color: #ffff99;
     background-color: #333333;
+    font-family: Verdana, sans-serif;
     font-weight: bold;
-    font-family: Inconsolata, monospace;
-    font-size: 6em;
+    font-size: 5.5em;
 }
 #configuration {
     position: absolute;
