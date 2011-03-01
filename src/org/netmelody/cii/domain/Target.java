@@ -2,7 +2,7 @@ package org.netmelody.cii.domain;
 
 import static com.google.common.collect.Iterators.find;
 import static com.google.common.collect.Iterators.transform;
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,15 +19,19 @@ public final class Target {
     private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
     private final List<Build> builds = new ArrayList<Build>();
     
-    public Target(String id, String name, Status status, Build... builds) {
-        this(id, name, status, new ArrayList<Sponsor>(), builds);
+    public Target(String id, String name, Status status) {
+        this(id, name, status, new ArrayList<Build>(), new ArrayList<Sponsor>());
     }
     
-    public Target(String id, String name, Status status, List<Sponsor> sponsors, Build... builds) {
-        this(id, name, status, sponsors, (null == builds) ? new ArrayList<Build>() : asList(builds));
+    public Target(String id, String name, Status status, List<Sponsor> sponsors) {
+        this(id, name, status, new ArrayList<Build>(), sponsors);
     }
     
-    public Target(String id, String name, Status status, List<Sponsor> sponsors, List<Build> builds) {
+    public Target(String id, String name, Status status, Build build) {
+        this(id, name, status, newArrayList(build), new ArrayList<Sponsor>());
+    }
+    
+    public Target(String id, String name, Status status, List<Build> builds, List<Sponsor> sponsors) {
         this.id = id;
         this.name = name;
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));

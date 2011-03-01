@@ -27,13 +27,15 @@ public class JobAnalyser {
     private final String jobEndpoint;
     private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
     private final Detective detective;
-    private final BuildDurationFetcher durationFetcher;
+    private final BuildDetailFetcher buildDetailFetcher;
+    private final BuildDurationFetcher buildDurationFetcher;
 
     public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, Detective detective) {
         this.communicator = communicator;
         this.jobEndpoint = jobEndpoint;
         this.detective = detective;
-        this.durationFetcher = new BuildDurationFetcher(this.communicator);
+        this.buildDetailFetcher = new BuildDetailFetcher(this.communicator);
+        this.buildDurationFetcher = new BuildDurationFetcher(this.buildDetailFetcher);
     }
     
     public Target analyse() {
@@ -41,7 +43,7 @@ public class JobAnalyser {
         if (job.lastBuild == null) {
             return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
         }
-        return new Target(job.url, job.name, statusOf(job), sponsorsOf(job), buildsFor(job));
+        return new Target(job.url, job.name, statusOf(job), buildsFor(job), sponsorsOf(job));
     }
 
     private Status statusOf(JobDetail job) {
@@ -49,8 +51,7 @@ public class JobAnalyser {
             return job.status();
         }
         
-        final String lastBadBuildDesc = fetchBuildData(job.lastBadBuildUrl()).description;
-        
+        final String lastBadBuildDesc = this.buildDetailFetcher.detailsOf(job.lastBadBuildUrl()).description;
         if (null == lastBadBuildDesc || lastBadBuildDesc.length() == 0) {
             return job.status();
         }
@@ -79,7 +80,7 @@ public class JobAnalyser {
             return sponsorCache.get(buildUrl);
         }
         
-        final BuildDetail buildData = fetchBuildData(buildUrl);
+        final BuildDetail buildData = this.buildDetailFetcher.detailsOf(buildUrl);
         if (null == buildData) {
             return new ArrayList<Sponsor>();
         }
@@ -124,15 +125,11 @@ public class JobAnalyser {
             return result;
         }
         
-        final BuildDetail currentBuild = fetchBuildData(job.lastBuild.url);
+        final BuildDetail currentBuild = this.buildDetailFetcher.detailsOf(job.lastBuild.url);
         final Percentage progress = percentageOf(new Date().getTime() - currentBuild.timestamp,
-                                                 durationFetcher.lastGoodDurationOf(job));
+                                                 this.buildDurationFetcher.lastGoodDurationOf(job));
         result.add(buildAt(progress));
         
         return result;
-    }
-
-    private BuildDetail fetchBuildData(String buildUrl) {
-        return communicator.makeJenkinsRestCall(buildUrl, BuildDetail.class);
     }
 }

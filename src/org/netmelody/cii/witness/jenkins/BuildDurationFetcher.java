@@ -2,7 +2,6 @@ package org.netmelody.cii.witness.jenkins;
 
 import java.util.Map;
 
-import org.netmelody.cii.witness.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.JobDetail;
 
 import com.google.common.base.Function;
@@ -12,13 +11,13 @@ public final class BuildDurationFetcher {
 
     private final Map<String, Long> durations;
     
-    public BuildDurationFetcher(final JenkinsCommunicator communicator) {
+    public BuildDurationFetcher(final BuildDetailFetcher detailFetcher) {
         durations = new MapMaker()
             .maximumSize(100)
             .makeComputingMap(
                 new Function<String, Long>() {
                     public Long apply(String buildUrl) {
-                        return communicator.makeJenkinsRestCall(buildUrl, BuildDetail.class).duration;
+                        return detailFetcher.detailsOf(buildUrl).duration;
                     }
                 });
     }
