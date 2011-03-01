@@ -44,9 +44,16 @@ public class JobAnalyser {
     }
 
     private Status statusOf(Job job) {
-//        if (!Status.BROKEN.equals(job.status())) {
+        if (!Status.BROKEN.equals(job.status())) {
             return job.status();
-//        }
+        }
+        
+        final String lastBadBuildDesc = fetchBuildData(job.lastBadBuildUrl()).description;
+        
+        if (null == lastBadBuildDesc || lastBadBuildDesc.length() == 0) {
+            return job.status();
+        }
+        return Status.UNDER_INVESTIGATION;
     }
     
     private List<Sponsor> sponsorsOf(Job job) {

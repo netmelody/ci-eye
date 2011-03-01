@@ -44,4 +44,19 @@ public final class Job {
     public boolean building() {
         return (null != color && color.endsWith("_anime"));
     }
+
+    public String lastBadBuildUrl() {
+        if (null == lastUnstableBuild) {
+            if (null == lastFailedBuild) {
+                return lastFailedBuild.url;
+            }
+            return url;
+        }
+        
+        if (null == lastFailedBuild) {
+            return lastUnstableBuild.url;
+        }
+        
+        return (lastUnstableBuild.number >= lastFailedBuild.number) ? lastUnstableBuild.url : lastFailedBuild.url;
+    }
 }
