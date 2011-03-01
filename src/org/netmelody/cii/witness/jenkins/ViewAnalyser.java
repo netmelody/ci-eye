@@ -11,6 +11,7 @@ import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
+import org.netmelody.cii.witness.jenkins.jsondomain.ViewDetail;
 
 import com.google.common.base.Function;
 
@@ -33,8 +34,8 @@ public class ViewAnalyser {
         });
     }
     
-    private Collection<Job> jobsFor(View viewDigest) {
-        return communicator.makeJenkinsRestCall(viewDigest.url, View.class).jobs;
+    private Collection<Job> jobsFor(View view) {
+        return communicator.makeJenkinsRestCall(view.url, ViewDetail.class).jobs;
     }
     
     private Target targetFrom(Job jobDigest) {

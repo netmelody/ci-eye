@@ -9,7 +9,7 @@ import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.jenkins.jsondomain.ServerDetails;
+import org.netmelody.cii.witness.jenkins.jsondomain.Server;
 import org.netmelody.cii.witness.jenkins.jsondomain.Users;
 import org.netmelody.cii.witness.jenkins.jsondomain.UserDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
@@ -55,7 +55,7 @@ public final class JenkinsWitness implements Witness {
     }
     
     private Collection<View> views() {
-        return communicator.makeJenkinsRestCallWithSuffix("", ServerDetails.class).views;
+        return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views;
     }
 
 //    private Computer agentDetails(String agentName) {

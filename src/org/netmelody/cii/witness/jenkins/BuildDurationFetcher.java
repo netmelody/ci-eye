@@ -2,8 +2,8 @@ package org.netmelody.cii.witness.jenkins;
 
 import java.util.Map;
 
-import org.netmelody.cii.witness.jenkins.jsondomain.Build;
-import org.netmelody.cii.witness.jenkins.jsondomain.Job;
+import org.netmelody.cii.witness.jenkins.jsondomain.BuildDetail;
+import org.netmelody.cii.witness.jenkins.jsondomain.JobDetail;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
@@ -18,12 +18,12 @@ public final class BuildDurationFetcher {
             .makeComputingMap(
                 new Function<String, Long>() {
                     public Long apply(String buildUrl) {
-                        return communicator.makeJenkinsRestCall(buildUrl, Build.class).duration;
+                        return communicator.makeJenkinsRestCall(buildUrl, BuildDetail.class).duration;
                     }
                 });
     }
     
-    public long lastGoodDurationOf(final Job job) {
+    public long lastGoodDurationOf(final JobDetail job) {
         if (!(job.lastStableBuild == null)) {
             return durations.get(job.lastStableBuild.url);
         }

@@ -16,8 +16,9 @@ import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Build;
+import org.netmelody.cii.witness.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
-import org.netmelody.cii.witness.jenkins.jsondomain.Job;
+import org.netmelody.cii.witness.jenkins.jsondomain.JobDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.User;
 
 public class JobAnalyser {
@@ -36,14 +37,14 @@ public class JobAnalyser {
     }
     
     public Target analyse() {
-        final Job job = communicator.makeJenkinsRestCall(jobEndpoint, Job.class);
+        final JobDetail job = communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class);
         if (job.lastBuild == null) {
             return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
         }
         return new Target(job.url, job.name, statusOf(job), sponsorsOf(job), buildsFor(job));
     }
 
-    private Status statusOf(Job job) {
+    private Status statusOf(JobDetail job) {
         if (!Status.BROKEN.equals(job.status())) {
             return job.status();
         }
@@ -56,7 +57,7 @@ public class JobAnalyser {
         return Status.UNDER_INVESTIGATION;
     }
     
-    private List<Sponsor> sponsorsOf(Job job) {
+    private List<Sponsor> sponsorsOf(JobDetail job) {
         final List<Sponsor> result = new ArrayList<Sponsor>();
         
         long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
@@ -78,7 +79,7 @@ public class JobAnalyser {
             return sponsorCache.get(buildUrl);
         }
         
-        final Build buildData = fetchBuildData(buildUrl);
+        final BuildDetail buildData = fetchBuildData(buildUrl);
         if (null == buildData) {
             return new ArrayList<Sponsor>();
         }
@@ -99,7 +100,7 @@ public class JobAnalyser {
         return result;
     }
     
-    private String commitMessagesOf(Build build) {
+    private String commitMessagesOf(BuildDetail build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
         }
@@ -117,13 +118,13 @@ public class JobAnalyser {
         return result.toString();
     }
     
-    private List<org.netmelody.cii.domain.Build> buildsFor(final Job job) {
+    private List<org.netmelody.cii.domain.Build> buildsFor(final JobDetail job) {
         final List<org.netmelody.cii.domain.Build> result = new ArrayList<org.netmelody.cii.domain.Build>();
         if (!job.building()) {
             return result;
         }
         
-        final Build currentBuild = fetchBuildData(job.lastBuild.url);
+        final BuildDetail currentBuild = fetchBuildData(job.lastBuild.url);
         final Percentage progress = percentageOf(new Date().getTime() - currentBuild.timestamp,
                                                  durationFetcher.lastGoodDurationOf(job));
         result.add(buildAt(progress));
@@ -131,7 +132,7 @@ public class JobAnalyser {
         return result;
     }
 
-    private Build fetchBuildData(String buildUrl) {
-        return communicator.makeJenkinsRestCall(buildUrl, Build.class);
+    private BuildDetail fetchBuildData(String buildUrl) {
+        return communicator.makeJenkinsRestCall(buildUrl, BuildDetail.class);
     }
 }
