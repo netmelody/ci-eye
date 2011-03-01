@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.netmelody.cii.domain.Status;
 import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Job;
@@ -39,14 +38,9 @@ public class ViewAnalyser {
     }
     
     private Target targetFrom(Job jobDigest) {
-        if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
-            analyserMap.remove(jobDigest.url);
-            return new Target(jobDigest.url, jobDigest.name, jobDigest.status());
-        }
-        
         if (!analyserMap.containsKey(jobDigest.url)) {
             analyserMap.put(jobDigest.url, new JobAnalyser(communicator, jobDigest.url, detective));
         }
-        return analyserMap.get(jobDigest.url).analyse();
+        return analyserMap.get(jobDigest.url).analyse(jobDigest);
     }
 }

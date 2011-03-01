@@ -18,6 +18,7 @@ import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.jsondomain.Build;
 import org.netmelody.cii.witness.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.ChangeSetItem;
+import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.JobDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.User;
 
@@ -40,6 +41,17 @@ public class JobAnalyser {
         this.buildStartTimeFetcher = new BuildStartTimeFetcher(this.buildDetailFetcher);
     }
     
+    public Target analyse(Job jobDigest) {
+        if (!jobDigest.url.equals(jobEndpoint)) {
+            throw new IllegalArgumentException("Incorrect job digest");
+        }
+        if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
+            sponsorCache.clear();
+            return new Target(jobDigest.url, jobDigest.name, jobDigest.status());
+        }
+        return analyse();
+    }
+
     public Target analyse() {
         final JobDetail job = communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class);
         if (job.lastBuild == null) {
