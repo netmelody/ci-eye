@@ -9,8 +9,8 @@ import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsDetails;
-import org.netmelody.cii.witness.jenkins.jsondomain.JenkinsUserDetails;
+import org.netmelody.cii.witness.jenkins.jsondomain.ServerDetails;
+import org.netmelody.cii.witness.jenkins.jsondomain.Users;
 import org.netmelody.cii.witness.jenkins.jsondomain.UserDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
 
@@ -48,14 +48,14 @@ public final class JenkinsWitness implements Witness {
     }
     
     public Collection<String> users() {
-        final JenkinsUserDetails detail = communicator.makeJenkinsRestCallWithSuffix("people", JenkinsUserDetails.class);
+        final Users detail = communicator.makeJenkinsRestCallWithSuffix("people", Users.class);
         return transform(detail.users, new Function<UserDetail, String>() {
             @Override public String apply(UserDetail userDetail) { return userDetail.user.fullName; }
         });
     }
     
     private Collection<View> views() {
-        return communicator.makeJenkinsRestCallWithSuffix("", JenkinsDetails.class).views;
+        return communicator.makeJenkinsRestCallWithSuffix("", ServerDetails.class).views;
     }
 
 //    private Computer agentDetails(String agentName) {

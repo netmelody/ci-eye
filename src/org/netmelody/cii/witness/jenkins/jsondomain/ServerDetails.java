@@ -3,7 +3,7 @@ package org.netmelody.cii.witness.jenkins.jsondomain;
 import java.util.List;
 
 
-public final class JenkinsDetails {
+public final class ServerDetails {
     public List<Label> assignedLabels;
     public String mode;
     public String nodeName;
