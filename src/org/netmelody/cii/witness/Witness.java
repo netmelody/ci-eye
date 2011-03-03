@@ -7,5 +7,5 @@ public interface Witness {
 
     TargetGroup statusOf(Feature feature);
 
-    long millisecondsUntilNextUpdate();
+    long millisecondsUntilNextUpdate(Feature feature);
 }

@@ -32,7 +32,7 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
         for (Feature feature : landscape.features()) {
             final Witness witness = witnessProvider.witnessFor(feature);
             response = response.add(witness.statusOf(feature));
-            timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate());
+            timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate(feature));
         }
         
         return new JsonResponse(response, timeToLive);

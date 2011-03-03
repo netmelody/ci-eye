@@ -31,4 +31,19 @@ public final class Feature {
     public CiServerType type() {
         return type;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Feature)) {
+            return false;
+        }
+        
+        final Feature other = (Feature)obj;
+        return other.name.equals(name) && other.endpoint.equals(endpoint) && other.type.equals(type);
+    }
+    
+    @Override
+    public int hashCode() {
+        return 17 + name.hashCode() + endpoint.hashCode() * 7;
+    }
 }

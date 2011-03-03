@@ -22,7 +22,11 @@ public class RestRequester {
             httpget.setHeader("Accept", "application/json");
 
             final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            final String responseBody = client.execute(httpget, responseHandler);
+            
+            final String responseBody;
+            synchronized(client) {
+                responseBody = client.execute(httpget, responseHandler);
+            }
 
             return responseBody;
         }

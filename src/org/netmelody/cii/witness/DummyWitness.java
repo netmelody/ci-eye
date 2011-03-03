@@ -32,7 +32,7 @@ public final class DummyWitness implements Witness {
     }
 
     @Override
-    public long millisecondsUntilNextUpdate() {
+    public long millisecondsUntilNextUpdate(Feature feature) {
         return 0L;
     }
 }
