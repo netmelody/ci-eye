@@ -18,7 +18,7 @@ public final class CiEye {
     private final Connection connection;
     private final SocketAddress address;
 
-    public static void main(String[] list) throws Exception {
+    public static void main(String[] args) throws Exception {
         new CiEye(8888).start();
     }
     
