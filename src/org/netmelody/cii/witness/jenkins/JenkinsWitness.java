@@ -5,19 +5,23 @@ import static com.google.common.collect.Collections2.transform;
 
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
 import org.netmelody.cii.witness.jenkins.jsondomain.Server;
-import org.netmelody.cii.witness.jenkins.jsondomain.Users;
 import org.netmelody.cii.witness.jenkins.jsondomain.UserDetail;
+import org.netmelody.cii.witness.jenkins.jsondomain.Users;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public final class JenkinsWitness implements Witness {
+    
+    private static final Log LOG = LogFactory.getLog(JenkinsWitness.class);
     
     private final JenkinsCommunicator communicator;
     private final ViewAnalyser viewAnalsyer;
@@ -39,6 +43,7 @@ public final class JenkinsWitness implements Witness {
             }
         });
         if (views.isEmpty()) {
+            LOG.error("No view named <" + feature.name() + "> found");
             return new TargetGroup();
         }
         
