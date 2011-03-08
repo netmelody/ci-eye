@@ -16,10 +16,21 @@ public final class CiEye {
     private final State state = new State();
     private final Container container = new ResourceContainer(new CiEyeResourceEngine(state));
     private final Connection connection;
-    private final SocketAddress address;
+    private final InetSocketAddress address;
 
     public static void main(String[] args) throws Exception {
-        new CiEye(8888).start();
+        int port = 0;
+        try {
+            port = Integer.parseInt(args[0]);
+        }
+        catch (Exception e) {
+            System.out.println("Usage: CiEye port");
+        }
+        if (port > 65535 || port < 0) {
+            port = 0;
+        }
+        
+        new CiEye(port).start();
     }
     
     public CiEye(int port) throws IOException {
@@ -28,6 +39,13 @@ public final class CiEye {
     }
 
     private void start() throws IOException {
-        connection.connect(address);
+        final SocketAddress socketAddress = connection.connect(address);
+        
+        if (socketAddress instanceof InetSocketAddress) {
+            System.out.println("Starting Ci-Eye server on port: " + ((InetSocketAddress)socketAddress).getPort());
+            return;
+        }
+        
+        System.out.println("Starting Ci-Eye server on: " + socketAddress.toString());
     }
 }
