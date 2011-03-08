@@ -33,12 +33,16 @@ public final class JenkinsWitness implements Witness {
             return new TargetGroup();
         }
         
-        final View viewDigest = filter(views(), new Predicate<View>() {
+        final Collection<View> views = filter(views(), new Predicate<View>() {
             @Override public boolean apply(View viewDigest) {
                 return viewDigest.name.startsWith(feature.name());
             }
-        }).iterator().next();
+        });
+        if (views.isEmpty()) {
+            return new TargetGroup();
+        }
         
+        final View viewDigest = views.iterator().next();
         return new TargetGroup(viewAnalsyer.analyse(viewDigest));
     }
     
