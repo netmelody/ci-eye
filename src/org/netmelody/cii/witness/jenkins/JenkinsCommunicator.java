@@ -1,5 +1,7 @@
 package org.netmelody.cii.witness.jenkins;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.witness.protocol.RestRequester;
 
 import com.google.gson.Gson;
@@ -7,6 +9,8 @@ import com.google.gson.GsonBuilder;
 
 public class JenkinsCommunicator {
 
+    private static final Log LOG = LogFactory.getLog(JenkinsCommunicator.class);
+    
     private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
@@ -21,7 +25,19 @@ public class JenkinsCommunicator {
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {
         final String reqUrl = url + (url.endsWith("/") ? "" : "/") + "api/json";
-        return json.fromJson(restRequester.makeRequest(reqUrl), type);
+        T result = json.fromJson(restRequester.makeRequest(reqUrl), type);
+        
+        if (null == result) {
+            LOG.warn("null result for json request: " + url);
+            try {
+                result = type.newInstance();
+            }
+            catch (Exception e) {
+                LOG.error("Failed to instantiate " + type.getName());
+            }
+        }
+        
+        return result;
     }
     
     public String endpoint() {
