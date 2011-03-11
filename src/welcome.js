@@ -8,16 +8,12 @@ ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
     
     function displayListItem(landscapeListItemJson) {
         var item = $('<li></li>'),
-            anchor = $('<a></a>'),
-            desktopAnchor = $('<a></a>');
+            anchor = $('<a></a>');
         
         anchor.attr('href', '/landscapes/' + landscapeListItemJson.name + '/');
-        anchor.text(landscapeListItemJson.name + '  (radiator)');
-        desktopAnchor.attr('href', '/desktop/landscapes/' + landscapeListItemJson.name + '/');
-        desktopAnchor.text(landscapeListItemJson.name + '  (desktop)');
+        anchor.text(landscapeListItemJson.name);
         
         item.append(anchor);
-        item.append(desktopAnchor);
         landscapeList.append(item);
     }
     

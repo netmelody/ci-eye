@@ -57,11 +57,7 @@ public final class FileResponder implements Resource {
             return "welcome.html";
         }
         
-        if (pathLength == 2) {
-            return "cieye.html";
-        }
-        
-        return "desktop.html";
+        return "cieye.html";
     }
 
     private static String contentTypeOf(String extension) {
