@@ -114,7 +114,7 @@ public final class TeamCityWitness implements Witness {
     }
 
     private String analyseChanges(BuildDetail build) {
-        if (build.changes == null) {
+        if (build.changes == null || build.changes.count == 0) {
             return "";
         }
         
