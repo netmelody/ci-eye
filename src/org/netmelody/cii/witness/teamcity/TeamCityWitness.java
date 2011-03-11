@@ -2,6 +2,7 @@ package org.netmelody.cii.witness.teamcity;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
+import static org.netmelody.cii.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -95,22 +96,30 @@ public final class TeamCityWitness implements Witness {
             return new Target(endpoint + buildType.href, buildType.name, Status.DISABLED);
         }
         
-        final Builds builds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
-
-        if (builds.build == null || builds.build.isEmpty()) {
-            return new Target(endpoint + buildType.href, buildType.name, Status.GREEN);
+        final List<Sponsor> sponsors = new ArrayList<Sponsor>();
+        final List<org.netmelody.cii.domain.Build> builds = new ArrayList<org.netmelody.cii.domain.Build>();
+        
+        final Builds runningBuilds = makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class);
+        if (runningBuilds.build != null && !runningBuilds.build.isEmpty()) {
+            for(Build build : runningBuilds.build) {
+                sponsors.addAll(sponsorsOf(build));
+                builds.add(new org.netmelody.cii.domain.Build(percentageOf(build.percentageComplete), build.status()));
+            }
         }
         
-        final Build lastBuild = builds.build.iterator().next();
-        final BuildDetail lastBuildDetail = makeTeamCityRestCall(endpoint + lastBuild.href, BuildDetail.class);
+        Status currentStatus = Status.GREEN;
+        final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
+        if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
+            final Build lastCompletedBuild = completedBuilds.build.iterator().next();
+            sponsors.addAll(sponsorsOf(lastCompletedBuild));
+            currentStatus = lastCompletedBuild.status();
+        }
         
-        final List<Sponsor> sponsors = sponsorsOf(lastBuildDetail);
-        
-        return new Target(endpoint + buildType.href, buildType.name, lastBuildDetail.status(), sponsors);
+        return new Target(endpoint + buildType.href, buildType.name, currentStatus, builds, sponsors);
     }
     
-    private List<Sponsor> sponsorsOf(BuildDetail build) {
-        return detective.sponsorsOf(analyseChanges(build));
+    private List<Sponsor> sponsorsOf(Build build) {
+        return detective.sponsorsOf(analyseChanges(makeTeamCityRestCall(endpoint + build.href, BuildDetail.class)));
     }
 
     private String analyseChanges(BuildDetail build) {
