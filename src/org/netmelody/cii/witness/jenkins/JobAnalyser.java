@@ -22,7 +22,7 @@ import org.netmelody.cii.witness.jenkins.jsondomain.Job;
 import org.netmelody.cii.witness.jenkins.jsondomain.JobDetail;
 import org.netmelody.cii.witness.jenkins.jsondomain.User;
 
-public class JobAnalyser {
+public final class JobAnalyser {
     
     private final JenkinsCommunicator communicator;
     private final String jobEndpoint;

@@ -14,7 +14,7 @@ import org.netmelody.cii.witness.jenkins.jsondomain.ViewDetail;
 
 import com.google.common.base.Function;
 
-public class ViewAnalyser {
+public final class ViewAnalyser {
 
     private final JenkinsCommunicator communicator;
     private final Map<String, JobAnalyser> analyserMap = new HashMap<String, JobAnalyser>();

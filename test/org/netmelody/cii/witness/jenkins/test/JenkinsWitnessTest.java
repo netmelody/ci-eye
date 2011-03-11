@@ -13,7 +13,7 @@ import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.jenkins.JenkinsWitness;
 
-public class JenkinsWitnessTest {
+public final class JenkinsWitnessTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {

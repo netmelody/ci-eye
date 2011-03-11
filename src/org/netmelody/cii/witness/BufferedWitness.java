@@ -12,7 +12,7 @@ import org.netmelody.cii.domain.TargetGroup;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public class BufferedWitness implements Witness {
+public final class BufferedWitness implements Witness {
 
     private static final long DEFAULT_BUFFER_TIME = 10000L;
 

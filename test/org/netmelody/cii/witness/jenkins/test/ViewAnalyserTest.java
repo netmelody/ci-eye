@@ -12,7 +12,7 @@ import org.netmelody.cii.witness.jenkins.ViewAnalyser;
 import org.netmelody.cii.witness.jenkins.jsondomain.View;
 
 
-public class ViewAnalyserTest {
+public final class ViewAnalyserTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
