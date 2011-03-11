@@ -31,7 +31,7 @@ public final class LandscapeGroup {
                 return landscape;
             }
         }
-        return null;
+        return new Landscape("name");
     }
 
     public static LandscapeGroup demo() {

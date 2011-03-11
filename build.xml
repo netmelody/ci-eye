@@ -8,7 +8,7 @@
     <target name="javac" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
-        <javac srcdir="src" includes="**" encoding="utf-8" destdir="build/main" source="1.5" target="1.5">
+        <javac srcdir="src" includes="**" encoding="utf-8" destdir="build/main" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
             <classpath refid="project.compile.class.path"/>
         </javac>
         

@@ -29,6 +29,7 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
         
         final String[] segments = path.getSegments();
         final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
+        
         for (Feature feature : landscape.features()) {
             final Witness witness = witnessProvider.witnessFor(feature);
             response = response.add(witness.statusOf(feature));
