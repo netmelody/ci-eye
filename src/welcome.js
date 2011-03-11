@@ -8,12 +8,16 @@ ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
     
     function displayListItem(landscapeListItemJson) {
         var item = $('<li></li>'),
-            anchor = $('<a></a>');
+            anchor = $('<a></a>'),
+            desktopAnchor = $('<a></a>');
         
         anchor.attr('href', '/landscapes/' + landscapeListItemJson.name + '/');
-        anchor.text(landscapeListItemJson.name);
+        anchor.text(landscapeListItemJson.name + '  (radiator)');
+        desktopAnchor.attr('href', '/desktop/landscapes/' + landscapeListItemJson.name + '/');
+        desktopAnchor.text(landscapeListItemJson.name + '  (desktop)');
         
         item.append(anchor);
+        item.append(desktopAnchor);
         landscapeList.append(item);
     }
     
@@ -62,13 +66,13 @@ ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
         content.fadeIn();
         trigger.unbind('click');
         trigger.click(fadeOut);
-    }
+    };
     
-    fadeOut = function fadeOut() {
+    fadeOut = function() {
         content.fadeOut();
         trigger.unbind('click');
         trigger.click(fadeIn);
-    }
+    };
 
     trigger.click(fadeIn);
     content.click(fadeOut);
