@@ -1,0 +1,23 @@
+body {
+    height: auto;
+    overflow-y: visible;
+}
+#radiator {
+    font-size: 1em;
+    font-weight: normal;
+}
+div.target.GREEN {
+	display: none;
+}
+div.target.GREEN.building {
+    display: block;
+}
+div.sponsors {
+    margin: 1px 1px 0 0;
+}
+div.sponsors > img {
+    padding-left: 1px;
+}
+div.progress-bar > div {
+    height: 8px;
+}

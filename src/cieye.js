@@ -35,9 +35,9 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 };
 
 ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
-    var MAX_IMAGE_SIZE = 90,
-        currentTargetJson = { builds:[] },
+    var currentTargetJson = { builds:[] },
         targetDiv = $('<div></div>'),
+        titleSpan = $('<span></span>'),
         sponsorDiv = $('<div></div>').addClass('sponsors'),
         buildsDiv = $('<div></div>'),
         sponsorImages = {};
@@ -49,17 +49,18 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function resizeImage() {
-        var image = $(this),
+        var maxSize = parseInt(titleSpan.css('font-size'), 10) + 5,
+            image = $(this),
             width = image.width(),
             height = image.height();
         
         if (width > height) {
-            image.height(height * MAX_IMAGE_SIZE / width);
-            image.width(MAX_IMAGE_SIZE);
+            image.height(height * maxSize / width);
+            image.width(maxSize);
         }
         else {
-            image.width(width * MAX_IMAGE_SIZE / height);
-            image.height(MAX_IMAGE_SIZE);
+            image.width(width * maxSize / height);
+            image.height(maxSize);
         }
     }
     
@@ -78,6 +79,13 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         $.each(newTargetJson.builds, function(index, buildJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
         });
+
+        if (newTargetJson.builds.length === 0) {
+            targetDiv.removeClass('building');
+        }
+        else {
+            targetDiv.addClass('building');
+        }
         
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
             sponsorDiv.empty();
@@ -86,15 +94,15 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
             if (!sponsorImages[sponsorJson.picture]) {
-                sponsorImages[sponsorJson.picture] = $('<img></img>').attr({ 'src': sponsorJson.picture, 'title': sponsorJson.name }).load(resizeImage);
+                sponsorImages[sponsorJson.picture] = $('<img></img>').attr({ 'src': sponsorJson.picture,
+                                                                             'title': sponsorJson.name })
+                                                                     .load(resizeImage);
             }
             sponsorDiv.append(sponsorImages[sponsorJson.picture]);
         });
     }
     
     function initialise() {
-        var titleSpan = $('<span></span>');
-        
         titleSpan.text(targetJson.name);
         targetDiv.append(titleSpan);
         targetDiv.append(sponsorDiv);

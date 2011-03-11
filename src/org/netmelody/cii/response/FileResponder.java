@@ -22,7 +22,7 @@ public final class FileResponder implements Resource {
     private final String extension;
 
     public FileResponder(Path path) {
-        this.name = defaultString(path.getName(), (path.getSegments().length <= 1) ? "welcome.html" : "cieye.html");
+        this.name = defaultString(path.getName(), defaultFileFor(path));
         this.extension = defaultString(path.getExtension(), "html");
         LOG.info(path.getPath());
     }
@@ -48,6 +48,20 @@ public final class FileResponder implements Resource {
             IOUtils.closeQuietly(input);
             IOUtils.closeQuietly(body);
         }
+    }
+    
+    private static String defaultFileFor(Path path) {
+        final int pathLength = path.getSegments().length;
+        
+        if (pathLength <= 1) {
+            return "welcome.html";
+        }
+        
+        if (pathLength == 2) {
+            return "cieye.html";
+        }
+        
+        return "desktop.html";
     }
 
     private static String contentTypeOf(String extension) {
