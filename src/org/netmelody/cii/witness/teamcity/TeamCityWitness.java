@@ -111,7 +111,9 @@ public final class TeamCityWitness implements Witness {
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
         if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
             final Build lastCompletedBuild = completedBuilds.build.iterator().next();
-            sponsors.addAll(sponsorsOf(lastCompletedBuild));
+            if (builds.isEmpty()) {
+                sponsors.addAll(sponsorsOf(lastCompletedBuild));
+            }
             currentStatus = lastCompletedBuild.status();
         }
         
