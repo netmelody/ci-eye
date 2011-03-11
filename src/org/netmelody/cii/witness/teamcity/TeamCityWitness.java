@@ -14,7 +14,7 @@ import org.netmelody.cii.domain.Target;
 import org.netmelody.cii.domain.TargetGroup;
 import org.netmelody.cii.persistence.Detective;
 import org.netmelody.cii.witness.Witness;
-import org.netmelody.cii.witness.protocol.RestRequester;
+import org.netmelody.cii.witness.protocol.JsonRestRequester;
 import org.netmelody.cii.witness.teamcity.jsondomain.Build;
 import org.netmelody.cii.witness.teamcity.jsondomain.BuildDetail;
 import org.netmelody.cii.witness.teamcity.jsondomain.BuildType;
@@ -30,13 +30,16 @@ import org.netmelody.cii.witness.teamcity.jsondomain.TeamCityProjects;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public final class TeamCityWitness implements Witness {
 
-    private final Gson json = new GsonBuilder().create();
-    private final RestRequester restRequester = new RestRequester();
+    private final JsonRestRequester restRequester =
+        new JsonRestRequester(new GsonBuilder().create(),
+                              new Function<String, String>() {
+                                  @Override public String apply(String input) {  return input.replace("\"@", "\""); }
+                              });
+    
     private final String endpoint;
     private final Detective detective;
 
@@ -47,7 +50,7 @@ public final class TeamCityWitness implements Witness {
 
     @Override
     public TargetGroup statusOf(final Feature feature) {
-        restRequester.makeRequest(endpoint + "/guestAuth/");
+        restRequester.performBasicLogin(endpoint + "/guestAuth/");
         if (!endpoint.equals(feature.endpoint())) {
             return new TargetGroup();
         }
@@ -134,6 +137,6 @@ public final class TeamCityWitness implements Witness {
     }
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
-        return json.fromJson(restRequester.makeRequest(url).replace("\"@", "\""), type);
+        return restRequester.makeJsonRestCall(url, type);
     }
 }

@@ -1,18 +1,14 @@
 package org.netmelody.cii.witness.jenkins;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.netmelody.cii.witness.protocol.RestRequester;
+import org.netmelody.cii.witness.protocol.JsonRestRequester;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class JenkinsCommunicator {
+public final class JenkinsCommunicator {
 
-    private static final Log LOG = LogFactory.getLog(JenkinsCommunicator.class);
+    private final JsonRestRequester restRequester =
+        new JsonRestRequester(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create());
     
-    private final Gson json = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-    private final RestRequester restRequester = new RestRequester();
     private final String endpoint;
 
     public JenkinsCommunicator(String endpoint) {
@@ -25,29 +21,7 @@ public class JenkinsCommunicator {
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {
         final String reqUrl = url + (url.endsWith("/") ? "" : "/") + "api/json";
-        
-        T result = null;
-        String content = "";
-        try {
-            content = restRequester.makeRequest(reqUrl);
-            result = json.fromJson(content, type);
-        }
-        catch (Exception e) {
-            LOG.error(String.format("Failed to parse json from (%s) of:\n %s", reqUrl, content));
-        }
-        
-        
-        if (null == result) {
-            LOG.warn("null result for json request: " + reqUrl);
-            try {
-                result = type.newInstance();
-            }
-            catch (Exception e) {
-                LOG.error("Failed to instantiate " + type.getName());
-            }
-        }
-        
-        return result;
+        return restRequester.makeJsonRestCall(reqUrl, type);
     }
     
     public String endpoint() {

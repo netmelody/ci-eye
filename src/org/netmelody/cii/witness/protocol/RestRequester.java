@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class RestRequester {
+public final class RestRequester {
 
     private static final Log LOG = LogFactory.getLog(RestRequester.class);
     
