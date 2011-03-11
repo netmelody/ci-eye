@@ -25,10 +25,20 @@ public class JenkinsCommunicator {
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {
         final String reqUrl = url + (url.endsWith("/") ? "" : "/") + "api/json";
-        T result = json.fromJson(restRequester.makeRequest(reqUrl), type);
+        
+        T result = null;
+        String content = "";
+        try {
+            content = restRequester.makeRequest(reqUrl);
+            result = json.fromJson(content, type);
+        }
+        catch (Exception e) {
+            LOG.error(String.format("Failed to parse json from (%s) of:\n %s", reqUrl, content));
+        }
+        
         
         if (null == result) {
-            LOG.warn("null result for json request: " + url);
+            LOG.warn("null result for json request: " + reqUrl);
             try {
                 result = type.newInstance();
             }
