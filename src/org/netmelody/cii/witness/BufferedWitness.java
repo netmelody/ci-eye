@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cii.domain.Feature;
 import org.netmelody.cii.domain.TargetGroup;
 
@@ -31,13 +33,7 @@ public final class BufferedWitness implements Witness {
         this.resultCache =
             new MapMaker()
                 .expireAfterWrite(bufferTime, TimeUnit.MILLISECONDS)
-                .makeComputingMap(new Function<Feature, TargetGroup>() {
-                     @Override
-                     public TargetGroup apply(Feature feature) {
-                         requestTimeCache.put(feature, System.currentTimeMillis());
-                         return delegate.statusOf(feature);
-                     }
-                });
+                .makeComputingMap(new StatusComputer(requestTimeCache, delegate));
     }
     
     @Override
@@ -49,4 +45,28 @@ public final class BufferedWitness implements Witness {
     public long millisecondsUntilNextUpdate(Feature feature) {
         return max(requestTimeCache.get(feature) + bufferTime - System.currentTimeMillis(), 0L);
     }
+    
+    public static final class StatusComputer implements Function<Feature, TargetGroup> {
+        private static final Log LOG = LogFactory.getLog(StatusComputer.class);
+        
+        private final Map<Feature, Long> requestTimeCache;
+        private final Witness delegate;
+
+        public StatusComputer(Map<Feature, Long> requestTimeCache, Witness delegate) {
+            this.requestTimeCache = requestTimeCache;
+            this.delegate = delegate;
+        }
+        
+        @Override
+        public TargetGroup apply(Feature feature) {
+            requestTimeCache.put(feature, System.currentTimeMillis());
+            try {
+                return delegate.statusOf(feature);
+            }
+            catch (Exception e) {
+                LOG.error(String.format("Failed to get status of feature (%s)", feature.name()), e);
+            }
+            return new TargetGroup();
+        }
+   } 
 }

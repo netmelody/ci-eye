@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
@@ -21,7 +22,8 @@ public final class JsonResponder implements Resource {
 
     @Override
     public final void handle(Request request, Response response) {
-        LOG.info(request.getAddress().getPath());
+        final Path path = request.getPath();
+        LOG.info(path);
         
         PrintStream body;
         try {
@@ -37,7 +39,7 @@ public final class JsonResponder implements Resource {
             body.println(json.toJson(jsonResponse.jsonContent()));
             body.close();        
         } catch (Exception e) {
-            LOG.error("failed to respond to json request", e);
+            LOG.error(String.format("failed to respond to json request (%s)", path), e);
             response.setCode(500);
         }
     }
