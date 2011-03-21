@@ -6,15 +6,30 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 public final class RestRequester {
 
     private static final Log LOG = LogFactory.getLog(RestRequester.class);
     
-    private final HttpClient client = new DefaultHttpClient();
+    private final HttpClient client;
 
+    public RestRequester() {
+        final SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+
+        final ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(schemeRegistry);
+        connectionManager.setMaxTotal(200);
+        connectionManager.setDefaultMaxPerRoute(20);
+         
+        client = new DefaultHttpClient(connectionManager);
+    }
+    
     public String makeRequest(String url) {
         LOG.info(url);
         try {
@@ -22,13 +37,7 @@ public final class RestRequester {
             httpget.setHeader("Accept", "application/json");
 
             final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            
-            final String responseBody;
-            synchronized(client) {
-                responseBody = client.execute(httpget, responseHandler);
-            }
-
-            return responseBody;
+            return client.execute(httpget, responseHandler);
         }
         catch (HttpResponseException e) {
             if (e.getStatusCode() == 404) {
@@ -39,6 +48,7 @@ public final class RestRequester {
         }
         catch (Exception e) {
             LOG.error(url, e);
+//            httpget.abort();
         }
         return "";
     }
