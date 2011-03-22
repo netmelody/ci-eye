@@ -12,6 +12,9 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
 
 public final class RestRequester {
 
@@ -27,7 +30,10 @@ public final class RestRequester {
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultMaxPerRoute(20);
          
-        client = new DefaultHttpClient(connectionManager);
+        final HttpParams params = new BasicHttpParams();
+        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
+        
+        client = new DefaultHttpClient(connectionManager, params);
     }
     
     public String makeRequest(String url) {
