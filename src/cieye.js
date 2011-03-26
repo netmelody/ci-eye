@@ -34,23 +34,11 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
     };
 };
 
-ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
-    var currentTargetJson = { builds:[] },
-        targetDiv = $('<div></div>'),
-        titleSpan = $('<span></span>'),
-        sponsorDiv = $('<div></div>').addClass('sponsors'),
-        buildsDiv = $('<div></div>'),
-        sponsorImages = {};
-    
-    function sortedSponsors(unsortedSponsors) {
-        return unsortedSponsors.sort(function(a, b) {
-            return (a.name === b.name) ? 0 : (a.name < b.name) ? -1 : 1;
-        });
-    }
+ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
+    var image;
     
     function resizeImage() {
-        var maxSize = parseInt(titleSpan.css('font-size'), 10) + 5,
-            image = $(this),
+        var maxSize = sizeCalculator(),
             width = image.width(),
             height = image.height();
         
@@ -62,6 +50,38 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             image.width(width * maxSize / height);
             image.height(maxSize);
         }
+    }
+    
+    function initialise() {
+        image = $('<img></img>').attr({ 'src': sponsorJson.picture,
+                                        'title': sponsorJson.name })
+                                .load(resizeImage);
+    }
+    
+    initialise();
+    
+    return {
+        "getContent": function() { return image; },
+        "refresh": resizeImage
+    };
+};
+
+ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
+    var currentTargetJson = { builds:[] },
+        targetDiv = $('<div></div>'),
+        titleSpan = $('<span></span>'),
+        sponsorDiv = $('<div></div>').addClass('sponsors'),
+        buildsDiv = $('<div></div>'),
+        sponsorMugshots = {};
+    
+    function sortedSponsors(unsortedSponsors) {
+        return unsortedSponsors.sort(function(a, b) {
+            return (a.name === b.name) ? 0 : (a.name < b.name) ? -1 : 1;
+        });
+    }
+    
+    function calculateImageSize() {
+        return parseInt(titleSpan.css('font-size'), 10) + 5;
     }
     
     function refresh(newTargetJson) {
@@ -93,12 +113,10 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         }
         
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
-            if (!sponsorImages[sponsorJson.picture]) {
-                sponsorImages[sponsorJson.picture] = $('<img></img>').attr({ 'src': sponsorJson.picture,
-                                                                             'title': sponsorJson.name })
-                                                                     .load(resizeImage);
+            if (!sponsorMugshots[sponsorJson.picture]) {
+                sponsorMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, calculateImageSize);
             }
-            sponsorDiv.append(sponsorImages[sponsorJson.picture]);
+            sponsorDiv.append(sponsorMugshots[sponsorJson.picture].getContent());
         });
     }
     
