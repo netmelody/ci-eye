@@ -25,7 +25,7 @@ public final class DefaultWitnessProvider implements WitnessProvider {
             return witnesses.get(feature.endpoint());
         }
         
-        Witness witness = new DummyWitness();
+        Witness witness = new DummyWitness(detective);
         if (CiServerType.JENKINS.equals(feature.type())) {
             witness = new BufferedWitness(new JenkinsWitness(feature.endpoint(), detective));
         }
