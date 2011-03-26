@@ -75,4 +75,16 @@ public final class Target {
     public List<Sponsor> sponsors() {
         return new ArrayList<Sponsor>(sponsors);
     }
+
+    public List<Build> builds() {
+        return new ArrayList<Build>(builds);
+    }
+
+    public Target withBuilds(List<Build> builds) {
+        return new Target(id, name, status, lastStartTime, builds, sponsors);
+    }
+
+    public Target withStatus(Status newStatus) {
+        return new Target(id, name, newStatus, lastStartTime, builds, sponsors);
+    }
 }

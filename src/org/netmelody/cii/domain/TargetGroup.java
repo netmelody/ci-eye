@@ -24,4 +24,8 @@ public final class TargetGroup {
         result.targets.addAll(group.targets);
         return result;
     }
+
+    public List<Target> targets() {
+        return new ArrayList<Target>(targets);
+    }
 }

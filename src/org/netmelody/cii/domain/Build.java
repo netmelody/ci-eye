@@ -31,4 +31,12 @@ public final class Build {
     public Status status() {
         return status;
     }
+
+    public Build advancedBy(int percentageIncrement) {
+        return new Build(percentageOf(Math.min(progress.value() + percentageIncrement, 100)), status);
+    }
+
+    public Build withStatus(Status status) {
+        return new Build(progress, status);
+    }
 }
