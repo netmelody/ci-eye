@@ -87,9 +87,11 @@ public final class DummyWitness implements Witness {
                     }
                 }
                 else {
+                    int minProgress = 100;
                     for (Build build : builds) {
                         Build newBuild = build.advancedBy(2);
                         final int progress = newBuild.progress().value();
+                        minProgress = Math.min(minProgress, progress);
                         if (progress >= 60 && progress <= 90 && random.nextInt(50) == 0) {
                             newBuild = newBuild.withStatus(Status.BROKEN);
                         }
@@ -100,7 +102,7 @@ public final class DummyWitness implements Witness {
                             newBuilds.add(newBuild);
                         }
                     }
-                    if (random.nextInt(100) == 0) {
+                    if (minProgress > 50 && random.nextInt(100) == 0) {
                         newBuilds.add(buildAt(percentageOf(0), Status.GREEN));
                     }
                 }
