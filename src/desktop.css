@@ -6,6 +6,9 @@ body {
     font-size: 1em;
     font-weight: normal;
 }
+div.target {
+    cursor: pointer;
+}
 div.target.GREEN {
 	display: none;
 }
