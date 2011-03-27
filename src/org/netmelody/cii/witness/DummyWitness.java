@@ -117,7 +117,7 @@ public final class DummyWitness implements Witness {
             final ArrayList<Build> builds = newArrayList();
             
             if (random.nextBoolean()) {
-                builds.add(buildAt(percentageOf(random.nextInt(101))));
+                builds.add(buildAt(percentageOf(random.nextInt(101)), Status.GREEN));
             }
             
             return new Target(name, name, status,
