@@ -120,13 +120,20 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         });
     }
     
+    function clickHandler() {
+        if (targetDiv.css('cursor') !== 'pointer') {
+            return;
+        }
+        window.alert('Do something with ' + targetJson.name);
+    }
+    
     function initialise() {
         titleSpan.text(targetJson.name);
         targetDiv.append(titleSpan);
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass('target');
-        targetDiv.click(function() { window.alert('Do something with ' + targetJson.name); });
+        targetDiv.click(clickHandler);
         refresh(targetJson);
     }
     
