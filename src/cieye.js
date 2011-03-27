@@ -126,6 +126,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass('target');
+        targetDiv.click(function() { window.alert('Do something with ' + targetJson.name); });
         refresh(targetJson);
     }
     
@@ -143,24 +144,28 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     
     function refresh(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(function(a, b) {
-            if (a.status === b.status) {
-                if (a.builds.length === b.builds.length) {
-                    return (a.name < b.name) ? -1 : 1;
+                if (a.status === b.status) {
+                    if (a.builds.length === b.builds.length) {
+                        return (a.name < b.name) ? -1 : 1;
+                    }
+                    return (a.builds.length > b.builds.length) ? -1 : 1;
                 }
-                return (a.builds.length > b.builds.length) ? -1 : 1;
-            }
-            return (a.status === 'BROKEN' || b.status === 'GREEN') ? -1 : 1;
-        });
+                return (a.status === 'BROKEN' || b.status === 'GREEN') ? -1 : 1;
+            }),
+            deadTargetWidgets = $.extend({}, targetWidgets);
         
-        radiatorDiv.empty();
         $.each(targets, function(index, targetJson) {
             if (targetWidgets[targetJson.id]) {
                 targetWidgets[targetJson.id].updateFrom(targetJson);
+                delete deadTargetWidgets[targetJson.id];
             }
             else {
                 targetWidgets[targetJson.id] = ORG.NETMELODY.CIEYE.newTargetWidget(targetJson);
             }
             radiatorDiv.append(targetWidgets[targetJson.id].getContent());
+        });
+        $.each(deadTargetWidgets, function(index, deadTargetWidget) {
+            radiatorDiv.remove(deadTargetWidget.getContent());
         });
     }
     
