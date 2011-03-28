@@ -93,7 +93,7 @@ public final class TeamCityWitness implements Witness {
         final BuildTypeDetail buildTypeDetail = makeTeamCityRestCall(endpoint + buildType.href, BuildTypeDetail.class);
         
         if (buildTypeDetail.paused) {
-            return new Target(endpoint + buildType.href, buildType.name, Status.DISABLED);
+            return new Target(endpoint + buildType.href, buildType.webUrl, buildType.name, Status.DISABLED);
         }
         
         final List<Sponsor> sponsors = new ArrayList<Sponsor>();
@@ -122,7 +122,7 @@ public final class TeamCityWitness implements Witness {
             currentStatus = lastCompletedBuild.status();
         }
         
-        return new Target(endpoint + buildType.href, buildType.name, currentStatus, startTime, builds, sponsors);
+        return new Target(endpoint + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, builds, sponsors);
     }
     
     private BuildDetail detailsOf(Build build) {

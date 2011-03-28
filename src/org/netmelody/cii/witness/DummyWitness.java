@@ -122,7 +122,7 @@ public final class DummyWitness implements Witness {
                 builds.add(buildAt(percentageOf(random.nextInt(101)), Status.GREEN));
             }
             
-            return new Target(name, name, status, 0L, builds, detective.sponsorsOf("dracula"));
+            return new Target(name, "http://www.example.com/", name, status, 0L, builds, detective.sponsorsOf("dracula"));
         }
     }
 }

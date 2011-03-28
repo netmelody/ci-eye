@@ -47,14 +47,14 @@ public final class JobAnalyser {
         }
         if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
             sponsorCache.clear();
-            return new Target(jobDigest.url, jobDigest.name, jobDigest.status());
+            return new Target(jobDigest.url, jobDigest.url, jobDigest.name, jobDigest.status());
         }
         return analyse();
     }
 
     public Target analyse() {
         final JobDetail job = communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class);
-        return new Target(job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
+        return new Target(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
     private long startTimeOf(JobDetail job) {

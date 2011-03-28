@@ -13,18 +13,20 @@ import com.google.common.base.Predicate;
 public final class Target {
 
     private final String id;
+    private final String webUrl;
     private final String name;
     private final Status status;
     private final long lastStartTime;
     private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
     private final List<Build> builds = new ArrayList<Build>();
     
-    public Target(String id, String name, Status status) {
-        this(id, name, status, 0L, new ArrayList<Build>(), new ArrayList<Sponsor>());
+    public Target(String id, String webUrl, String name, Status status) {
+        this(id, webUrl, name, status, 0L, new ArrayList<Build>(), new ArrayList<Sponsor>());
     }
     
-    public Target(String id, String name, Status status, long lastStartTime, List<Build> builds, List<Sponsor> sponsors) {
+    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<Build> builds, List<Sponsor> sponsors) {
         this.id = id;
+        this.webUrl = webUrl;
         this.name = name;
         this.lastStartTime = lastStartTime;
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
@@ -68,10 +70,10 @@ public final class Target {
     }
 
     public Target withBuilds(List<Build> builds) {
-        return new Target(id, name, status, lastStartTime, builds, sponsors);
+        return new Target(id, webUrl, name, status, lastStartTime, builds, sponsors);
     }
 
     public Target withStatus(Status newStatus) {
-        return new Target(id, name, newStatus, lastStartTime, builds, sponsors);
+        return new Target(id, webUrl, name, newStatus, lastStartTime, builds, sponsors);
     }
 }
