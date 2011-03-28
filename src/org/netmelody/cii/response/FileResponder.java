@@ -41,7 +41,8 @@ public final class FileResponder implements Resource {
             response.setDate("Last-Modified", time);
             IOUtils.copy(input, body);
         }
-        catch (IOException e) {
+        catch (Exception e) {
+            LOG.error("Failed to respond to request for resource " + this.name);
             response.setCode(500);
         }
         finally {
