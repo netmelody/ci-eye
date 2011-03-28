@@ -36,7 +36,7 @@ import com.google.gson.GsonBuilder;
 public final class TeamCityWitness implements Witness {
 
     private final JsonRestRequester restRequester =
-        new JsonRestRequester(new GsonBuilder().create(),
+        new JsonRestRequester(new GsonBuilder().setDateFormat("yyyyMMdd'T'HHmmssZ").create(),
                               new Function<String, String>() {
                                   @Override public String apply(String input) {  return input.replace("\"@", "\""); }
                               });
@@ -98,11 +98,14 @@ public final class TeamCityWitness implements Witness {
         
         final List<Sponsor> sponsors = new ArrayList<Sponsor>();
         final List<org.netmelody.cii.domain.Build> builds = new ArrayList<org.netmelody.cii.domain.Build>();
-        
+        long startTime = 0L;
+            
         final Builds runningBuilds = makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class);
         if (runningBuilds.build != null && !runningBuilds.build.isEmpty()) {
             for(Build build : runningBuilds.build) {
-                sponsors.addAll(sponsorsOf(build));
+                final BuildDetail buildDetail = detailsOf(build);
+                startTime = Math.max(buildDetail.startDateTime(), startTime);
+                sponsors.addAll(sponsorsOf(buildDetail));
                 builds.add(new org.netmelody.cii.domain.Build(percentageOf(build.percentageComplete), build.status()));
             }
         }
@@ -112,16 +115,22 @@ public final class TeamCityWitness implements Witness {
         if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
             final Build lastCompletedBuild = completedBuilds.build.iterator().next();
             if (builds.isEmpty()) {
-                sponsors.addAll(sponsorsOf(lastCompletedBuild));
+                final BuildDetail buildDetail = detailsOf(lastCompletedBuild);
+                startTime = Math.max(buildDetail.startDateTime(), startTime);
+                sponsors.addAll(sponsorsOf(buildDetail));
             }
             currentStatus = lastCompletedBuild.status();
         }
         
-        return new Target(endpoint + buildType.href, buildType.name, currentStatus, builds, sponsors);
+        return new Target(endpoint + buildType.href, buildType.name, currentStatus, startTime, builds, sponsors);
     }
     
-    private List<Sponsor> sponsorsOf(Build build) {
-        return detective.sponsorsOf(analyseChanges(makeTeamCityRestCall(endpoint + build.href, BuildDetail.class)));
+    private BuildDetail detailsOf(Build build) {
+        return makeTeamCityRestCall(endpoint + build.href, BuildDetail.class);
+    }
+    
+    private List<Sponsor> sponsorsOf(BuildDetail build) {
+        return detective.sponsorsOf(analyseChanges(build));
     }
 
     private String analyseChanges(BuildDetail build) {

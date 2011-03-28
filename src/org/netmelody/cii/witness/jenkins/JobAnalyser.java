@@ -54,9 +54,6 @@ public final class JobAnalyser {
 
     public Target analyse() {
         final JobDetail job = communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class);
-        if (job.lastBuild == null) {
-            return new Target(job.url, job.name, job.status(), buildAt(percentageOf(0)));
-        }
         return new Target(job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
@@ -65,6 +62,10 @@ public final class JobAnalyser {
     }
 
     private Status statusOf(JobDetail job) {
+        if (job.lastBuild == null) {
+            return job.status();
+        }
+        
         if (!Status.BROKEN.equals(job.status())) {
             return job.status();
         }
@@ -78,6 +79,10 @@ public final class JobAnalyser {
     
     private List<Sponsor> sponsorsOf(JobDetail job) {
         final List<Sponsor> result = new ArrayList<Sponsor>();
+        
+        if (job.lastBuild == null) {
+            return result;
+        }
         
         long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
         for (Build build : job.builds) {
@@ -139,7 +144,8 @@ public final class JobAnalyser {
     
     private List<org.netmelody.cii.domain.Build> buildsFor(final JobDetail job) {
         final List<org.netmelody.cii.domain.Build> result = new ArrayList<org.netmelody.cii.domain.Build>();
-        if (!job.building()) {
+        
+        if (!job.building() || job.lastBuild == null) {
             return result;
         }
         

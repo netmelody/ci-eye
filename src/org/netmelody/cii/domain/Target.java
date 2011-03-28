@@ -2,7 +2,6 @@ package org.netmelody.cii.domain;
 
 import static com.google.common.collect.Iterators.find;
 import static com.google.common.collect.Iterators.transform;
-import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,19 +20,7 @@ public final class Target {
     private final List<Build> builds = new ArrayList<Build>();
     
     public Target(String id, String name, Status status) {
-        this(id, name, status, new ArrayList<Build>(), new ArrayList<Sponsor>());
-    }
-    
-    public Target(String id, String name, Status status, List<Sponsor> sponsors) {
-        this(id, name, status, new ArrayList<Build>(), sponsors);
-    }
-    
-    public Target(String id, String name, Status status, Build build) {
-        this(id, name, status, newArrayList(build), new ArrayList<Sponsor>());
-    }
-    
-    public Target(String id, String name, Status status, List<Build> builds, List<Sponsor> sponsors) {
-        this(id, name, status, 0L, builds, sponsors);
+        this(id, name, status, 0L, new ArrayList<Build>(), new ArrayList<Sponsor>());
     }
     
     public Target(String id, String name, Status status, long lastStartTime, List<Build> builds, List<Sponsor> sponsors) {
