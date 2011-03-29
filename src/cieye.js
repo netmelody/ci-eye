@@ -160,7 +160,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         var targets = targetGroupJson.targets.sort(function(a, b) {
                 if (a.status === b.status) {
                     if (a.builds.length === b.builds.length) {
-                        return (a.name < b.name) ? -1 : 1;
+                        return (a.lastStartTime > b.lastStartTime) ? -1 : 1;
                     }
                     return (a.builds.length > b.builds.length) ? -1 : 1;
                 }
