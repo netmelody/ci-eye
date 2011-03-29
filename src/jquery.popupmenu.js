@@ -98,10 +98,12 @@
         shadow.appendTo("body");
     });
     
-    $.fn.popupMenu = function(items) {
+    $.fn.popupMenu = function(items, guardFunction) {
         $(this).bind("click", function(event) {
-            showMenu(event.pageX, event.pageY, items);
-            return false;
+            if (!guardFunction || guardFunction()) {
+                showMenu(event.pageX, event.pageY, items);
+                return false;
+            }
         });
         return this;
     };

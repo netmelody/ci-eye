@@ -120,11 +120,12 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         });
     }
     
-    function clickHandler() {
-        if (targetDiv.css('cursor') !== 'pointer') {
-            return;
-        }
-        window.alert('Do something with ' + targetJson.name);
+    function clickable() {
+        return (targetDiv.css('cursor') === 'pointer');
+    }
+    
+    function sayHi() {
+        alert("Hi");
     }
     
     function initialise() {
@@ -133,7 +134,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass('target');
-        targetDiv.click(clickHandler);
+        targetDiv.popupMenu([{"label": "One", "handler": sayHi}, {"label": "Two", "handler": sayHi}], clickable);
         refresh(targetJson);
     }
     
