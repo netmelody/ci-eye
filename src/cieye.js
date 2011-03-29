@@ -124,8 +124,12 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         return (targetDiv.css('cursor') === 'pointer');
     }
     
-    function sayHi() {
-        alert("Hi");
+    function viewDetails() {
+        window.open(targetJson.webUrl);
+    }
+    
+    function markAsBeingFixed() {
+        window.alert("Sorry, not implemented yet.");
     }
     
     function initialise() {
@@ -134,7 +138,9 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass('target');
-        targetDiv.popupMenu([{"label": "One", "handler": sayHi}, {"label": "Two", "handler": sayHi}], clickable);
+        targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
+                             {"label": "Mark as Being Fixed", "handler": markAsBeingFixed}],
+                            clickable);
         refresh(targetJson);
     }
     
