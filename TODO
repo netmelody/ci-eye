@@ -1,4 +1,3 @@
-repackage org.netmelody.cii to org.netmelody.cieye
 change to a pop-up when comms are lost with the server (and keep re-trying)
 add mark as fixed link for targets in desktop mode
 resize images again when changing modes
