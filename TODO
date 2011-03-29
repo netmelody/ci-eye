@@ -1,7 +1,5 @@
 repackage org.netmelody.cii to org.netmelody.cieye
 change to a pop-up when comms are lost with the server (and keep re-trying)
-sub-order by last build time
-add goto link for targets in desktop mode
 add mark as fixed link for targets in desktop mode
 resize images again when changing modes
 allow a different set of pictures for each landscape
