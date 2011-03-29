@@ -4,11 +4,11 @@ ORG.NETMELODY = ORG.NETMELODY ? ORG.NETMELODY : {};
 ORG.NETMELODY.CIEYE = {};
 
 ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
-    var buildDiv = $('<div></div>').addClass('progress-bar'),
-        barDiv   = $('<div></div>');
+    var buildDiv = $("<div></div>").addClass("progress-bar"),
+        barDiv   = $("<div></div>");
     
     function updateProgress(percent) {
-        barDiv.attr('style', 'width: ' + percent + '%');
+        barDiv.attr("style", "width: " + percent + "%");
     }
     
     function updateStatus(status) {
@@ -53,8 +53,8 @@ ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
     }
     
     function initialise() {
-        image = $('<img></img>').attr({ 'src': sponsorJson.picture,
-                                        'title': sponsorJson.name })
+        image = $("<img></img>").attr({ "src": sponsorJson.picture,
+                                        "title": sponsorJson.name })
                                 .load(resizeImage);
     }
     
@@ -68,10 +68,10 @@ ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
 
 ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     var currentTargetJson = { builds:[] },
-        targetDiv = $('<div></div>'),
-        titleSpan = $('<span></span>'),
-        sponsorDiv = $('<div></div>').addClass('sponsors'),
-        buildsDiv = $('<div></div>'),
+        targetDiv = $("<div></div>"),
+        titleSpan = $("<span></span>"),
+        sponsorDiv = $("<div></div>").addClass("sponsors"),
+        buildsDiv = $("<div></div>"),
         sponsorMugshots = {};
     
     function sortedSponsors(unsortedSponsors) {
@@ -81,7 +81,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function calculateImageSize() {
-        return parseInt(titleSpan.css('font-size'), 10) + 5;
+        return parseInt(titleSpan.css("font-size"), 10) + 5;
     }
     
     function refresh(newTargetJson) {
@@ -101,10 +101,10 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         });
 
         if (newTargetJson.builds.length === 0) {
-            targetDiv.removeClass('building');
+            targetDiv.removeClass("building");
         }
         else {
-            targetDiv.addClass('building');
+            targetDiv.addClass("building");
         }
         
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
@@ -121,7 +121,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function clickable() {
-        return (targetDiv.css('cursor') === 'pointer');
+        return (targetDiv.css("cursor") === "pointer");
     }
     
     function viewDetails() {
@@ -137,7 +137,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(titleSpan);
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
-        targetDiv.addClass('target');
+        targetDiv.addClass("target");
         targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
                              {"label": "Mark as Being Fixed", "handler": markAsBeingFixed}],
                             clickable);
@@ -153,7 +153,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 };
 
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
-    var radiatorDiv = $('<div></div>'),
+    var radiatorDiv = $("<div></div>"),
         targetWidgets = {};
     
     function refresh(targetGroupJson) {
@@ -164,7 +164,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                     }
                     return (a.builds.length > b.builds.length) ? -1 : 1;
                 }
-                return (a.status === 'BROKEN' || b.status === 'GREEN') ? -1 : 1;
+                return (a.status === "BROKEN" || b.status === "GREEN") ? -1 : 1;
             }),
             deadTargetWidgets = $.extend({}, targetWidgets);
         
@@ -236,7 +236,7 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
     
     function refresh() {
         scheduler.guard(30000);
-        $.getJSON('landscapeobservation.json', function(targetList) {
+        $.getJSON("landscapeobservation.json", function(targetList) {
             scheduler.relax();
             radiatorWidget.updateFrom(targetList);
         });
@@ -255,5 +255,5 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
 
 $(document).ready(function() {
     var scheduler = ORG.NETMELODY.CIEYE.scheduler(window);
-    ORG.NETMELODY.CIEYE.newRadiator($('#radiator'), scheduler).start();
+    ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler).start();
 });

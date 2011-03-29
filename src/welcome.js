@@ -4,13 +4,13 @@ ORG.NETMELODY = ORG.NETMELODY ? ORG.NETMELODY : {};
 ORG.NETMELODY.CIEYE = {};
 
 ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
-    var landscapeList = $('<ul></ul>');
+    var landscapeList = $("<ul></ul>");
     
     function displayListItem(landscapeListItemJson) {
-        var item = $('<li></li>'),
-            anchor = $('<a></a>');
+        var item = $("<li></li>"),
+            anchor = $("<a></a>");
         
-        anchor.attr('href', '/landscapes/' + landscapeListItemJson.name + '/');
+        anchor.attr("href", "/landscapes/" + landscapeListItemJson.name + "/");
         anchor.text(landscapeListItemJson.name);
         
         item.append(anchor);
@@ -25,7 +25,7 @@ ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
     }
     
     function refresh() {
-        $.getJSON('landscapelist.json', function(landscapeListJson) {
+        $.getJSON("landscapelist.json", function(landscapeListJson) {
             displayList(landscapeListJson.landscapes);
         });
     }
@@ -37,14 +37,14 @@ ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
 };
 
 ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function(landscapeListDiv) {
-    var settingsLocationSpan = $('<span></span>');
+    var settingsLocationSpan = $("<span></span>");
     
     function displayLocation(location) {
         settingsLocationSpan.text(location);
     }
     
     function refresh() {
-        $.getJSON('settingslocation.json', function(locationJson) {
+        $.getJSON("settingslocation.json", function(locationJson) {
             displayLocation(locationJson);
         });
     }
@@ -60,13 +60,13 @@ ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
 
     fadeIn = function() {
         content.fadeIn();
-        trigger.unbind('click');
+        trigger.unbind("click");
         trigger.click(fadeOut);
     };
     
     fadeOut = function() {
         content.fadeOut();
-        trigger.unbind('click');
+        trigger.unbind("click");
         trigger.click(fadeIn);
     };
 
@@ -80,7 +80,7 @@ $(document).ready(function() {
     var landscapeListWidget = ORG.NETMELODY.CIEYE.newLandscapeListWidget(),
         settingsLocationWidget = ORG.NETMELODY.CIEYE.newSettingsLocationWidget();
     
-    $('#landscapelist').append(landscapeListWidget.getContent());
-    $('#settingsDir').append(settingsLocationWidget.getContent());
-    ORG.NETMELODY.CIEYE.newPopup($('#help'), $('#helptext'));
+    $("#landscapelist").append(landscapeListWidget.getContent());
+    $("#settingsDir").append(settingsLocationWidget.getContent());
+    ORG.NETMELODY.CIEYE.newPopup($("#help"), $("#helptext"));
 });
