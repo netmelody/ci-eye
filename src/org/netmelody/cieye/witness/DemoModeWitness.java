@@ -21,11 +21,11 @@ import org.netmelody.cieye.persistence.Detective;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public final class DummyWitness implements Witness {
+public final class DemoModeWitness implements Witness {
 
     private final Map<String, TargetGroup> groupMap;
 
-    public DummyWitness(final Detective detective) {
+    public DemoModeWitness(final Detective detective) {
         final Map<String, TargetGroupGenerator> generatorMap =
             new MapMaker().makeComputingMap(new Function<String, TargetGroupGenerator>() {
                 @Override
