@@ -29,7 +29,7 @@
             <zipgroupfileset dir="vendor/lib" includes="*.jar"/>
 
             <manifest>
-                <attribute name="Main-Class" value="org.netmelody.cii.CiEye"/>
+                <attribute name="Main-Class" value="org.netmelody.cieye.CiEye"/>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Implementation-Vendor" value="netmelody.org"/>
                 <attribute name="Implementation-Title" value="Ci-Eye"/>
