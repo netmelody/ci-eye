@@ -1,5 +1,7 @@
 package org.netmelody.cii.witness.teamcity.jsondomain;
 
+import java.util.Date;
+
 import org.netmelody.cii.domain.Status;
 
 public final class BuildDetail {
@@ -13,8 +15,8 @@ public final class BuildDetail {
     public boolean pinned;
     public String statusText;
     //buildType
-    //startDate
-    //finishDate
+    public Date startDate;
+    public Date finishDate;
     //agent
     //tags
     //properties
@@ -27,5 +29,9 @@ public final class BuildDetail {
             return Status.GREEN;
         }
         return Status.BROKEN;
+    }
+
+    public long startDateTime() {
+        return (null == startDate) ? 0L : startDate.getTime();
     }
 }

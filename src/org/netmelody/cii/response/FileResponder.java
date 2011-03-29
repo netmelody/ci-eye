@@ -1,6 +1,5 @@
 package org.netmelody.cii.response;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
@@ -41,7 +40,8 @@ public final class FileResponder implements Resource {
             response.setDate("Last-Modified", time);
             IOUtils.copy(input, body);
         }
-        catch (IOException e) {
+        catch (Exception e) {
+            LOG.error("Failed to respond to request for resource " + this.name);
             response.setCode(500);
         }
         finally {
