@@ -8,29 +8,43 @@
             "shadowStyle": {
                 "backgroundColor": "#000000",
                 "position": "absolute",
-                "opacity": "0.2",
+                "opacity": "0.4",
                 "zIndex": "499"
+            },
+            "titleBarStyle": {
+                "padding": "1px",
+                "margin": "0",
+                "backgroundColor": "#ffffff",
+                "border": "1px solid #999",
+                "height": "16px"
             },
             "itemListStyle": {
                 "listStyle": "none",
                 "padding": "1px",
-                "margin": "0px",
-                "backgroundColor": "#fff",
-                "border": "1px solid #999",
-                "width": "100px"
+                "margin": "0",
+                "backgroundColor": "#ffffff",
+                "border": "1px solid #999"
             },
             "itemStyle": {
                 "margin": "0px",
-                "color": "#000",
+                "color": "#000000",
                 "display": "block",
                 "cursor": "default",
                 "padding": "3px",
-                "border": "1px solid #fff",
+                "border": "1px solid #ffffff",
                 "backgroundColor": "transparent"
             },
             "itemHoverStyle": {
                 "border": "1px solid #0a246a",
                 "backgroundColor": "#b6bdd2"
+            },
+            "closeButtonStyle": {
+                "color": "#000000",
+                "float": "right",
+                "padding": "0 1px 0 0",
+                "cursor": "pointer",
+                "font-family": "verdana,sans-serif",
+                "font-size": "0.8em"
             }
         },
         menu = $("<div></div>")
@@ -41,7 +55,16 @@
                    }),
         shadow = $("<div></div>")
                      .hide()
-                     .css(style.shadowStyle);
+                     .css(style.shadowStyle),
+        titleBar = $("<div></div>")
+                       .css(style.titleBarStyle)
+                       .appendTo(menu),
+        closeButton = $("<a>X</a>")
+                          .css(style.closeButtonStyle)
+                          .appendTo(titleBar),
+        content = $("<ul></ul>")
+                      .css(style.itemListStyle)
+                      .appendTo(menu);
     
     function hideMenu() {
         menu.hide();
@@ -70,16 +93,11 @@
     }
     
     function showMenu(x, y, items) {
-        var content = $("<ul></ul>").css(style.itemListStyle);
-        
+        content.empty();
         $.each(items, function(index, item) {
             content.append(listItemFor(item));
         });
-        content.append(listItemFor({"label": "Cancel",
-                                    "handler": hideMenu}));
         
-        menu.empty();
-        menu.append(content);
         menu.css({
                 "left": x,
                 "top": y})
@@ -96,6 +114,7 @@
     $(document).ready(function() {
         menu.appendTo("body");
         shadow.appendTo("body");
+        closeButton.click(hideMenu);
     });
     
     $.fn.popupMenu = function(items, guardFunction) {
