@@ -32,7 +32,9 @@
                 "cursor": "default",
                 "padding": "3px",
                 "border": "1px solid #ffffff",
-                "backgroundColor": "transparent"
+                "backgroundColor": "transparent",
+                "font-family": "verdana,sans-serif",
+                "font-size": "0.8em"
             },
             "itemHoverStyle": {
                 "border": "1px solid #0a246a",
