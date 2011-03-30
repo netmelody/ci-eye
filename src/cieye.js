@@ -128,8 +128,9 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         window.open(targetJson.webUrl);
     }
     
-    function markAsBeingFixed() {
+    function markAsUnderInvestigation() {
         window.alert("Sorry, not implemented yet.");
+        //$.post("mark", { "id": targetJson.id, "status": "UNDER_INVESTIGATION" } );
     }
     
     function initialise() {
@@ -139,7 +140,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(buildsDiv);
         targetDiv.addClass("target");
         targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
-                             {"label": "Mark as Being Fixed", "handler": markAsBeingFixed}],
+                             {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation}],
                             clickable);
         refresh(targetJson);
     }
