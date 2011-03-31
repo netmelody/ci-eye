@@ -102,32 +102,35 @@ public final class TeamCityWitness implements Witness {
         }
         
         final List<Sponsor> sponsors = new ArrayList<Sponsor>();
-        final List<org.netmelody.cieye.domain.Build> builds = new ArrayList<org.netmelody.cieye.domain.Build>();
+        final List<org.netmelody.cieye.domain.Build> runningBuilds = new ArrayList<org.netmelody.cieye.domain.Build>();
         long startTime = 0L;
             
-        final Builds runningBuilds = makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class);
-        if (runningBuilds.build != null && !runningBuilds.build.isEmpty()) {
-            for(Build build : runningBuilds.build) {
-                final BuildDetail buildDetail = detailsOf(build);
-                startTime = Math.max(buildDetail.startDateTime(), startTime);
-                sponsors.addAll(sponsorsOf(buildDetail));
-                builds.add(new org.netmelody.cieye.domain.Build(percentageOf(build.percentageComplete), build.status()));
-            }
+        for(Build build : runningBuildsFor(buildType)) {
+            final BuildDetail buildDetail = detailsOf(build);
+            startTime = Math.max(buildDetail.startDateTime(), startTime);
+            sponsors.addAll(sponsorsOf(buildDetail));
+            runningBuilds.add(new org.netmelody.cieye.domain.Build(percentageOf(build.percentageComplete), build.status()));
         }
         
         Status currentStatus = Status.GREEN;
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
         if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
             final Build lastCompletedBuild = completedBuilds.build.iterator().next();
-            if (builds.isEmpty()) {
+            currentStatus = lastCompletedBuild.status();
+            if (runningBuilds.isEmpty() || Status.BROKEN.equals(currentStatus)) {
                 final BuildDetail buildDetail = detailsOf(lastCompletedBuild);
                 startTime = Math.max(buildDetail.startDateTime(), startTime);
                 sponsors.addAll(sponsorsOf(buildDetail));
+                currentStatus = buildDetail.status();
             }
-            currentStatus = lastCompletedBuild.status();
         }
         
-        return new Target(endpoint + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, builds, sponsors);
+        return new Target(endpoint + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, runningBuilds, sponsors);
+    }
+
+    private List<Build> runningBuildsFor(BuildType buildType) {
+        final List<Build> result = makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build;
+        return (result == null) ? new ArrayList<Build>() : result;
     }
     
     private BuildDetail detailsOf(Build build) {
