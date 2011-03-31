@@ -130,7 +130,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     
     function markAsUnderInvestigation() {
         window.alert("Sorry, not implemented yet.");
-        //$.post("mark", { "id": targetJson.id, "status": "UNDER_INVESTIGATION" } );
+        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
     }
     
     function initialise() {

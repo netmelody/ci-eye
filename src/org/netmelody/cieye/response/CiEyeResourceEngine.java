@@ -25,6 +25,10 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         if ("json".equals(target.getPath().getExtension())) {
             return new JsonResponder(jsonResponseBuilderFor(target));
         }
+        if ("addNote".equals(target.getPath().getName())) {
+            return new TargetNotationHandler(state, witnessProvider);
+        }
+        
         if ((target.getPath().getSegments().length > 0) && "/pictures".equals(target.getPath().getPath(0, 1))) {
             return new PictureResponder(state, target.getPath());
         }
