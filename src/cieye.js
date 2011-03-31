@@ -35,27 +35,42 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 };
 
 ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
-    var image;
+    var image,
+        heightFactor = 1.0,
+        widthFactor = 1.0,
+        currentMaxSize = -1;
     
     function resizeImage() {
-        var maxSize = sizeCalculator(),
-            width = image.width(),
+        var maxSize = sizeCalculator();
+        
+        if (maxSize === currentMaxSize) {
+            return;
+        }
+        
+        currentMaxSize = maxSize;
+        image.height(maxSize * heightFactor);
+        image.width(maxSize * widthFactor);
+    }
+    
+    function initialiseImage() {
+        var width = image.width(),
             height = image.height();
         
         if (width > height) {
-            image.height(height * maxSize / width);
-            image.width(maxSize);
+            heightFactor = height / width;
         }
         else {
-            image.width(width * maxSize / height);
-            image.height(maxSize);
+            widthFactor = width / height;
         }
+        
+        resizeImage();
     }
     
     function initialise() {
-        image = $("<img></img>").attr({ "src": sponsorJson.picture,
-                                        "title": sponsorJson.name })
-                                .load(resizeImage);
+        image = $("<img></img>")
+                    .attr({ "src": sponsorJson.picture,
+                            "title": sponsorJson.name })
+                    .load(initialiseImage);
     }
     
     initialise();
@@ -84,7 +99,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         return parseInt(titleSpan.css("font-size"), 10) + 5;
     }
     
-    function refresh(newTargetJson) {
+    function updateFrom(newTargetJson) {
         var lastTargetJson = currentTargetJson;
         
         currentTargetJson = newTargetJson;
@@ -133,6 +148,12 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         //$.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
     }
     
+    function refreshImages() {
+        $.each(sponsorMugshots, function(key, mugshotWidget) {
+            mugshotWidget.refresh();
+        });
+    }
+    
     function initialise() {
         titleSpan.text(targetJson.name);
         targetDiv.append(titleSpan);
@@ -142,20 +163,15 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
                              {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation}],
                             clickable);
-                            
-//        targetDiv.bind("resize", function() {
-//            $.each(sponsorMugshots, function(key, mugshotWidget) {
-//                mugshotWidget.resizeImage();
-//            }); 
-//        });
-
-        refresh(targetJson);
+        
+        updateFrom(targetJson);
     }
     
     initialise();
     
     return {
-        "updateFrom": refresh,
+        "refresh": refreshImages,
+        "updateFrom": updateFrom,
         "getContent": function() { return targetDiv; }
     };
 };
@@ -165,11 +181,11 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         targetWidgets = {},
         statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
 
-    function compare(a, b) {
-        return (a < b) ? -1 : ((a === b) ? 0 : 1);
-    }
-    
     function targetComparator(a, b) {
+        function compare(a, b) {
+            return (a < b) ? -1 : ((a === b) ? 0 : 1);
+        }
+        
         if (a.status !== b.status) {
             return compare(statusRanks.indexOf(a.status), statusRanks.indexOf(b.status));
         }
@@ -179,13 +195,13 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         }
         
         if (a.lastStartTime !== b.lastStartTime) {
-            return compare(a.lastStartTime, b.lastStartTime);
+            return compare(b.lastStartTime, a.lastStartTime);
         }
         
         return compare(a.name, b.name);
     }
     
-    function refresh(targetGroupJson) {
+    function updateFrom(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
         
@@ -204,8 +220,15 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         });
     }
     
+    function refresh() {
+        $.each(targetWidgets, function(index, targetWidget) {
+            targetWidget.refresh();
+        });
+    }
+    
     return {
-        "updateFrom": refresh,
+        "refresh": refresh,
+        "updateFrom": updateFrom,
         "getContent": function() { return radiatorDiv; }
     };
 };
@@ -255,7 +278,7 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
 ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
     var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget();
     
-    function refresh() {
+    function update() {
         scheduler.guard(30000);
         $.getJSON("landscapeobservation.json", function(targetList) {
             scheduler.relax();
@@ -263,18 +286,29 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
         });
     }
     
+    function refresh() {
+        radiatorWidget.refresh();
+    }
+    
     function startup() {
         radiatorDiv.append(radiatorWidget.getContent());
-        refresh();
-        scheduler.repeat(refresh, 2000);
+        update();
+        scheduler.repeat(update, 2000);
     }
     
     return {
-        "start": startup
+        "start": startup,
+        "refresh": refresh
     };
 };
 
 $(document).ready(function() {
-    var scheduler = ORG.NETMELODY.CIEYE.scheduler(window);
-    ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler).start();
+    var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
+        radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler);
+    
+    $(window).bind("resize", function() {
+        radiator.refresh();
+    });
+    
+    radiator.start();
 });
