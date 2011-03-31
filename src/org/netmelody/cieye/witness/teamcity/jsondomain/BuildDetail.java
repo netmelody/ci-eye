@@ -18,6 +18,7 @@ public final class BuildDetail {
     public Date startDate;
     public Date finishDate;
     //agent
+    public Comment comment;
     //tags
     //properties
     //revisions
@@ -27,6 +28,9 @@ public final class BuildDetail {
     public Status status() {
         if (status == null || "SUCCESS".equals(status)) {
             return Status.GREEN;
+        }
+        if (comment != null && comment.text != null && !comment.text.isEmpty()) {
+            return Status.UNDER_INVESTIGATION;
         }
         return Status.BROKEN;
     }
