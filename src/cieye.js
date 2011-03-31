@@ -155,18 +155,31 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
-        targetWidgets = {};
+        targetWidgets = {},
+        statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
+
+    function compare(a, b) {
+        return (a < b) ? -1 : ((a === b) ? 0 : 1);
+    }
+    
+    function targetComparator(a, b) {
+        if (a.status !== b.status) {
+            return compare(statusRanks.indexOf(a.status), statusRanks.indexOf(b.status));
+        }
+        
+        if (a.builds.length !== b.builds.length) {
+            return compare(a.builds.length, b.builds.length);
+        }
+        
+        if (a.lastStartTime !== b.lastStartTime) {
+            return compare(a.lastStartTime, b.lastStartTime);
+        }
+        
+        return compare(a.name, b.name);
+    }
     
     function refresh(targetGroupJson) {
-        var targets = targetGroupJson.targets.sort(function(a, b) {
-                if (a.status === b.status) {
-                    if (a.builds.length === b.builds.length) {
-                        return (a.lastStartTime > b.lastStartTime) ? -1 : 1;
-                    }
-                    return (a.builds.length > b.builds.length) ? -1 : 1;
-                }
-                return (a.status === "BROKEN" || b.status === "GREEN") ? -1 : 1;
-            }),
+        var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
         
         $.each(targets, function(index, targetJson) {
