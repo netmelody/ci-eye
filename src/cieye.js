@@ -142,6 +142,13 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
                              {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation}],
                             clickable);
+                            
+//        targetDiv.bind("resize", function() {
+//            $.each(sponsorMugshots, function(key, mugshotWidget) {
+//                mugshotWidget.resizeImage();
+//            }); 
+//        });
+
         refresh(targetJson);
     }
     
