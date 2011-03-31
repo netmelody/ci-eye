@@ -130,7 +130,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     
     function markAsUnderInvestigation() {
         window.alert("Sorry, not implemented yet.");
-        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
+        //$.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
     }
     
     function initialise() {
@@ -168,7 +168,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         }
         
         if (a.builds.length !== b.builds.length) {
-            return compare(a.builds.length, b.builds.length);
+            return compare(b.builds.length, a.builds.length);
         }
         
         if (a.lastStartTime !== b.lastStartTime) {
