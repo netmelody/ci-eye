@@ -8,4 +8,6 @@ public interface Witness {
     TargetGroup statusOf(Feature feature);
 
     long millisecondsUntilNextUpdate(Feature feature);
+
+    boolean takeNoteOf(String targetId, String note);
 }

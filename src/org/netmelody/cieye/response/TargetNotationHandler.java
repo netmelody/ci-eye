@@ -36,7 +36,9 @@ public final class TargetNotationHandler implements Resource {
             
             for (Feature feature : landscape.features()) {
                 final Witness witness = witnessProvider.witnessFor(feature);
-                //witness.note(targetId, note);
+                if (witness.takeNoteOf(targetId, note)) {
+                    return;
+                }
             }
         } catch (IOException e) {
             LOG.error("Failed to handle request to note a build", e);

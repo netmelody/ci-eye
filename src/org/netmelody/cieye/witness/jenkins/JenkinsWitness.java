@@ -4,6 +4,8 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,6 +56,20 @@ public final class JenkinsWitness implements Witness {
     @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
         return 0L;
+    }
+    
+    @Override
+    public boolean takeNoteOf(String targetId, String note) {
+        String buildUrl = this.viewAnalsyer.lastBadBuildUrlFor(targetId);
+        
+        if (null == buildUrl || buildUrl.isEmpty()) {
+            return false;
+        }
+        
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("desctiption", note);
+        communicator.doJenkinsPost(buildUrl + "/submitDescription", params);
+        return true;
     }
     
     public Collection<String> users() {

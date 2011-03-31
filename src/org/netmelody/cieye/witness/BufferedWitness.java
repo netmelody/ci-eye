@@ -18,6 +18,7 @@ public final class BufferedWitness implements Witness {
 
     private static final long DEFAULT_BUFFER_TIME = 10000L;
 
+    private final Witness delegate;
     private final Map<Feature, Long> requestTimeCache = new HashMap<Feature, Long>();
     private final Map<Feature, TargetGroup> resultCache;
     
@@ -28,6 +29,7 @@ public final class BufferedWitness implements Witness {
     }
     
     public BufferedWitness(final Witness delegate, final long bufferTime) {
+        this.delegate = delegate;
         this.bufferTime = bufferTime;
         
         this.resultCache =
@@ -46,27 +48,32 @@ public final class BufferedWitness implements Witness {
         return max(requestTimeCache.get(feature) + bufferTime - System.currentTimeMillis(), 0L);
     }
     
+    @Override
+    public boolean takeNoteOf(String targetId, String note) {
+        return this.delegate.takeNoteOf(targetId, note);
+    } 
+    
     public static final class StatusComputer implements Function<Feature, TargetGroup> {
         private static final Log LOG = LogFactory.getLog(StatusComputer.class);
         
         private final Map<Feature, Long> requestTimeCache;
-        private final Witness delegate;
+        private final Witness witness;
 
-        public StatusComputer(Map<Feature, Long> requestTimeCache, Witness delegate) {
+        public StatusComputer(Map<Feature, Long> requestTimeCache, Witness witness) {
             this.requestTimeCache = requestTimeCache;
-            this.delegate = delegate;
+            this.witness = witness;
         }
         
         @Override
         public TargetGroup apply(Feature feature) {
             requestTimeCache.put(feature, System.currentTimeMillis());
             try {
-                return delegate.statusOf(feature);
+                return witness.statusOf(feature);
             }
             catch (Exception e) {
                 LOG.error(String.format("Failed to get status of feature (%s)", feature.name()), e);
             }
             return new TargetGroup();
         }
-   } 
+    }
 }

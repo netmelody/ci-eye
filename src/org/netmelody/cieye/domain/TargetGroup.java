@@ -28,4 +28,13 @@ public final class TargetGroup {
     public List<Target> targets() {
         return new ArrayList<Target>(targets);
     }
+
+    public Target targetIdentifiedBy(String targetId) {
+        for(Target target : targets) {
+            if (targetId.equals(target.id())) {
+                return target;
+            }
+        }
+        return null;
+    }
 }

@@ -33,6 +33,13 @@ public final class ViewAnalyser {
         });
     }
     
+    public String lastBadBuildUrlFor(String jobId) {
+        if (analyserMap.containsKey(jobId)) {
+            return analyserMap.get(jobId).lastBadBuildUrl();
+        }
+        return null;
+    }
+    
     private Collection<Job> jobsFor(View view) {
         return communicator.makeJenkinsRestCall(view.url, ViewDetail.class).jobs;
     }

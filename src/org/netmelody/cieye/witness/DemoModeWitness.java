@@ -55,6 +55,11 @@ public final class DemoModeWitness implements Witness {
         return 0L;
     }
     
+    @Override
+    public boolean takeNoteOf(String targetId, String note) {
+        return true;
+    }
+    
     private static final class TargetGroupGenerator {
         
         private final Detective detective;

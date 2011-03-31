@@ -1,5 +1,7 @@
 package org.netmelody.cieye.witness.protocol;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,5 +52,13 @@ public final class JsonRestRequester {
 
     public void performBasicLogin(String loginUrl) {
         restRequester.makeRequest(loginUrl);
+    }
+
+    public void performBasicAuthentication(String username, String password) {
+        restRequester.performBasicAuthentication(username, password);
+    }
+    
+    public void doPost(String url, Map<String, String> parameterValues) {
+        restRequester.doPost(url, parameterValues);
     }
 }

@@ -80,7 +80,12 @@ public final class TeamCityWitness implements Witness {
     public long millisecondsUntilNextUpdate(Feature feature) {
         return 0L;
     }
-        
+    
+    @Override
+    public boolean takeNoteOf(String targetId, String note) {
+        return false;
+    }
+    
     private Collection<Project> projects() {
         return makeTeamCityRestCall(endpoint + "/app/rest/projects", TeamCityProjects.class).project;
     }

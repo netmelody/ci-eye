@@ -57,6 +57,10 @@ public final class JobAnalyser {
         return new Target(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
+    public String lastBadBuildUrl() {
+        return communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class).lastBadBuildUrl();
+    }
+    
     private long startTimeOf(JobDetail job) {
         return buildStartTimeFetcher.lastStartTimeOf(job);
     }

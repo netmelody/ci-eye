@@ -41,7 +41,7 @@ public final class JobDetail extends Job {
         final Collection<String> candidates = filter(filter(transform(filter(lastBadBuilds, notNull()), toUrl()), notNull()), notEmpty());
         
         if (candidates.isEmpty()) {
-            return url;
+            return "";
         }
         
         return lexographicallyLastFrom(candidates);

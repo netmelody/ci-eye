@@ -1,5 +1,7 @@
 package org.netmelody.cieye.witness.jenkins;
 
+import java.util.Map;
+
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 
 import com.google.gson.GsonBuilder;
@@ -26,5 +28,9 @@ public final class JenkinsCommunicator {
     
     public String endpoint() {
         return endpoint;
+    }
+
+    public void doJenkinsPost(String url, Map<String, String> parameterValues) {
+        restRequester.doPost(url, parameterValues);
     }
 }
