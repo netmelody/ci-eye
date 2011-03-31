@@ -109,7 +109,7 @@ public final class TeamCityWitness implements Witness {
             final BuildDetail buildDetail = detailsOf(build);
             startTime = Math.max(buildDetail.startDateTime(), startTime);
             sponsors.addAll(sponsorsOf(buildDetail));
-            runningBuilds.add(new org.netmelody.cieye.domain.Build(percentageOf(build.percentageComplete), build.status()));
+            runningBuilds.add(new org.netmelody.cieye.domain.Build(percentageOf(build.percentageComplete), buildDetail.status()));
         }
         
         Status currentStatus = Status.GREEN;
