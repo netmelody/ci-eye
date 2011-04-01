@@ -1,25 +1,30 @@
 package org.netmelody.cieye.witness.protocol;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScheme;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 
 public final class RestRequester {
 
@@ -70,17 +75,16 @@ public final class RestRequester {
     }
     
     public void doPost(String url, Map<String, String> parameterValues) {
+        
         LOG.info(url);
         try {
-            final HttpPost httpPost = new HttpPost(url);
-            final BasicHttpParams params = new BasicHttpParams();
-            for (Entry<String, String> parameterValue : parameterValues.entrySet()) {
-                params.setParameter(parameterValue.getKey(), parameterValue.getValue());
-            }
-            httpPost.setParams(params);
+            performBasicAuthentication("ci", "");
+            final BasicHttpContext localcontext = new BasicHttpContext();
+            localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
             
+            final HttpPost httpPost = new HttpPost(url + "?description=blah");
             final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            client.execute(httpPost, responseHandler);
+            client.execute(httpPost, responseHandler, localcontext);
         }
         catch (Exception e) {
             LOG.error(url, e);
@@ -94,5 +98,14 @@ public final class RestRequester {
         catch (Exception e) {
             LOG.error("error shutting down", e);
         }
+    }
+    
+    public static final class SingleAuthCache implements AuthCache {
+        private AuthScheme authScheme;
+        public SingleAuthCache(AuthScheme authScheme) { this.authScheme = authScheme; }
+        @Override public void put(HttpHost host, AuthScheme authScheme) { this.authScheme = authScheme; } 
+        @Override public AuthScheme get(HttpHost host) { return this.authScheme; } 
+        @Override public void remove(HttpHost host) { return; } 
+        @Override public void clear() { return; }
     }
 }

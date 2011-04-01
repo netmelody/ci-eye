@@ -68,7 +68,7 @@ public final class JenkinsWitness implements Witness {
         
         final Map<String, String> params = new HashMap<String, String>();
         params.put("desctiption", note);
-        communicator.doJenkinsPost(buildUrl + "/submitDescription", params);
+        communicator.doJenkinsPost(buildUrl + "submitDescription", params);
         return true;
     }
     
