@@ -144,7 +144,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function markAsUnderInvestigation() {
-        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
+        window.alert("Sorry, not implemented yet.");
+        //$.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
     }
     
     function refreshImages() {
