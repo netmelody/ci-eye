@@ -14,7 +14,7 @@ import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Build;
 import org.netmelody.cieye.witness.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cieye.witness.jenkins.jsondomain.ChangeSetItem;

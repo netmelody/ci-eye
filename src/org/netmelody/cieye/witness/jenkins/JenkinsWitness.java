@@ -13,7 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Server;
 import org.netmelody.cieye.witness.jenkins.jsondomain.UserDetail;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Users;

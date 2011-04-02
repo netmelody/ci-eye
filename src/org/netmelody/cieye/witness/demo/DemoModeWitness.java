@@ -20,7 +20,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;

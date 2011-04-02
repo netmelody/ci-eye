@@ -1,4 +1,4 @@
-package org.netmelody.cieye.persistence;
+package org.netmelody.cieye.core.observation;
 
 import java.io.File;
 import java.io.IOException;

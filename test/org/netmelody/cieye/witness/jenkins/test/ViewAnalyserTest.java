@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.witness.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.witness.jenkins.ViewAnalyser;
 import org.netmelody.cieye.witness.jenkins.jsondomain.View;

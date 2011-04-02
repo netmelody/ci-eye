@@ -6,7 +6,7 @@ import java.util.Map;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.witness.demo.DemoModeWitness;
 import org.netmelody.cieye.witness.jenkins.JenkinsWitness;

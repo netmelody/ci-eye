@@ -14,7 +14,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 import org.netmelody.cieye.witness.teamcity.jsondomain.Build;
 import org.netmelody.cieye.witness.teamcity.jsondomain.BuildDetail;

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.core.observation.Detective;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Job;
 import org.netmelody.cieye.witness.jenkins.jsondomain.View;
 import org.netmelody.cieye.witness.jenkins.jsondomain.ViewDetail;

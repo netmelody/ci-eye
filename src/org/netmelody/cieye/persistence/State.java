@@ -5,6 +5,7 @@ import java.net.InetAddress;
 
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
+import org.netmelody.cieye.core.observation.Detective;
 
 public final class State {
 
