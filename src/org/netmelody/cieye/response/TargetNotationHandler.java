@@ -6,8 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.witness.Witness;
 import org.netmelody.cieye.witness.WitnessProvider;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -35,7 +35,7 @@ public final class TargetNotationHandler implements Resource {
             final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
             
             for (Feature feature : landscape.features()) {
-                final Witness witness = witnessProvider.witnessFor(feature);
+                final CiSpy witness = witnessProvider.witnessFor(feature);
                 if (witness.takeNoteOf(targetId, note)) {
                     return;
                 }

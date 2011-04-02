@@ -10,25 +10,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.observation.CiSpy;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public final class BufferedWitness implements Witness {
+public final class BufferedWitness implements CiSpy {
 
     private static final long DEFAULT_BUFFER_TIME = 10000L;
 
-    private final Witness delegate;
+    private final CiSpy delegate;
     private final Map<Feature, Long> requestTimeCache = new HashMap<Feature, Long>();
     private final Map<Feature, TargetGroup> resultCache;
     
     private final long bufferTime;
 
-    public BufferedWitness(Witness delegate) {
+    public BufferedWitness(CiSpy delegate) {
         this(delegate, DEFAULT_BUFFER_TIME);
     }
     
-    public BufferedWitness(final Witness delegate, final long bufferTime) {
+    public BufferedWitness(final CiSpy delegate, final long bufferTime) {
         this.delegate = delegate;
         this.bufferTime = bufferTime;
         
@@ -57,9 +58,9 @@ public final class BufferedWitness implements Witness {
         private static final Log LOG = LogFactory.getLog(StatusComputer.class);
         
         private final Map<Feature, Long> requestTimeCache;
-        private final Witness witness;
+        private final CiSpy witness;
 
-        public StatusComputer(Map<Feature, Long> requestTimeCache, Witness witness) {
+        public StatusComputer(Map<Feature, Long> requestTimeCache, CiSpy witness) {
             this.requestTimeCache = requestTimeCache;
             this.witness = witness;
         }

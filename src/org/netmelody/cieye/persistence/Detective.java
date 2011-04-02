@@ -18,10 +18,10 @@ import org.netmelody.cieye.core.domain.Sponsor;
 
 public final class Detective {
     
+    private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
+    
     private static final Log LOG = LogFactory.getLog(Detective.class);
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
-    
-    public Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
     public Detective(File picturesFile) {
         loadPictureSettings(picturesFile);

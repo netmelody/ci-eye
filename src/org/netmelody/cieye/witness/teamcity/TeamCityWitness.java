@@ -13,8 +13,8 @@ import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.persistence.Detective;
-import org.netmelody.cieye.witness.Witness;
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 import org.netmelody.cieye.witness.teamcity.jsondomain.Build;
 import org.netmelody.cieye.witness.teamcity.jsondomain.BuildDetail;
@@ -33,7 +33,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.gson.GsonBuilder;
 
-public final class TeamCityWitness implements Witness {
+public final class TeamCityWitness implements CiSpy {
 
     private final JsonRestRequester restRequester =
         new JsonRestRequester(new GsonBuilder().setDateFormat("yyyyMMdd'T'HHmmssZ").create(),

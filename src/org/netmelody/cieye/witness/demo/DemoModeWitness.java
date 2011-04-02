@@ -19,13 +19,13 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.persistence.Detective;
-import org.netmelody.cieye.witness.Witness;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public final class DemoModeWitness implements Witness {
+public final class DemoModeWitness implements CiSpy {
 
     private final Map<String, TargetGroupGenerator> generatorMap;
     private final Map<String, TargetGroup> groupMap;

@@ -1,9 +1,9 @@
-package org.netmelody.cieye.witness;
+package org.netmelody.cieye.core.observation;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
 
-public interface Witness {
+public interface CiSpy {
 
     TargetGroup statusOf(Feature feature);
 

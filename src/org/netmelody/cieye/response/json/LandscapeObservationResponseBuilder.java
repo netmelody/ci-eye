@@ -5,10 +5,10 @@ import static java.lang.Math.min;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.response.JsonResponse;
 import org.netmelody.cieye.response.JsonResponseBuilder;
-import org.netmelody.cieye.witness.Witness;
 import org.netmelody.cieye.witness.WitnessProvider;
 import org.simpleframework.http.Path;
 
@@ -31,7 +31,7 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
         final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
         
         for (Feature feature : landscape.features()) {
-            final Witness witness = witnessProvider.witnessFor(feature);
+            final CiSpy witness = witnessProvider.witnessFor(feature);
             response = response.add(witness.statusOf(feature));
             timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate(feature));
         }
