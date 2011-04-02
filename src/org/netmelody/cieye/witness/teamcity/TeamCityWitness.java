@@ -51,14 +51,15 @@ public final class TeamCityWitness implements Witness {
 
     @Override
     public TargetGroup statusOf(final Feature feature) {
-        restRequester.performBasicLogin(endpoint + "/guestAuth/");
         if (!endpoint.equals(feature.endpoint())) {
             return new TargetGroup();
         }
         
-        Collection<Project> projects = filter(projects(), new Predicate<Project>() {
+        restRequester.performBasicLogin(endpoint + "/guestAuth/");
+        
+        final Collection<Project> projects = filter(projects(), new Predicate<Project>() {
             @Override public boolean apply(Project project) {
-                return project.name.startsWith(feature.name());
+                return project.name.trim().equals(feature.name().trim());
             }
         });
         if (projects.isEmpty()) {
@@ -83,7 +84,21 @@ public final class TeamCityWitness implements Witness {
     
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        return false;
+        if (!targetId.startsWith(endpoint)) {
+            return false;
+        }
+        
+        final BuildTypeDetail buildTypeDetail = makeTeamCityRestCall(targetId, BuildTypeDetail.class);
+        final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
+        
+        if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
+            final Build lastCompletedBuild = completedBuilds.build.iterator().next();
+            if (Status.BROKEN.equals(lastCompletedBuild.status())) {
+//                restRequester.doPost(url);
+            }
+        }
+        
+        return true;
     }
     
     private Collection<Project> projects() {

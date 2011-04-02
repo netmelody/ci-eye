@@ -42,7 +42,7 @@ public final class JenkinsWitness implements Witness {
         
         final Collection<View> views = filter(views(), new Predicate<View>() {
             @Override public boolean apply(View viewDigest) {
-                return viewDigest.name.startsWith(feature.name());
+                return viewDigest.name.trim().equals(feature.name().trim());
             }
         });
         if (views.isEmpty()) {
