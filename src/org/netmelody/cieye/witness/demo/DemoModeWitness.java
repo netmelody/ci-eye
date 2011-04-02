@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness;
+package org.netmelody.cieye.witness.demo;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.netmelody.cieye.domain.Build.buildAt;
@@ -20,6 +20,7 @@ import org.netmelody.cieye.domain.Status;
 import org.netmelody.cieye.domain.Target;
 import org.netmelody.cieye.domain.TargetGroup;
 import org.netmelody.cieye.persistence.Detective;
+import org.netmelody.cieye.witness.Witness;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
