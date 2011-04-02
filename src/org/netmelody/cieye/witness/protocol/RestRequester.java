@@ -1,9 +1,12 @@
 package org.netmelody.cieye.witness.protocol;
 
+import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScheme;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -24,6 +27,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.util.EntityUtils;
 
 public final class RestRequester {
 
@@ -79,9 +83,8 @@ public final class RestRequester {
             final BasicHttpContext localcontext = new BasicHttpContext();
             localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
             
-            final HttpPost httpPost = new HttpPost(url + "?description=blah");
-            final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            client.execute(httpPost, responseHandler, localcontext);
+            client.execute(new HttpPost(url), new ConsumingResponseHandler(), localcontext);
+//            client.setRedirectStrategy(redirectStrategy)
         }
         catch (Exception e) {
             LOG.error(url, e);
@@ -104,5 +107,18 @@ public final class RestRequester {
         @Override public AuthScheme get(HttpHost host) { return this.authScheme; } 
         @Override public void remove(HttpHost host) { return; } 
         @Override public void clear() { return; }
+    }
+    
+    public static final class ConsumingResponseHandler implements ResponseHandler<String> {
+        @Override
+        public String handleResponse(HttpResponse response) {
+            final HttpEntity entity = response.getEntity();
+            try {
+                EntityUtils.consume(entity);
+            } catch (IOException e) {
+                LOG.error("Failed to consume rsponse entity");
+            }
+            return "";
+        }
     }
 }

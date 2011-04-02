@@ -2,11 +2,14 @@ package org.netmelody.cieye.witness.jenkins;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.domain.Feature;
 import org.netmelody.cieye.domain.TargetGroup;
 import org.netmelody.cieye.persistence.Detective;
@@ -64,7 +67,10 @@ public final class JenkinsWitness implements Witness {
             return false;
         }
         
-        communicator.doJenkinsPost(buildUrl + "submitDescription?dscription=" + note);
+        communicator.doJenkinsPost(buildUrl +
+                                   "submitDescription?" +
+                                   URLEncodedUtils.format(newArrayList(new BasicNameValuePair("description", note)),
+                                                          "UTF-8"));
         return true;
     }
     
@@ -82,10 +88,4 @@ public final class JenkinsWitness implements Witness {
 //    private Computer agentDetails(String agentName) {
 //        return makeJenkinsRestCall(endpoint + "/computer/" + agentName, Computer.class);
 //    }
-    
-//    private void changeDescription(String jobName, String buildNumber, String newDescription) {
-//        "/submitDescription?Submit=Submit&description=" + encodeURI(change.desc) + "&json={\"description\":\"" + change.desc + "\"}";
-//    }
-    
-
 }
