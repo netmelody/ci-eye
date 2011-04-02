@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Job;
 import org.netmelody.cieye.witness.jenkins.jsondomain.View;
 import org.netmelody.cieye.witness.jenkins.jsondomain.ViewDetail;
@@ -18,9 +18,9 @@ public final class ViewAnalyser {
 
     private final JenkinsCommunicator communicator;
     private final Map<String, JobAnalyser> analyserMap = new HashMap<String, JobAnalyser>();
-    private final Detective detective;
+    private final KnownOffendersDirectory detective;
     
-    public ViewAnalyser(JenkinsCommunicator communicator, Detective detective) {
+    public ViewAnalyser(JenkinsCommunicator communicator, KnownOffendersDirectory detective) {
         this.communicator = communicator;
         this.detective = detective;
     }

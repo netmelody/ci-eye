@@ -4,5 +4,5 @@ import org.netmelody.cieye.core.domain.Feature;
 
 public interface ObservationAgency {
     
-    CiSpy provideSpyFor(Feature feature, Detective mostWantedDirectory);
+    CiSpy provideSpyFor(Feature feature, KnownOffendersDirectory directory);
 }

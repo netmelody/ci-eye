@@ -14,7 +14,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 import org.netmelody.cieye.witness.teamcity.jsondomain.Build;
 import org.netmelody.cieye.witness.teamcity.jsondomain.BuildDetail;
@@ -42,9 +42,9 @@ public final class TeamCityWitness implements CiSpy {
                               });
     
     private final String endpoint;
-    private final Detective detective;
+    private final KnownOffendersDirectory detective;
 
-    public TeamCityWitness(String endpoint, Detective detective) {
+    public TeamCityWitness(String endpoint, KnownOffendersDirectory detective) {
         this.endpoint = endpoint;
         this.detective = detective;
     }
@@ -154,7 +154,7 @@ public final class TeamCityWitness implements CiSpy {
     }
     
     private List<Sponsor> sponsorsOf(BuildDetail build) {
-        return detective.sponsorsOf(analyseChanges(build));
+        return detective.search(analyseChanges(build));
     }
 
     private String analyseChanges(BuildDetail build) {

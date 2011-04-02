@@ -14,7 +14,7 @@ import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Build;
 import org.netmelody.cieye.witness.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cieye.witness.jenkins.jsondomain.ChangeSetItem;
@@ -27,12 +27,12 @@ public final class JobAnalyser {
     private final JenkinsCommunicator communicator;
     private final String jobEndpoint;
     private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
-    private final Detective detective;
+    private final KnownOffendersDirectory detective;
     private final BuildDetailFetcher buildDetailFetcher;
     private final BuildDurationFetcher buildDurationFetcher;
     private final BuildStartTimeFetcher buildStartTimeFetcher;
 
-    public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, Detective detective) {
+    public JobAnalyser(JenkinsCommunicator communicator, String jobEndpoint, KnownOffendersDirectory detective) {
         this.communicator = communicator;
         this.jobEndpoint = jobEndpoint;
         this.detective = detective;
@@ -112,7 +112,7 @@ public final class JobAnalyser {
             return new ArrayList<Sponsor>();
         }
         
-        final List<Sponsor> sponsors = detective.sponsorsOf(commitMessagesOf(buildData));
+        final List<Sponsor> sponsors = detective.search(commitMessagesOf(buildData));
         
         if (sponsors.isEmpty()) {
             for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {

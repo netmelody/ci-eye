@@ -5,19 +5,19 @@ import java.net.InetAddress;
 
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
 public final class State {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
-    private final Detective detective = new Detective(settings.picturesFile());
+    private final KnownOffendersDirectory detective = new KnownOffendersDirectory(settings.picturesFile());
     private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
 
     public LandscapeGroup landscapes() {
         return this.landscapes;
     }
     
-    public Detective detective() {
+    public KnownOffendersDirectory detective() {
         return this.detective;
     }
 

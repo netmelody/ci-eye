@@ -20,7 +20,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
@@ -30,7 +30,7 @@ public final class DemoModeWitness implements CiSpy {
     private final Map<String, TargetGroupGenerator> generatorMap;
     private final Map<String, TargetGroup> groupMap;
 
-    public DemoModeWitness(final Detective detective) {
+    public DemoModeWitness(final KnownOffendersDirectory detective) {
         generatorMap =
             new MapMaker().makeComputingMap(new Function<String, TargetGroupGenerator>() {
                 @Override
@@ -79,11 +79,11 @@ public final class DemoModeWitness implements CiSpy {
         
         private final Set<String> notes = new HashSet<String>();
         
-        private final Detective detective;
+        private final KnownOffendersDirectory detective;
         private final Status[] statuses;
         private TargetGroup group;
         
-        private TargetGroupGenerator(Detective detective, String featureName) {
+        private TargetGroupGenerator(KnownOffendersDirectory detective, String featureName) {
             this.detective = detective;
 
             statuses = EnumSet.of(Status.BROKEN, Status.GREEN)
@@ -152,7 +152,7 @@ public final class DemoModeWitness implements CiSpy {
                 builds.add(buildAt(percentageOf(random.nextInt(101)), Status.GREEN));
             }
             
-            return new Target(name, "http://www.example.com/", name, status, 0L, builds, detective.sponsorsOf("dracula"));
+            return new Target(name, "http://www.example.com/", name, status, 0L, builds, detective.search("dracula"));
         }
     }
 }

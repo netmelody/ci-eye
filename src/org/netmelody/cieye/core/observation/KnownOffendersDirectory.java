@@ -16,14 +16,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Sponsor;
 
-public final class Detective {
+public final class KnownOffendersDirectory {
     
     private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
-    private static final Log LOG = LogFactory.getLog(Detective.class);
+    private static final Log LOG = LogFactory.getLog(KnownOffendersDirectory.class);
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     
-    public Detective(File picturesFile) {
+    public KnownOffendersDirectory(File picturesFile) {
         loadPictureSettings(picturesFile);
     }
 
@@ -74,7 +74,7 @@ public final class Detective {
         }
     }
     
-    public List<Sponsor> sponsorsOf(String changeText) {
+    public List<Sponsor> search(String changeText) {
         final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
         
         final String upperChangeText = changeText.toUpperCase();

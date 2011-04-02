@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.observation.Detective;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.witness.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.witness.jenkins.ViewAnalyser;
 import org.netmelody.cieye.witness.jenkins.jsondomain.View;
@@ -16,7 +16,7 @@ public final class ViewAnalyserTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org", "", ""), new Detective(new File("")));
+        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org", "", ""), new KnownOffendersDirectory(new File("")));
 
         View viewDigest = new View();
         viewDigest.url = "http://ci.jenkins-ci.org/view/Jenkins%20core";
