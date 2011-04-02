@@ -1,0 +1,21 @@
+show allResults
+
+{package} = org.netmelody.cieye
+
+[ci-eye] = ${package}.*
+[domain] = ${package}.domain.*
+[witness] = ${package}.witness.*
+[persistence] = ${package}.persistence.*
+[non-domain] = [ci-eye] excluding [domain]
+
+check sets [ci-eye] [domain] [witness] [persistence] [non-domain]
+
+check [domain] independentOf [non-domain]
+
+check absenceOfPackageCycles > 1 in [ci-eye]
+
+layer core = [domain]
+layer server = [persistence]
+layer analysis = [witness]
+
+check layeringOf core server analysis

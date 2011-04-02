@@ -23,11 +23,24 @@
         <delete dir="build" failonerror="false" />
     </target>
 
+    <target name="dependencycheck" depends="build">
+        <mkdir dir="build/docs"/>
+        <taskdef name="classycleDependencyCheck"
+                 classname="classycle.ant.DependencyCheckingTask"
+                 classpath="vendor/buildlib/classycle-1.3.3.jar"/>
+        
+        <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
+            <fileset dir="build/main">
+                <include name="**/*.class"/>
+            </fileset>
+        </classycleDependencyCheck>
+    </target>
+
     <target name="jar" depends="clean,build" description="Create a jar file">
         <jar destfile="build/ci-eye.jar">
             <fileset dir="build/main"/>
             <zipgroupfileset dir="vendor/lib" includes="*.jar"/>
-
+            
             <manifest>
                 <attribute name="Main-Class" value="org.netmelody.cieye.CiEye"/>
                 <attribute name="Built-By" value="${user.name}"/>
