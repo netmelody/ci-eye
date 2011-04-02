@@ -60,4 +60,8 @@ public final class JsonRestRequester {
     public void doPost(String url) {
         restRequester.doPost(url);
     }
+
+    public void doPut(String url, String content) {
+        restRequester.doPut(url, content);
+    }
 }

@@ -94,7 +94,8 @@ public final class TeamCityWitness implements Witness {
         if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
             final Build lastCompletedBuild = completedBuilds.build.iterator().next();
             if (Status.BROKEN.equals(lastCompletedBuild.status())) {
-//                restRequester.doPost(url);
+                restRequester.performBasicAuthentication("cieye", "cieye");
+                restRequester.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
             }
         }
         

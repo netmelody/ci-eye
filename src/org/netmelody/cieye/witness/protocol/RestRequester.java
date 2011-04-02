@@ -15,10 +15,12 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -84,7 +86,22 @@ public final class RestRequester {
             localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
             
             client.execute(new HttpPost(url), new ConsumingResponseHandler(), localcontext);
-//            client.setRedirectStrategy(redirectStrategy)
+        }
+        catch (Exception e) {
+            LOG.error(url, e);
+        }
+    }
+    
+    public void doPut(String url, String content) {
+        LOG.info(url);
+        try {
+            final BasicHttpContext localcontext = new BasicHttpContext();
+            localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
+            
+            final HttpPut put = new HttpPut(url);
+            put.setEntity(new StringEntity(content));
+            
+            client.execute(put, new ConsumingResponseHandler(), localcontext);
         }
         catch (Exception e) {
             LOG.error(url, e);
