@@ -1,6 +1,5 @@
 package org.netmelody.cieye.witness.protocol;
 
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,11 +73,9 @@ public final class RestRequester {
                                                        new UsernamePasswordCredentials(username, password));
     }
     
-    public void doPost(String url, Map<String, String> parameterValues) {
-        
+    public void doPost(String url) {
         LOG.info(url);
         try {
-            performBasicAuthentication("ci", "");
             final BasicHttpContext localcontext = new BasicHttpContext();
             localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
             

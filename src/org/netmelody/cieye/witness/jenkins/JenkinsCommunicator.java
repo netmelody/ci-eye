@@ -1,6 +1,5 @@
 package org.netmelody.cieye.witness.jenkins;
 
-import java.util.Map;
 
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 
@@ -12,9 +11,13 @@ public final class JenkinsCommunicator {
         new JsonRestRequester(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create());
     
     private final String endpoint;
+    private final String username;
+    private final String password;
 
-    public JenkinsCommunicator(String endpoint) {
+    public JenkinsCommunicator(String endpoint, String username, String password) {
         this.endpoint = endpoint;
+        this.username = username;
+        this.password = password;
     }
     
     public <T> T makeJenkinsRestCallWithSuffix(String urlSuffix, Class<T> type) {
@@ -30,7 +33,8 @@ public final class JenkinsCommunicator {
         return endpoint;
     }
 
-    public void doJenkinsPost(String url, Map<String, String> parameterValues) {
-        restRequester.doPost(url, parameterValues);
+    public void doJenkinsPost(String url) {
+        restRequester.performBasicAuthentication(username, password);
+        restRequester.doPost(url);
     }
 }

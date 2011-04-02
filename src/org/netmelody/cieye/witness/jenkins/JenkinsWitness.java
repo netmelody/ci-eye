@@ -4,8 +4,6 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +27,7 @@ public final class JenkinsWitness implements Witness {
     private final ViewAnalyser viewAnalsyer;
 
     public JenkinsWitness(String endpoint, Detective detective) {
-        this.communicator = new JenkinsCommunicator(endpoint);
+        this.communicator = new JenkinsCommunicator(endpoint, "ci", "");
         this.viewAnalsyer = new ViewAnalyser(communicator, detective);
     }
 
@@ -60,15 +58,13 @@ public final class JenkinsWitness implements Witness {
     
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        String buildUrl = this.viewAnalsyer.lastBadBuildUrlFor(targetId);
+        final String buildUrl = this.viewAnalsyer.lastBadBuildUrlFor(targetId);
         
         if (null == buildUrl || buildUrl.isEmpty()) {
             return false;
         }
         
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("desctiption", note);
-        communicator.doJenkinsPost(buildUrl + "submitDescription", params);
+        communicator.doJenkinsPost(buildUrl + "submitDescription?dscription=" + note);
         return true;
     }
     

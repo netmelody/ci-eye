@@ -40,7 +40,7 @@ public final class TargetNotationHandler implements Resource {
                     return;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("Failed to handle request to note a build", e);
         }
         finally {
