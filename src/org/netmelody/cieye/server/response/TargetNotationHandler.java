@@ -1,4 +1,4 @@
-package org.netmelody.cieye.response;
+package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
 
@@ -7,8 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.witness.WitnessProvider;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.observation.WitnessProvider;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;

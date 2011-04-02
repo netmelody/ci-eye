@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
-import org.netmelody.cieye.persistence.RecordedKnownOffenders;
+import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
-import org.netmelody.cieye.witness.protocol.JsonRestRequesterBuilder;
 
 public final class JenkinsWitnessTest {
 

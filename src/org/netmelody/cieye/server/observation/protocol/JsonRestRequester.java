@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness.protocol;
+package org.netmelody.cieye.server.observation.protocol;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

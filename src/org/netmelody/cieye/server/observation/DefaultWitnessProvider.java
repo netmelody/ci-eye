@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness;
+package org.netmelody.cieye.server.observation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,11 +8,11 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
-import org.netmelody.cieye.persistence.State;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.spies.demo.DemoModeWitness;
 import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
 import org.netmelody.cieye.spies.teamcity.TeamCityWitness;
-import org.netmelody.cieye.witness.protocol.JsonRestRequesterBuilder;
 
 public final class DefaultWitnessProvider implements WitnessProvider {
 

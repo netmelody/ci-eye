@@ -1,4 +1,4 @@
-package org.netmelody.cieye.persistence;
+package org.netmelody.cieye.server.configuration;
 
 import java.io.File;
 import java.net.InetAddress;

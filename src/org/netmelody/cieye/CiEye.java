@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.response.CiEyeResourceEngine;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.response.CiEyeResourceEngine;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.ResourceContainer;
 import org.simpleframework.transport.connect.Connection;

@@ -1,4 +1,4 @@
-package org.netmelody.cieye.response;
+package org.netmelody.cieye.server.response;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,8 +9,8 @@ import java.util.ResourceBundle;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.persistence.ViewsRepository;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.configuration.ViewsRepository;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;

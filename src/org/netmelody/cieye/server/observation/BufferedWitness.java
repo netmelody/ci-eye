@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness;
+package org.netmelody.cieye.server.observation;
 
 import static java.lang.Math.max;
 

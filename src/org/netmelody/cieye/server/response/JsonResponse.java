@@ -1,4 +1,4 @@
-package org.netmelody.cieye.response;
+package org.netmelody.cieye.server.response;
 
 public final class JsonResponse {
 

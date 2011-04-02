@@ -6,11 +6,11 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.persistence.RecordedKnownOffenders;
+import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.spies.jenkins.ViewAnalyser;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
-import org.netmelody.cieye.witness.protocol.JsonRestRequesterBuilder;
 
 
 public final class ViewAnalyserTest {

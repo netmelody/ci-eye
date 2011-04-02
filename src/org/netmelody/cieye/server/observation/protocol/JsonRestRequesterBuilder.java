@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness.protocol;
+package org.netmelody.cieye.server.observation.protocol;
 
 import java.text.SimpleDateFormat;
 

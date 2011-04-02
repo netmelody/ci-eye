@@ -15,16 +15,23 @@ check [domain] independentOf [ci-eye]
 check sets [spies]
 check [spies] independentOf [non-core]
 
-[observation] = ${package}.core.observation.*
-check sets [observation]
+[server] = ${package}.server.*
+check sets [server]
+check [server] independentOf [non-core]
 
-[witness] = ${package}.witness.*
-[persistence] = ${package}.persistence.*
+[configuration] = ${package}.server.observation.*
+[observation] = ${package}.server.observation.*
+[response] = ${package}.server.observation.*
+check sets [configuration] [observation] [response]
+check [configuration] independentOf [non-core]
+check [observation] independentOf [non-core]
+check [response] independentOf [non-core]
 
 check absenceOfPackageCycles > 1 in [ci-eye]
 
-layer core = [domain]
-layer server = [persistence]
-layer analysis = [witness]
+layer foundations = [core]
+layer webserver = [configuration] [observation] [response]
+layer spynetwork = ${package}.spies.demo.* ${package}.spies.jenkins.* ${package}.spies.teamcity.*
 
-check layeringOf core server analysis
+check strictLayeringOf foundations webserver
+check strictLayeringOf foundations spynetwork

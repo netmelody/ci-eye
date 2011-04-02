@@ -1,11 +1,11 @@
-package org.netmelody.cieye.response;
+package org.netmelody.cieye.server.response;
 
-import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.response.json.LandscapeListResponseBuilder;
-import org.netmelody.cieye.response.json.LandscapeObservationResponseBuilder;
-import org.netmelody.cieye.response.json.SettingsLocationResponseBuilder;
-import org.netmelody.cieye.witness.DefaultWitnessProvider;
-import org.netmelody.cieye.witness.WitnessProvider;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
+import org.netmelody.cieye.server.observation.WitnessProvider;
+import org.netmelody.cieye.server.response.json.LandscapeListResponseBuilder;
+import org.netmelody.cieye.server.response.json.LandscapeObservationResponseBuilder;
+import org.netmelody.cieye.server.response.json.SettingsLocationResponseBuilder;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.resource.Resource;

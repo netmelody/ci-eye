@@ -1,4 +1,4 @@
-package org.netmelody.cieye.response.json;
+package org.netmelody.cieye.server.response.json;
 
 import static java.lang.Math.min;
 
@@ -6,10 +6,10 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.response.JsonResponse;
-import org.netmelody.cieye.response.JsonResponseBuilder;
-import org.netmelody.cieye.witness.WitnessProvider;
+import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.observation.WitnessProvider;
+import org.netmelody.cieye.server.response.JsonResponse;
+import org.netmelody.cieye.server.response.JsonResponseBuilder;
 import org.simpleframework.http.Path;
 
 public final class LandscapeObservationResponseBuilder implements JsonResponseBuilder {
