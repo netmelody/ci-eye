@@ -1,7 +1,5 @@
 change to a pop-up when comms are lost with the server (and keep re-trying)
 add mark as fixed link for targets in desktop mode
 allow a different set of pictures for each landscape
-move the templates into a separate folder
-repackage the web resources into a separate source folder
 don't require restart when settings are changed
 push user/pass for ci into settings

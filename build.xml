@@ -15,6 +15,9 @@
         <copy todir="build/main">
             <fileset dir="src" excludes="**/*.java"/>
         </copy>
+        <copy todir="build/main">
+            <fileset dir="web" excludes="**/*.java"/>
+        </copy>
     </target>
 
     <target name="build" depends="javac" description="Build this project" />
