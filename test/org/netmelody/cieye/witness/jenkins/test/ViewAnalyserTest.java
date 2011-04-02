@@ -16,7 +16,7 @@ public final class ViewAnalyserTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org"), new Detective(new File("")));
+        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org", "", ""), new Detective(new File("")));
 
         View viewDigest = new View();
         viewDigest.url = "http://ci.jenkins-ci.org/view/Jenkins%20core";
