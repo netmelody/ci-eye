@@ -3,7 +3,10 @@ show allResults
 {package} = org.netmelody.cieye
 
 [ci-eye] = ${package}.*
-[domain] = ${package}.domain.*
+[core] = ${package}.core.*
+[domain] = ${package}.core.domain.*
+[observation] = ${package}.core.observation.*
+
 [witness] = ${package}.witness.*
 [persistence] = ${package}.persistence.*
 [non-domain] = [ci-eye] excluding [domain]

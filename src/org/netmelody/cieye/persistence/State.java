@@ -10,7 +10,7 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 public final class State {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
-    private final KnownOffendersDirectory detective = new KnownOffendersDirectory(settings.picturesFile());
+    private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
     private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
 
     public LandscapeGroup landscapes() {

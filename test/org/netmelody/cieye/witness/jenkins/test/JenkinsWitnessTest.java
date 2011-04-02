@@ -10,14 +10,14 @@ import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
-import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
+import org.netmelody.cieye.persistence.RecordedKnownOffenders;
 import org.netmelody.cieye.witness.jenkins.JenkinsWitness;
 
 public final class JenkinsWitnessTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        final JenkinsWitness witness = new JenkinsWitness("http://ci.jenkins-ci.org", new KnownOffendersDirectory(new File("")));
+        final JenkinsWitness witness = new JenkinsWitness("http://ci.jenkins-ci.org", new RecordedKnownOffenders(new File("")));
         
         TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
         witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
