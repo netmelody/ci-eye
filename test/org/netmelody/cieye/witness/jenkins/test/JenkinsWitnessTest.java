@@ -11,7 +11,7 @@ import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.persistence.RecordedKnownOffenders;
-import org.netmelody.cieye.witness.jenkins.JenkinsWitness;
+import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
 
 public final class JenkinsWitnessTest {
 

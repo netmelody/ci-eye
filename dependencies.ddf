@@ -1,19 +1,25 @@
 show allResults
 
 {package} = org.netmelody.cieye
-
 [ci-eye] = ${package}.*
+check sets [ci-eye]
+
 [core] = ${package}.core.*
 [domain] = ${package}.core.domain.*
+[non-core] = [ci-eye] excluding [core]
+check sets [core] [domain] [non-core]
+check [core] independentOf [ci-eye]
+check [domain] independentOf [ci-eye]
+
+[spies] = ${package}.spies.*
+check sets [spies]
+check [spies] independentOf [non-core]
+
 [observation] = ${package}.core.observation.*
+check sets [observation]
 
 [witness] = ${package}.witness.*
 [persistence] = ${package}.persistence.*
-[non-domain] = [ci-eye] excluding [domain]
-
-check sets [ci-eye] [domain] [witness] [persistence] [non-domain]
-
-check [domain] independentOf [non-domain]
 
 check absenceOfPackageCycles > 1 in [ci-eye]
 

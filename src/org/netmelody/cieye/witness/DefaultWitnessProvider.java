@@ -8,9 +8,9 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.persistence.State;
-import org.netmelody.cieye.witness.demo.DemoModeWitness;
-import org.netmelody.cieye.witness.jenkins.JenkinsWitness;
-import org.netmelody.cieye.witness.teamcity.TeamCityWitness;
+import org.netmelody.cieye.spies.demo.DemoModeWitness;
+import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
+import org.netmelody.cieye.spies.teamcity.TeamCityWitness;
 
 public final class DefaultWitnessProvider implements WitnessProvider {
 

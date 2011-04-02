@@ -7,9 +7,9 @@ import java.util.Collection;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.persistence.RecordedKnownOffenders;
-import org.netmelody.cieye.witness.jenkins.JenkinsCommunicator;
-import org.netmelody.cieye.witness.jenkins.ViewAnalyser;
-import org.netmelody.cieye.witness.jenkins.jsondomain.View;
+import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
+import org.netmelody.cieye.spies.jenkins.ViewAnalyser;
+import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
 
 public final class ViewAnalyserTest {
