@@ -56,25 +56,16 @@ public final class JsonRestRequester implements Contact {
         restRequester.makeRequest(loginUrl);
     }
 
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.witness.protocol.Contact#performBasicAuthentication(java.lang.String, java.lang.String)
-     */
     @Override
     public void performBasicAuthentication(String username, String password) {
         restRequester.performBasicAuthentication(username, password);
     }
     
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.witness.protocol.Contact#doPost(java.lang.String)
-     */
     @Override
     public void doPost(String url) {
         restRequester.doPost(url);
     }
 
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.witness.protocol.Contact#doPut(java.lang.String, java.lang.String)
-     */
     @Override
     public void doPut(String url, String content) {
         restRequester.doPut(url, content);

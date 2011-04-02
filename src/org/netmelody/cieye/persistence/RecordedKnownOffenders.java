@@ -75,9 +75,6 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory {
         }
     }
     
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.core.observation.KnownOffendersDirectory#search(java.lang.String)
-     */
     @Override
     public List<Sponsor> search(String fingerprint) {
         final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
