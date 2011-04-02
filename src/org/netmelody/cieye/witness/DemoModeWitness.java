@@ -6,9 +6,12 @@ import static org.netmelody.cieye.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.domain.Build;
@@ -23,10 +26,11 @@ import com.google.common.collect.MapMaker;
 
 public final class DemoModeWitness implements Witness {
 
+    private final Map<String, TargetGroupGenerator> generatorMap;
     private final Map<String, TargetGroup> groupMap;
 
     public DemoModeWitness(final Detective detective) {
-        final Map<String, TargetGroupGenerator> generatorMap =
+        generatorMap =
             new MapMaker().makeComputingMap(new Function<String, TargetGroupGenerator>() {
                 @Override
                 public TargetGroupGenerator apply(String featureName) {
@@ -48,7 +52,6 @@ public final class DemoModeWitness implements Witness {
     public TargetGroup statusOf(Feature feature) {
         return groupMap.get(feature.name());
     }
-    
 
     @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
@@ -57,10 +60,23 @@ public final class DemoModeWitness implements Witness {
     
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        return true;
+        final Set<Entry<String, TargetGroup>> entries = groupMap.entrySet();
+        for (Entry<String, TargetGroup> entry : entries) {
+            final TargetGroup group = entry.getValue();
+            final List<Target> targets = group.targets();
+            for (Target target : targets) {
+                if (targetId.equals(target.id())) {
+                    generatorMap.get(entry.getKey()).noteReceivedFor(target.id());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     private static final class TargetGroupGenerator {
+        
+        private final Set<String> notes = new HashSet<String>();
         
         private final Detective detective;
         private final Status[] statuses;
@@ -78,6 +94,10 @@ public final class DemoModeWitness implements Witness {
                                                  randomTarget(featureName + " - Release")));
         }
         
+        public void noteReceivedFor(String id) {
+            notes.add(id);
+        }
+
         private TargetGroup updatedValue() {
             final Random random = new Random();
             final List<Target> newTargets = newArrayList();
@@ -85,6 +105,10 @@ public final class DemoModeWitness implements Witness {
                 final List<Build> builds = target.builds();
                 final List<Build> newBuilds = newArrayList();
                 Status newStatus = target.status();
+                
+                if (notes.remove(target.id()) && !Status.GREEN.equals(target.status())) {
+                    newStatus = Status.UNDER_INVESTIGATION;
+                }
                 
                 if (builds.isEmpty()) {
                     if (random.nextInt(Status.GREEN.equals(target.status()) ? 30 : 10) == 0) {
