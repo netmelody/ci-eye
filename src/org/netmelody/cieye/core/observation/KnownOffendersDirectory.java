@@ -85,5 +85,4 @@ public final class KnownOffendersDirectory {
         }
         return new ArrayList<Sponsor>(sponsors);
     }
-
 }
