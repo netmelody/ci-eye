@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.domain.Sponsor;
+import org.netmelody.cieye.core.domain.Sponsor;
 
 public final class Detective {
     

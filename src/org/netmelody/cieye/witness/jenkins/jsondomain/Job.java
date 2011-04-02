@@ -1,6 +1,6 @@
 package org.netmelody.cieye.witness.jenkins.jsondomain;
 
-import org.netmelody.cieye.domain.Status;
+import org.netmelody.cieye.core.domain.Status;
 
 public class Job {
     public String name;

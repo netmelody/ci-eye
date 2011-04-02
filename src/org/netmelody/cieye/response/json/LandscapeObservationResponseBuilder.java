@@ -2,9 +2,9 @@ package org.netmelody.cieye.response.json;
 
 import static java.lang.Math.min;
 
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.Landscape;
-import org.netmelody.cieye.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.response.JsonResponse;
 import org.netmelody.cieye.response.JsonResponseBuilder;

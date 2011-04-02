@@ -1,8 +1,8 @@
 package org.netmelody.cieye.witness.demo;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.netmelody.cieye.domain.Build.buildAt;
-import static org.netmelody.cieye.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.Build.buildAt;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -14,11 +14,11 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.netmelody.cieye.domain.Build;
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.Status;
-import org.netmelody.cieye.domain.Target;
-import org.netmelody.cieye.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.Build;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Status;
+import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.persistence.Detective;
 import org.netmelody.cieye.witness.Witness;
 

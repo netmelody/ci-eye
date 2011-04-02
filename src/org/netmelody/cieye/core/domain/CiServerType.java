@@ -1,4 +1,4 @@
-package org.netmelody.cieye.domain;
+package org.netmelody.cieye.core.domain;
 
 import java.util.HashMap;
 import java.util.Map;

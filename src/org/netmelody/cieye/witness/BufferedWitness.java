@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.TargetGroup;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;

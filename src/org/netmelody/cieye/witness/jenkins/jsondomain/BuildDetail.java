@@ -3,7 +3,7 @@ package org.netmelody.cieye.witness.jenkins.jsondomain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.netmelody.cieye.domain.Status;
+import org.netmelody.cieye.core.domain.Status;
 
 public final class BuildDetail extends Build {
     public String description;

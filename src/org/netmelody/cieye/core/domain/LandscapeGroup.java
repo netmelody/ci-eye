@@ -1,7 +1,7 @@
-package org.netmelody.cieye.domain;
+package org.netmelody.cieye.core.domain;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.netmelody.cieye.domain.CiServerType.DEMO;
+import static org.netmelody.cieye.core.domain.CiServerType.DEMO;
 
 import java.util.ArrayList;
 import java.util.Collection;

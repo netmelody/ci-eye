@@ -1,8 +1,8 @@
 package org.netmelody.cieye.witness.jenkins;
 
 import static java.util.Collections.unmodifiableList;
-import static org.netmelody.cieye.domain.Build.buildAt;
-import static org.netmelody.cieye.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.Build.buildAt;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cieye.domain.Percentage;
-import org.netmelody.cieye.domain.Sponsor;
-import org.netmelody.cieye.domain.Status;
-import org.netmelody.cieye.domain.Target;
+import org.netmelody.cieye.core.domain.Percentage;
+import org.netmelody.cieye.core.domain.Sponsor;
+import org.netmelody.cieye.core.domain.Status;
+import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.persistence.Detective;
 import org.netmelody.cieye.witness.jenkins.jsondomain.Build;
 import org.netmelody.cieye.witness.jenkins.jsondomain.BuildDetail;
@@ -146,8 +146,8 @@ public final class JobAnalyser {
         return result.toString();
     }
     
-    private List<org.netmelody.cieye.domain.Build> buildsFor(final JobDetail job) {
-        final List<org.netmelody.cieye.domain.Build> result = new ArrayList<org.netmelody.cieye.domain.Build>();
+    private List<org.netmelody.cieye.core.domain.Build> buildsFor(final JobDetail job) {
+        final List<org.netmelody.cieye.core.domain.Build> result = new ArrayList<org.netmelody.cieye.core.domain.Build>();
         
         if (!job.building() || job.lastBuild == null) {
             return result;

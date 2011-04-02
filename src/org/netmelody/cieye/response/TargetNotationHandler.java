@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.Landscape;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.witness.Witness;
 import org.netmelody.cieye.witness.WitnessProvider;

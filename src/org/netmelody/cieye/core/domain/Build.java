@@ -1,6 +1,6 @@
-package org.netmelody.cieye.domain;
+package org.netmelody.cieye.core.domain;
 
-import static org.netmelody.cieye.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 public final class Build {
     

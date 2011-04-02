@@ -3,8 +3,8 @@ package org.netmelody.cieye.persistence;
 import java.io.File;
 import java.net.InetAddress;
 
-import org.netmelody.cieye.domain.Landscape;
-import org.netmelody.cieye.domain.LandscapeGroup;
+import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.domain.LandscapeGroup;
 
 public final class State {
 

@@ -3,8 +3,8 @@ package org.netmelody.cieye.witness;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.netmelody.cieye.domain.CiServerType;
-import org.netmelody.cieye.domain.Feature;
+import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.persistence.Detective;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.witness.demo.DemoModeWitness;

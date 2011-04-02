@@ -2,7 +2,7 @@ package org.netmelody.cieye.witness.teamcity.jsondomain;
 
 import java.util.Date;
 
-import org.netmelody.cieye.domain.Status;
+import org.netmelody.cieye.core.domain.Status;
 
 public final class BuildDetail {
     public long id;

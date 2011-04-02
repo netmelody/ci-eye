@@ -2,17 +2,17 @@ package org.netmelody.cieye.witness.teamcity;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
-import static org.netmelody.cieye.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.Sponsor;
-import org.netmelody.cieye.domain.Status;
-import org.netmelody.cieye.domain.Target;
-import org.netmelody.cieye.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Sponsor;
+import org.netmelody.cieye.core.domain.Status;
+import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.persistence.Detective;
 import org.netmelody.cieye.witness.Witness;
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
@@ -118,14 +118,14 @@ public final class TeamCityWitness implements Witness {
         }
         
         final List<Sponsor> sponsors = new ArrayList<Sponsor>();
-        final List<org.netmelody.cieye.domain.Build> runningBuilds = new ArrayList<org.netmelody.cieye.domain.Build>();
+        final List<org.netmelody.cieye.core.domain.Build> runningBuilds = new ArrayList<org.netmelody.cieye.core.domain.Build>();
         long startTime = 0L;
             
         for(Build build : runningBuildsFor(buildType)) {
             final BuildDetail buildDetail = detailsOf(build);
             startTime = Math.max(buildDetail.startDateTime(), startTime);
             sponsors.addAll(sponsorsOf(buildDetail));
-            runningBuilds.add(new org.netmelody.cieye.domain.Build(percentageOf(build.percentageComplete), buildDetail.status()));
+            runningBuilds.add(new org.netmelody.cieye.core.domain.Build(percentageOf(build.percentageComplete), buildDetail.status()));
         }
         
         Status currentStatus = Status.GREEN;

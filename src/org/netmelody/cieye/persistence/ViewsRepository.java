@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.domain.CiServerType;
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.Landscape;
-import org.netmelody.cieye.domain.LandscapeGroup;
+import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.domain.LandscapeGroup;
 
 public final class ViewsRepository {
 

@@ -2,7 +2,7 @@ package org.netmelody.cieye.response;
 
 import java.lang.reflect.Type;
 
-import org.netmelody.cieye.domain.Percentage;
+import org.netmelody.cieye.core.domain.Percentage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

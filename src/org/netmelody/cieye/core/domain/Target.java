@@ -1,4 +1,4 @@
-package org.netmelody.cieye.domain;
+package org.netmelody.cieye.core.domain;
 
 import static com.google.common.collect.Iterators.find;
 import static com.google.common.collect.Iterators.transform;
