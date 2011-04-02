@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Server;
 import org.netmelody.cieye.spies.jenkins.jsondomain.UserDetail;
@@ -29,8 +30,8 @@ public final class JenkinsWitness implements CiSpy {
     private final JenkinsCommunicator communicator;
     private final ViewAnalyser viewAnalsyer;
 
-    public JenkinsWitness(String endpoint, KnownOffendersDirectory detective) {
-        this.communicator = new JenkinsCommunicator(endpoint, "ci", "");
+    public JenkinsWitness(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
+        this.communicator = new JenkinsCommunicator(endpoint, network, "ci", "");
         this.viewAnalsyer = new ViewAnalyser(communicator, detective);
     }
 

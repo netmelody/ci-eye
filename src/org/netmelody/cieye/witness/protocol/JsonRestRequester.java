@@ -1,12 +1,10 @@
 package org.netmelody.cieye.witness.protocol;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import com.google.gson.Gson;
 
 public final class JsonRestRequester implements Contact {
@@ -18,17 +16,16 @@ public final class JsonRestRequester implements Contact {
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, Functions.<String>identity());
+        this(jsonTranslator, new Function<String, String>() {
+            @Override public String apply(String input) {  return input.replace("\"@", "\""); }
+        });
     }
     
-    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
+    private JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }
     
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.witness.protocol.Contact#makeJsonRestCall(java.lang.String, java.lang.Class)
-     */
     @Override
     public <T> T makeJsonRestCall(String url, Class<T> type) {
         T result = null;
@@ -54,9 +51,6 @@ public final class JsonRestRequester implements Contact {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see org.netmelody.cieye.witness.protocol.Contact#performBasicLogin(java.lang.String)
-     */
     @Override
     public void performBasicLogin(String loginUrl) {
         restRequester.makeRequest(loginUrl);

@@ -6,15 +6,18 @@ import java.util.Map;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.persistence.State;
 import org.netmelody.cieye.spies.demo.DemoModeWitness;
 import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
 import org.netmelody.cieye.spies.teamcity.TeamCityWitness;
+import org.netmelody.cieye.witness.protocol.JsonRestRequesterBuilder;
 
 public final class DefaultWitnessProvider implements WitnessProvider {
 
     private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
+    private final CommunicationNetwork network = new JsonRestRequesterBuilder();
     private final KnownOffendersDirectory detective;
     
     public DefaultWitnessProvider(State state) {
@@ -29,10 +32,10 @@ public final class DefaultWitnessProvider implements WitnessProvider {
         
         CiSpy witness = new DemoModeWitness(detective);
         if (CiServerType.JENKINS.equals(feature.type())) {
-            witness = new BufferedWitness(new JenkinsWitness(feature.endpoint(), detective));
+            witness = new BufferedWitness(new JenkinsWitness(feature.endpoint(), network, detective));
         }
         else if (CiServerType.TEAMCITY.equals(feature.type())) {
-            witness = new BufferedWitness(new TeamCityWitness(feature.endpoint(), detective));
+            witness = new BufferedWitness(new TeamCityWitness(feature.endpoint(), network, detective));
         }
         witnesses.put(feature.endpoint(), witness);
         return witness;

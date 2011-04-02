@@ -4,6 +4,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
@@ -28,26 +30,20 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesOne;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
-import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.gson.GsonBuilder;
 
 public final class TeamCityWitness implements CiSpy {
 
-    private final Contact restRequester =
-        new JsonRestRequester(new GsonBuilder().setDateFormat("yyyyMMdd'T'HHmmssZ").create(),
-                              new Function<String, String>() {
-                                  @Override public String apply(String input) {  return input.replace("\"@", "\""); }
-                              });
-    
+    private final Contact contact;
     private final String endpoint;
     private final KnownOffendersDirectory detective;
 
-    public TeamCityWitness(String endpoint, KnownOffendersDirectory detective) {
+    public TeamCityWitness(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
         this.endpoint = endpoint;
         this.detective = detective;
+        this.contact = network.makeContact(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"));
     }
 
     @Override
@@ -56,7 +52,7 @@ public final class TeamCityWitness implements CiSpy {
             return new TargetGroup();
         }
         
-        restRequester.performBasicLogin(endpoint + "/guestAuth/");
+        contact.performBasicLogin(endpoint + "/guestAuth/");
         
         final Collection<Project> projects = filter(projects(), new Predicate<Project>() {
             @Override public boolean apply(Project project) {
@@ -95,8 +91,8 @@ public final class TeamCityWitness implements CiSpy {
         if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
             final Build lastCompletedBuild = completedBuilds.build.iterator().next();
             if (Status.BROKEN.equals(lastCompletedBuild.status())) {
-                restRequester.performBasicAuthentication("cieye", "cieye");
-                restRequester.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
+                contact.performBasicAuthentication("cieye", "cieye");
+                contact.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
             }
         }
         
@@ -182,6 +178,6 @@ public final class TeamCityWitness implements CiSpy {
     }
 
     private <T> T makeTeamCityRestCall(String url, Class<T> type) {
-        return restRequester.makeJsonRestCall(url, type);
+        return contact.makeJsonRestCall(url, type);
     }
 }

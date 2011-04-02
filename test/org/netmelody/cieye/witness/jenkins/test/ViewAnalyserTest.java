@@ -10,13 +10,14 @@ import org.netmelody.cieye.persistence.RecordedKnownOffenders;
 import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.spies.jenkins.ViewAnalyser;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
+import org.netmelody.cieye.witness.protocol.JsonRestRequesterBuilder;
 
 
 public final class ViewAnalyserTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org", "", ""), new RecordedKnownOffenders(new File("")));
+        ViewAnalyser analyser = new ViewAnalyser(new JenkinsCommunicator("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), "", ""), new RecordedKnownOffenders(new File("")));
 
         View viewDigest = new View();
         viewDigest.url = "http://ci.jenkins-ci.org/view/Jenkins%20core";

@@ -1,22 +1,20 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import java.text.SimpleDateFormat;
 
+import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
-import org.netmelody.cieye.witness.protocol.JsonRestRequester;
-
-import com.google.gson.GsonBuilder;
 
 public final class JenkinsCommunicator {
 
-    private final Contact restRequester =
-        new JsonRestRequester(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create());
-    
+    private final Contact contact;
     private final String endpoint;
     private final String username;
     private final String password;
 
-    public JenkinsCommunicator(String endpoint, String username, String password) {
+    public JenkinsCommunicator(String endpoint, CommunicationNetwork network, String username, String password) {
         this.endpoint = endpoint;
+        this.contact = network.makeContact(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
         this.username = username;
         this.password = password;
     }
@@ -27,7 +25,7 @@ public final class JenkinsCommunicator {
     
     public <T> T makeJenkinsRestCall(String url, Class<T> type) {
         final String reqUrl = url + (url.endsWith("/") ? "" : "/") + "api/json";
-        return restRequester.makeJsonRestCall(reqUrl, type);
+        return contact.makeJsonRestCall(reqUrl, type);
     }
     
     public String endpoint() {
@@ -35,7 +33,7 @@ public final class JenkinsCommunicator {
     }
 
     public void doJenkinsPost(String url) {
-        restRequester.performBasicAuthentication(username, password);
-        restRequester.doPost(url);
+        contact.performBasicAuthentication(username, password);
+        contact.doPost(url);
     }
 }
