@@ -7,9 +7,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.io.File;
 
 import org.junit.Test;
-import org.netmelody.cieye.domain.CiServerType;
-import org.netmelody.cieye.domain.Feature;
-import org.netmelody.cieye.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.persistence.Detective;
 import org.netmelody.cieye.witness.jenkins.JenkinsWitness;
 
