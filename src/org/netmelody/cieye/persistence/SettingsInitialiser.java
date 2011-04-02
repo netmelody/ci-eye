@@ -55,8 +55,8 @@ public final class SettingsInitialiser {
         }
     }
 
-    private InputStream resource(String named) {
-        return SettingsInitialiser.class.getClassLoader().getResourceAsStream(named);
+    private InputStream resource(String name) {
+        return SettingsInitialiser.class.getResourceAsStream("templates/" + name);
     }
 
     public File viewsFile() {
