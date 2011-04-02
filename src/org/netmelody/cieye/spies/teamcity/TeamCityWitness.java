@@ -14,6 +14,7 @@ import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
@@ -35,7 +36,7 @@ import com.google.gson.GsonBuilder;
 
 public final class TeamCityWitness implements CiSpy {
 
-    private final JsonRestRequester restRequester =
+    private final Contact restRequester =
         new JsonRestRequester(new GsonBuilder().setDateFormat("yyyyMMdd'T'HHmmssZ").create(),
                               new Function<String, String>() {
                                   @Override public String apply(String input) {  return input.replace("\"@", "\""); }

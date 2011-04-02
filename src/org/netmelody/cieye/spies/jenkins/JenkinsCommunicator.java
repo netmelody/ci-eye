@@ -1,13 +1,14 @@
 package org.netmelody.cieye.spies.jenkins;
 
 
+import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.witness.protocol.JsonRestRequester;
 
 import com.google.gson.GsonBuilder;
 
 public final class JenkinsCommunicator {
 
-    private final JsonRestRequester restRequester =
+    private final Contact restRequester =
         new JsonRestRequester(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create());
     
     private final String endpoint;

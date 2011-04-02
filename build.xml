@@ -26,7 +26,7 @@
         <delete dir="build" failonerror="false" />
     </target>
 
-    <target name="dependencycheck" depends="build">
+    <target name="dependencycheck" depends="clean,build">
         <mkdir dir="build/docs"/>
         <taskdef name="classycleDependencyCheck"
                  classname="classycle.ant.DependencyCheckingTask"

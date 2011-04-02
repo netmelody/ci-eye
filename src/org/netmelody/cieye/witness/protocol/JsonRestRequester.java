@@ -3,12 +3,13 @@ package org.netmelody.cieye.witness.protocol;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.gson.Gson;
 
-public final class JsonRestRequester {
+public final class JsonRestRequester implements Contact {
 
     private static final Log LOG = LogFactory.getLog(JsonRestRequester.class);
     
@@ -25,6 +26,10 @@ public final class JsonRestRequester {
         this.contentMunger = contentMunger;
     }
     
+    /* (non-Javadoc)
+     * @see org.netmelody.cieye.witness.protocol.Contact#makeJsonRestCall(java.lang.String, java.lang.Class)
+     */
+    @Override
     public <T> T makeJsonRestCall(String url, Class<T> type) {
         T result = null;
         String content = "";
@@ -49,18 +54,34 @@ public final class JsonRestRequester {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see org.netmelody.cieye.witness.protocol.Contact#performBasicLogin(java.lang.String)
+     */
+    @Override
     public void performBasicLogin(String loginUrl) {
         restRequester.makeRequest(loginUrl);
     }
 
+    /* (non-Javadoc)
+     * @see org.netmelody.cieye.witness.protocol.Contact#performBasicAuthentication(java.lang.String, java.lang.String)
+     */
+    @Override
     public void performBasicAuthentication(String username, String password) {
         restRequester.performBasicAuthentication(username, password);
     }
     
+    /* (non-Javadoc)
+     * @see org.netmelody.cieye.witness.protocol.Contact#doPost(java.lang.String)
+     */
+    @Override
     public void doPost(String url) {
         restRequester.doPost(url);
     }
 
+    /* (non-Javadoc)
+     * @see org.netmelody.cieye.witness.protocol.Contact#doPut(java.lang.String, java.lang.String)
+     */
+    @Override
     public void doPut(String url, String content) {
         restRequester.doPut(url, content);
     }
