@@ -18,7 +18,7 @@ import org.simpleframework.http.resource.Resource;
 
 public final class PictureResponder implements Resource {
 
-    private static final Log LOG = LogFactory.getLog(ViewsRepository.class);
+    private static final Log LOG = LogFactory.getLog(PictureResponder.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
     
     private final String name;
