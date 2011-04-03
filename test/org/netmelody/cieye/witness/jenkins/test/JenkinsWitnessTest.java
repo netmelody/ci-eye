@@ -20,8 +20,8 @@ public final class JenkinsWitnessTest {
     canPullFromTheJenkinsLiveInstance() {
         final JenkinsWitness witness = new JenkinsWitness("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new File("")));
         
-        TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
-        witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", CiServerType.JENKINS));
+        TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
+        witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         
         assertThat(group, is(notNullValue(TargetGroup.class)));
     }

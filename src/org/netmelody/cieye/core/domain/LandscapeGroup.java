@@ -1,8 +1,5 @@
 package org.netmelody.cieye.core.domain;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.netmelody.cieye.core.domain.CiServerType.DEMO;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,9 +29,5 @@ public final class LandscapeGroup {
             }
         }
         return new Landscape("name");
-    }
-
-    public static LandscapeGroup demo() {
-        return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", DEMO))));
     }
 }

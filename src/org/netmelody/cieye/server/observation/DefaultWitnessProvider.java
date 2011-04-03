@@ -3,7 +3,6 @@ package org.netmelody.cieye.server.observation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
@@ -26,19 +25,19 @@ public final class DefaultWitnessProvider implements WitnessProvider {
     
     @Override
     public CiSpy witnessFor(Feature feature) {
-        if (witnesses.containsKey(feature.endpoint())) {
-            return witnesses.get(feature.endpoint());
+        if (!witnesses.containsKey(feature.endpoint())) {
+            witnesses.put(feature.endpoint(), createWitnessFor(feature));
         }
-        
-        CiSpy witness = new DemoModeWitness(detective);
-        if (CiServerType.JENKINS.equals(feature.type())) {
-            witness = new BufferedWitness(new JenkinsWitness(feature.endpoint(), network, detective));
-        }
-        else if (CiServerType.TEAMCITY.equals(feature.type())) {
-            witness = new BufferedWitness(new TeamCityWitness(feature.endpoint(), network, detective));
-        }
-        witnesses.put(feature.endpoint(), witness);
-        return witness;
+        return witnesses.get(feature.endpoint());
     }
 
+    private CiSpy createWitnessFor(Feature feature) {
+        if ("JENKINS".equals(feature.type().name())) {
+            return new BufferedWitness(new JenkinsWitness(feature.endpoint(), network, detective));
+        }
+        if ("TEAMCITY".equals(feature.type().name())) {
+            return new BufferedWitness(new TeamCityWitness(feature.endpoint(), network, detective));
+        }
+        return new DemoModeWitness(detective);
+    }
 }

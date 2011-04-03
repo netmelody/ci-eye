@@ -1,5 +1,7 @@
 package org.netmelody.cieye.server.configuration;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public final class ViewsRepository {
     
     public LandscapeGroup landscapes() {
         if (!viewsFile.canRead()) {
-            return LandscapeGroup.demo();
+            return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
         }
         
         try {
@@ -39,7 +41,7 @@ public final class ViewsRepository {
             LOG.error("failed to read view settings file", e);
         }
         
-        return LandscapeGroup.demo();
+        return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
     }
 
     private static LandscapeGroup extractLandscapeFrom(List<String> content) {
