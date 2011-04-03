@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.observation.WitnessProvider;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -17,10 +17,10 @@ public final class TargetNotationHandler implements Resource {
 
     private static final Log LOG = LogFactory.getLog(TargetNotationHandler.class);
     
-    private final State state;
+    private final LandscapeFetcher state;
     private final WitnessProvider witnessProvider;
 
-    public TargetNotationHandler(State state, WitnessProvider witnessProvider) {
+    public TargetNotationHandler(LandscapeFetcher state, WitnessProvider witnessProvider) {
         this.state = state;
         this.witnessProvider = witnessProvider;
     }

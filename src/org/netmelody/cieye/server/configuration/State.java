@@ -6,13 +6,15 @@ import java.net.InetAddress;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
+import org.netmelody.cieye.server.LandscapeFetcher;
 
-public final class State {
+public final class State implements LandscapeFetcher {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
     private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
     private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
 
+    @Override
     public LandscapeGroup landscapes() {
         return this.landscapes;
     }
@@ -21,10 +23,7 @@ public final class State {
         return this.detective;
     }
 
-    public void addLandscape(Landscape landscape) {
-        landscapes = landscapes.add(landscape);
-    }
-
+    @Override
     public Landscape landscapeNamed(String name) {
         return landscapes.landscapeNamed(name);
     }

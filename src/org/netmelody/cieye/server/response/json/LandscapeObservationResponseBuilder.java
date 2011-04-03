@@ -6,7 +6,7 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.observation.WitnessProvider;
 import org.netmelody.cieye.server.response.JsonResponse;
 import org.netmelody.cieye.server.response.JsonResponseBuilder;
@@ -14,10 +14,10 @@ import org.simpleframework.http.Path;
 
 public final class LandscapeObservationResponseBuilder implements JsonResponseBuilder {
 
-    private final State state;
+    private final LandscapeFetcher state;
     private final WitnessProvider witnessProvider;
 
-    public LandscapeObservationResponseBuilder(State state, WitnessProvider witnessProvider) {
+    public LandscapeObservationResponseBuilder(LandscapeFetcher state, WitnessProvider witnessProvider) {
         this.state = state;
         this.witnessProvider = witnessProvider;
     }
