@@ -5,9 +5,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,21 +23,6 @@ public final class ViewsRepository {
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
 
-    private static final Map<String, CiServerType> aliases = new HashMap<String, CiServerType>();
-    static {
-        aliases.put("DEMO", new CiServerType("DEMO"));
-        aliases.put("JENKINS", new CiServerType("JENKINS"));
-        aliases.put("HUDSON", new CiServerType("JENKINS"));
-        aliases.put("TEAMCITY", new CiServerType("TEAMCITY"));
-    }
-    
-    public static CiServerType from(String name) {
-        if (aliases.containsKey(name.toUpperCase())) {
-            return aliases.get(name.toUpperCase());
-        }
-        return aliases.get("DEMO");
-    }
-    
     private final File viewsFile;
     
     public ViewsRepository(File viewsFile) {
@@ -80,7 +63,9 @@ public final class ViewsRepository {
             
             Matcher featureMatcher = FEATURE_REGEX.matcher(line);
             if (featureMatcher.matches()) {
-                features.add(new Feature(featureMatcher.group(3), featureMatcher.group(2), from(featureMatcher.group(1))));
+                features.add(new Feature(featureMatcher.group(3),
+                                         featureMatcher.group(2),
+                                         new CiServerType(featureMatcher.group(1))));
             }
         }
         
