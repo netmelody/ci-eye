@@ -29,7 +29,7 @@ public final class TargetNotationHandler implements Resource {
     public void handle(Request request, Response response) {
         try {
             final String targetId = request.getForm().get("id");
-            final String note = request.getForm().get("note") + " by " + request.getClientAddress().getHostName();
+            final String note = request.getForm().get("note") + " by " + getOriginator(request);
             
             final String[] segments = request.getAddress().getPath().getSegments();
             final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
@@ -50,6 +50,14 @@ public final class TargetNotationHandler implements Resource {
                 LOG.error("Failed to close response object", e);
             }
         }
+    }
+
+    private String getOriginator(Request request) {
+        String forwardedFor = request.getValue("X-Forwarded-For");
+        if (null != forwardedFor && !forwardedFor.isEmpty()) {
+            return forwardedFor;
+        }
+        return request.getClientAddress().getHostName();
     }
 
 }
