@@ -29,7 +29,7 @@ public final class TargetNotationHandler implements Resource {
     public void handle(Request request, Response response) {
         try {
             final String targetId = request.getForm().get("id");
-            final String note = request.getForm().get("note");
+            final String note = request.getForm().get("note") + " by " + request.getClientAddress().getHostName();
             
             final String[] segments = request.getAddress().getPath().getSegments();
             final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
