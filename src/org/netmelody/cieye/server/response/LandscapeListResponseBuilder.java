@@ -1,8 +1,6 @@
-package org.netmelody.cieye.server.response.json;
+package org.netmelody.cieye.server.response;
 
 import org.netmelody.cieye.server.LandscapeFetcher;
-import org.netmelody.cieye.server.response.JsonResponse;
-import org.netmelody.cieye.server.response.JsonResponseBuilder;
 import org.simpleframework.http.Path;
 
 public final class LandscapeListResponseBuilder implements JsonResponseBuilder {

@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 
 import org.netmelody.cieye.server.configuration.State;
 import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.server.response.CiEyeResourceEngine;
 import org.simpleframework.http.core.Container;
 import org.simpleframework.http.resource.ResourceContainer;
@@ -17,7 +18,8 @@ public final class CiEyeServer {
     private final State state = new State();
     private final Container container =
         new ResourceContainer(new CiEyeResourceEngine(state, state, state,
-                                                      new DefaultWitnessProvider(state.detective())));
+                                                      new DefaultWitnessProvider(new JsonRestRequesterBuilder(),
+                                                                                 state.detective())));
     private final Connection connection;
     private final InetSocketAddress address;
     

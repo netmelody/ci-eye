@@ -11,16 +11,17 @@ import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.CiSpyAllocator;
-import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 
 public final class DefaultWitnessProvider implements CiSpyAllocator {
 
-    private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
-    private final CommunicationNetwork network = new JsonRestRequesterBuilder();
-    private final KnownOffendersDirectory directory;
     private final Properties agencyConfiguration = new Properties();
+    private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
     
-    public DefaultWitnessProvider(KnownOffendersDirectory directory) {
+    private final CommunicationNetwork network;
+    private final KnownOffendersDirectory directory;
+    
+    public DefaultWitnessProvider(CommunicationNetwork network, KnownOffendersDirectory directory) {
+        this.network = network;
         this.directory = directory;
         try {
             agencyConfiguration.load(DefaultWitnessProvider.class.getResourceAsStream("CiObservationModules.properties"));
