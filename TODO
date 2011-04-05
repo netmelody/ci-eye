@@ -2,4 +2,5 @@ change to a pop-up when comms are lost with the server (and keep re-trying)
 allow a different set of pictures for each landscape
 don't require restart when settings are changed
 push user/pass for ci into settings
-rename of project on hudson duplicates it on the radiator.
+FIX: a rename of a project on hudson duplicates it on the radiator.
+support for Cruise, AnthillPro, CI Joe, Buildomatic?
