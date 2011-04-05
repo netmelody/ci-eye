@@ -5,33 +5,27 @@ show allResults
 check sets [ci-eye]
 
 [core] = ${package}.core.*
-[domain] = ${package}.core.domain.*
 [non-core] = [ci-eye] excluding [core]
-check sets [core] [domain] [non-core]
+check sets [core] [non-core]
 check [core] independentOf [ci-eye]
-check [domain] independentOf [ci-eye]
 
-[spies] = ${package}.spies.*
-check sets [spies]
-check [spies] independentOf [non-core]
+[domain] = ${package}.core.domain.*
+check sets [domain]
+check [domain] independentOf [ci-eye]
 
 [server] = ${package}.server.*
 check sets [server]
 check [server] independentOf [non-core]
 
-[configuration] = ${package}.server.observation.*
-[observation] = ${package}.server.observation.*
-[response] = ${package}.server.observation.*
-check sets [configuration] [observation] [response]
-check [configuration] independentOf [non-core]
-check [observation] independentOf [non-core]
-check [response] independentOf [non-core]
+[spies] = ${package}.spies.*
+check sets [spies]
+check [spies] independentOf [non-core]
+
+layer foundation = [core]
+layer server-modules = ${package}.server.configuration.* ${package}.server.observation.* ${package}.server.response.*
+layer spy-network = ${package}.spies.demo.* ${package}.spies.jenkins.* ${package}.spies.teamcity.*
+
+check strictLayeringOf foundation server-modules
+check strictLayeringOf foundation spy-network
 
 check absenceOfPackageCycles > 1 in [ci-eye]
-
-layer foundations = [core]
-layer webserver = [configuration] [observation] [response]
-layer spynetwork = ${package}.spies.demo.* ${package}.spies.jenkins.* ${package}.spies.teamcity.*
-
-check strictLayeringOf foundations webserver
-check strictLayeringOf foundations spynetwork

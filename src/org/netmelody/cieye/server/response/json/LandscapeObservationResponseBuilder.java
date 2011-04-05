@@ -7,7 +7,7 @@ import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.LandscapeFetcher;
-import org.netmelody.cieye.server.observation.WitnessProvider;
+import org.netmelody.cieye.server.WitnessProvider;
 import org.netmelody.cieye.server.response.JsonResponse;
 import org.netmelody.cieye.server.response.JsonResponseBuilder;
 import org.simpleframework.http.Path;

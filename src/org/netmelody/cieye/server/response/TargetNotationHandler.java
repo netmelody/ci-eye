@@ -8,7 +8,7 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.LandscapeFetcher;
-import org.netmelody.cieye.server.observation.WitnessProvider;
+import org.netmelody.cieye.server.WitnessProvider;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;

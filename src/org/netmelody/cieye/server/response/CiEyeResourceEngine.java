@@ -1,8 +1,8 @@
 package org.netmelody.cieye.server.response;
 
+import org.netmelody.cieye.server.WitnessProvider;
 import org.netmelody.cieye.server.configuration.State;
 import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
-import org.netmelody.cieye.server.observation.WitnessProvider;
 import org.netmelody.cieye.server.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cieye.server.response.json.LandscapeObservationResponseBuilder;
 import org.netmelody.cieye.server.response.json.SettingsLocationResponseBuilder;
@@ -17,7 +17,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
 
     public CiEyeResourceEngine(State state) {
         this.state = state;
-        this.witnessProvider = new DefaultWitnessProvider(state);
+        this.witnessProvider = new DefaultWitnessProvider(state.detective());
     }
     
     @Override

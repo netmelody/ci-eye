@@ -10,18 +10,18 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.WitnessProvider;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 
 public final class DefaultWitnessProvider implements WitnessProvider {
 
     private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
     private final CommunicationNetwork network = new JsonRestRequesterBuilder();
-    private final KnownOffendersDirectory detective;
+    private final KnownOffendersDirectory directory;
     private final Properties agencyConfiguration = new Properties();
     
-    public DefaultWitnessProvider(State state) {
-        detective = state.detective();
+    public DefaultWitnessProvider(KnownOffendersDirectory directory) {
+        this.directory = directory;
         try {
             agencyConfiguration.load(DefaultWitnessProvider.class.getResourceAsStream("CiObservationModules.properties"));
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public final class DefaultWitnessProvider implements WitnessProvider {
             @SuppressWarnings("unchecked")
             final Class<? extends ObservationAgency> agencyClass =
                  (Class<? extends ObservationAgency>) Class.forName(agencyConfiguration.getProperty(featureTypeName));
-            return new BufferedWitness(agencyClass.newInstance().provideSpyFor(feature, network, detective));
+            return new BufferedWitness(agencyClass.newInstance().provideSpyFor(feature, network, directory));
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load CI Observation Module for " + featureTypeName, e);
         }
