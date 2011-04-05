@@ -1,8 +1,9 @@
 package org.netmelody.cieye.server.response;
 
 import org.netmelody.cieye.server.CiSpyAllocator;
-import org.netmelody.cieye.server.configuration.State;
-import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
+import org.netmelody.cieye.server.ConfigurationFetcher;
+import org.netmelody.cieye.server.LandscapeFetcher;
+import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.json.LandscapeListResponseBuilder;
 import org.netmelody.cieye.server.response.json.LandscapeObservationResponseBuilder;
 import org.netmelody.cieye.server.response.json.SettingsLocationResponseBuilder;
@@ -12,12 +13,18 @@ import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceEngine;
 
 public final class CiEyeResourceEngine implements ResourceEngine {
-    private final State state;
-    private final CiSpyAllocator witnessProvider;
+    
+    private final CiSpyAllocator allocator;
+    private final LandscapeFetcher landscapeFetcher;
+    private final PictureFetcher pictureFetcher;
+    private final ConfigurationFetcher configurationFetcher;
 
-    public CiEyeResourceEngine(State state) {
-        this.state = state;
-        this.witnessProvider = new DefaultWitnessProvider(state.detective());
+    public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
+                               ConfigurationFetcher configurationFetcher, CiSpyAllocator allocator) {
+        this.landscapeFetcher = landscapeFetcher;
+        this.pictureFetcher = pictureFetcher;
+        this.configurationFetcher = configurationFetcher;
+        this.allocator = allocator;
     }
     
     @Override
@@ -26,11 +33,11 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             return new JsonResponder(jsonResponseBuilderFor(target));
         }
         if ("addNote".equals(target.getPath().getName())) {
-            return new TargetNotationHandler(state, witnessProvider);
+            return new TargetNotationHandler(landscapeFetcher, allocator);
         }
         
         if ((target.getPath().getSegments().length > 0) && "/pictures".equals(target.getPath().getPath(0, 1))) {
-            return new PictureResponder(state, target.getPath());
+            return new PictureResponder(pictureFetcher, target.getPath());
         }
         return new FileResponder(target.getPath());
     }
@@ -39,15 +46,15 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         final String name = target.getPath().getName();
         
         if ("landscapeobservation.json".equals(name)) {
-            return new LandscapeObservationResponseBuilder(state, witnessProvider);
+            return new LandscapeObservationResponseBuilder(landscapeFetcher, allocator);
         }
         
         if ("landscapelist.json".equals(name)) {
-            return new LandscapeListResponseBuilder(state);
+            return new LandscapeListResponseBuilder(landscapeFetcher);
         }
         
         if ("settingslocation.json".equals(name)) {
-            return new SettingsLocationResponseBuilder(state);
+            return new SettingsLocationResponseBuilder(configurationFetcher);
         }
         
         return new JsonResponseBuilder() {

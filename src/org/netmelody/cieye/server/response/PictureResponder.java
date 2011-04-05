@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.PictureFetcher;
 import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -22,9 +22,9 @@ public final class PictureResponder implements Resource {
     
     private final String name;
     private final String extension;
-    private final State state;
+    private final PictureFetcher state;
 
-    public PictureResponder(State state, Path path) {
+    public PictureResponder(PictureFetcher state, Path path) {
         this.state = state;
         this.name = defaultString(path.getName(), "vlad.jpg");
         this.extension = defaultString(path.getExtension(), "jpg");

@@ -1,15 +1,15 @@
 package org.netmelody.cieye.server.response.json;
 
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.netmelody.cieye.server.response.JsonResponse;
 import org.netmelody.cieye.server.response.JsonResponseBuilder;
 import org.simpleframework.http.Path;
 
 public final class SettingsLocationResponseBuilder implements JsonResponseBuilder {
 
-    private final State state;
+    private final ConfigurationFetcher state;
 
-    public SettingsLocationResponseBuilder(State state) {
+    public SettingsLocationResponseBuilder(ConfigurationFetcher state) {
         this.state = state;
     }
 

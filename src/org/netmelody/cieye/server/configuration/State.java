@@ -6,9 +6,11 @@ import java.net.InetAddress;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
+import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
+import org.netmelody.cieye.server.PictureFetcher;
 
-public final class State implements LandscapeFetcher {
+public final class State implements LandscapeFetcher, PictureFetcher, ConfigurationFetcher {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
     private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
@@ -28,10 +30,12 @@ public final class State implements LandscapeFetcher {
         return landscapes.landscapeNamed(name);
     }
 
+    @Override
     public File getPictureResource(String name) {
         return settings.pictureNamed(name);
     }
 
+    @Override
     public String settingsLocation() {
         try {
             return new StringBuilder()
