@@ -7,7 +7,7 @@ import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.LandscapeFetcher;
-import org.netmelody.cieye.server.WitnessProvider;
+import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.response.JsonResponse;
 import org.netmelody.cieye.server.response.JsonResponseBuilder;
 import org.simpleframework.http.Path;
@@ -15,9 +15,9 @@ import org.simpleframework.http.Path;
 public final class LandscapeObservationResponseBuilder implements JsonResponseBuilder {
 
     private final LandscapeFetcher state;
-    private final WitnessProvider witnessProvider;
+    private final CiSpyAllocator witnessProvider;
 
-    public LandscapeObservationResponseBuilder(LandscapeFetcher state, WitnessProvider witnessProvider) {
+    public LandscapeObservationResponseBuilder(LandscapeFetcher state, CiSpyAllocator witnessProvider) {
         this.state = state;
         this.witnessProvider = witnessProvider;
     }
@@ -31,7 +31,7 @@ public final class LandscapeObservationResponseBuilder implements JsonResponseBu
         final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
         
         for (Feature feature : landscape.features()) {
-            final CiSpy witness = witnessProvider.witnessFor(feature);
+            final CiSpy witness = witnessProvider.spyFor(feature);
             response = response.add(witness.statusOf(feature));
             timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate(feature));
         }

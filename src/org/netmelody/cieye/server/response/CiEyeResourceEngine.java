@@ -1,6 +1,6 @@
 package org.netmelody.cieye.server.response;
 
-import org.netmelody.cieye.server.WitnessProvider;
+import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.configuration.State;
 import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
 import org.netmelody.cieye.server.response.json.LandscapeListResponseBuilder;
@@ -13,7 +13,7 @@ import org.simpleframework.http.resource.ResourceEngine;
 
 public final class CiEyeResourceEngine implements ResourceEngine {
     private final State state;
-    private final WitnessProvider witnessProvider;
+    private final CiSpyAllocator witnessProvider;
 
     public CiEyeResourceEngine(State state) {
         this.state = state;

@@ -10,10 +10,10 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
-import org.netmelody.cieye.server.WitnessProvider;
+import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 
-public final class DefaultWitnessProvider implements WitnessProvider {
+public final class DefaultWitnessProvider implements CiSpyAllocator {
 
     private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
     private final CommunicationNetwork network = new JsonRestRequesterBuilder();
@@ -30,7 +30,7 @@ public final class DefaultWitnessProvider implements WitnessProvider {
     }
     
     @Override
-    public CiSpy witnessFor(Feature feature) {
+    public CiSpy spyFor(Feature feature) {
         if (!witnesses.containsKey(feature.endpoint())) {
             witnesses.put(feature.endpoint(), createWitnessFor(feature));
         }

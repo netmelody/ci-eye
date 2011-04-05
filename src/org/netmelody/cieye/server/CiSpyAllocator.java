@@ -3,7 +3,7 @@ package org.netmelody.cieye.server;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 
-public interface WitnessProvider {
+public interface CiSpyAllocator {
 
-    CiSpy witnessFor(Feature feature);
+    CiSpy spyFor(Feature feature);
 }
