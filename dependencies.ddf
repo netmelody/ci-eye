@@ -28,4 +28,6 @@ layer spy-network = ${package}.spies.demo.* ${package}.spies.jenkins.* ${package
 check strictLayeringOf foundation server-modules
 check strictLayeringOf foundation spy-network
 
-check absenceOfPackageCycles > 1 in [ci-eye]
+check absenceOfPackageCycles > 1 in [core]
+check absenceOfPackageCycles > 1 in [spies]
+check absenceOfPackageCycles > 4 in [server]

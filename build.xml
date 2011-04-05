@@ -39,7 +39,7 @@
         </classycleDependencyCheck>
     </target>
 
-    <target name="jar" depends="clean,build" description="Create a jar file">
+    <target name="jar" depends="clean,build,dependencycheck" description="Create a jar file">
         <jar destfile="build/ci-eye.jar">
             <fileset dir="build/main"/>
             <zipgroupfileset dir="vendor/lib" includes="*.jar"/>
