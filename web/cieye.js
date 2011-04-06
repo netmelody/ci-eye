@@ -147,6 +147,10 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
     }
     
+    function markAsFixed() {
+        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
+    }
+    
     function refreshImages() {
         $.each(sponsorMugshots, function(key, mugshotWidget) {
             mugshotWidget.refresh();
@@ -160,7 +164,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(buildsDiv);
         targetDiv.addClass("target");
         targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
-                             {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation}],
+                             {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation},
+                             {"label": "Mark as Fixed", "handler": markAsFixed}],
                             clickable);
         
         updateFrom(targetJson);
