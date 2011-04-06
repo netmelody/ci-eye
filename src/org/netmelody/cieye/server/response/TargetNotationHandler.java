@@ -1,6 +1,8 @@
 package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,11 +55,16 @@ public final class TargetNotationHandler implements Resource {
     }
 
     private String getOriginator(Request request) {
-        String forwardedFor = request.getValue("X-Forwarded-For");
+        final String forwardedFor = request.getValue("X-Forwarded-For");
+        
         if (null != forwardedFor && !forwardedFor.isEmpty()) {
-            return forwardedFor;
+            try {
+                final InetAddress addr = InetAddress.getByName(forwardedFor);
+                return addr.getHostName();
+            } catch (UnknownHostException e) {
+                return forwardedFor;
+            }
         }
         return request.getClientAddress().getHostName();
     }
-
 }
