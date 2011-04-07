@@ -2,38 +2,37 @@ package org.netmelody.cieye.server.response;
 
 import static java.lang.Math.min;
 
+import java.io.IOException;
+
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.CiSpyAllocator;
-import org.simpleframework.http.Path;
+import org.simpleframework.http.Response;
 
-public final class LandscapeObservationResponseBuilder implements JsonResponseBuilder {
+public final class LandscapeObservationResponseBuilder implements CiEyeResponder {
 
-    private final LandscapeFetcher state;
-    private final CiSpyAllocator witnessProvider;
+    private final CiSpyAllocator spyAllocator;
+    private final Landscape landscape;
 
-    public LandscapeObservationResponseBuilder(LandscapeFetcher state, CiSpyAllocator witnessProvider) {
-        this.state = state;
-        this.witnessProvider = witnessProvider;
+    public LandscapeObservationResponseBuilder(Landscape landscape, CiSpyAllocator spyAllocator) {
+        this.landscape = landscape;
+        this.spyAllocator = spyAllocator;
     }
 
     @Override
-    public JsonResponse buildResponse(Path path, String requestContent) {
-        TargetGroup response = new TargetGroup();
+    public void writeTo(Response response) throws IOException {
+        TargetGroup result = new TargetGroup();
         long timeToLive = Long.MAX_VALUE;
-        
-        final String[] segments = path.getSegments();
-        final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
-        
         for (Feature feature : landscape.features()) {
-            final CiSpy witness = witnessProvider.spyFor(feature);
-            response = response.add(witness.statusOf(feature));
+            final CiSpy witness = spyAllocator.spyFor(feature);
+            result = result.add(witness.statusOf(feature));
             timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate(feature));
         }
         
-        return new JsonResponse(response, timeToLive);
+        response.set("Content-Type", "application/json");
+        response.setDate("Expires", System.currentTimeMillis() + timeToLive);
+        response.getPrintStream().println(new JsonTranslator().toJson(result));
     }
 }

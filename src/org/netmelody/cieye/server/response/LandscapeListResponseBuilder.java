@@ -1,19 +1,22 @@
 package org.netmelody.cieye.server.response;
 
+import java.io.IOException;
+
 import org.netmelody.cieye.server.LandscapeFetcher;
-import org.simpleframework.http.Path;
+import org.simpleframework.http.Response;
 
-public final class LandscapeListResponseBuilder implements JsonResponseBuilder {
+public final class LandscapeListResponseBuilder implements CiEyeResponder {
 
-    private final LandscapeFetcher state;
+    private final LandscapeFetcher landscapeFetcher;
 
     public LandscapeListResponseBuilder(LandscapeFetcher state) {
-        this.state = state;
+        this.landscapeFetcher = state;
     }
 
     @Override
-    public JsonResponse buildResponse(Path path, String requestContent) {
-        return new JsonResponse(state.landscapes());
+    public void writeTo(Response response) throws IOException {
+        response.set("Content-Type", "application/json");
+        response.setDate("Expires", System.currentTimeMillis() + 10000L);
+        response.getPrintStream().println(new JsonTranslator().toJson(landscapeFetcher.landscapes()));
     }
-
 }

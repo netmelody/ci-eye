@@ -1,18 +1,23 @@
 package org.netmelody.cieye.server.response;
 
+import java.io.IOException;
+
 import org.netmelody.cieye.server.ConfigurationFetcher;
-import org.simpleframework.http.Path;
+import org.simpleframework.http.Response;
 
-public final class SettingsLocationResponseBuilder implements JsonResponseBuilder {
+public final class SettingsLocationResponseBuilder implements CiEyeResponder {
 
-    private final ConfigurationFetcher state;
+    private final ConfigurationFetcher configurationFetcher;
 
-    public SettingsLocationResponseBuilder(ConfigurationFetcher state) {
-        this.state = state;
+    public SettingsLocationResponseBuilder(ConfigurationFetcher configurationFetcher) {
+        this.configurationFetcher = configurationFetcher;
     }
 
     @Override
-    public JsonResponse buildResponse(Path path, String requestContent) {
-        return new JsonResponse(state.settingsLocation());
+    public void writeTo(Response response) throws IOException {
+        response.set("Content-Type", "application/json");
+        response.setDate("Expires", System.currentTimeMillis() + 10000L);
+        response.getPrintStream().println(new JsonTranslator().toJson(configurationFetcher.settingsLocation()));
     }
+    
 }

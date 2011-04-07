@@ -1,5 +1,6 @@
 package org.netmelody.cieye.server.response;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
@@ -7,12 +8,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
-import org.simpleframework.http.resource.Resource;
 
-public final class FileResponder implements Resource {
+public final class FileResponder implements CiEyeResponder {
 
     private static final Log LOG = LogFactory.getLog(FileResponder.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
@@ -27,32 +25,19 @@ public final class FileResponder implements Resource {
     }
 
     @Override
-    public void handle(Request request, Response response) {
+    public void writeTo(Response response) throws IOException {
         InputStream input = null;
         OutputStream body = null;
         try {
             input = getClass().getResourceAsStream("/" + name);
             body = response.getOutputStream();
-            long time = System.currentTimeMillis();
-            response.set("Content-Type", contentTypeOf(extension));
-            response.set("Server", "CiEye/1.0 (Simple 4.0)");
-            response.setDate("Date", time);
-            response.setDate("Last-Modified", time);
+            response.set("Content-Type", MIME_TYPES.getString(extension));
             IOUtils.copy(input, body);
-        }
-        catch (Exception e) {
-            LOG.error("Failed to respond to request for resource " + this.name);
-            response.setCode(Status.NOT_FOUND.getCode());
-            response.setText(Status.NOT_FOUND.getDescription());
         }
         finally {
             IOUtils.closeQuietly(input);
             IOUtils.closeQuietly(body);
         }
-    }
-    
-    private static String contentTypeOf(String extension) {
-        return MIME_TYPES.getString(extension);
     }
 }
 

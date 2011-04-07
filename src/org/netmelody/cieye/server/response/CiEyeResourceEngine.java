@@ -35,17 +35,17 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         final String[] path = target.getPath().getSegments();
         
         if (path.length == 0) {
-            return new FileResponder("welcome.html");
+            return new CiEyeResource(new FileResponder("welcome.html"));
         }
         
         if (path.length == 1) {
             if ("landscapelist.json".equals(path[0])) {
-                return new JsonResponder(new LandscapeListResponseBuilder(landscapeFetcher));
+                return new CiEyeResource(new LandscapeListResponseBuilder(landscapeFetcher));
             }
             if ("settingslocation.json".equals(path[0])) {
-                return new JsonResponder(new SettingsLocationResponseBuilder(configurationFetcher));
+                return new CiEyeResource(new SettingsLocationResponseBuilder(configurationFetcher));
             }
-            return new FileResponder(path[0]);
+            return new CiEyeResource(new FileResponder(path[0]));
         }
         
         if (path.length == 2) {
@@ -54,13 +54,13 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
             
             if ("landscapes".equals(path[0])) {
-                return new FileResponder("cieye.html");
+                return new CiEyeResource(new FileResponder("cieye.html"));
             }
         }
         
         if (path.length == 3) {
             if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
-                return new JsonResponder(new LandscapeObservationResponseBuilder(landscapeFetcher, allocator));
+                return new CiEyeResource(new LandscapeObservationResponseBuilder(landscapeFetcher.landscapeNamed(path[1]), allocator));
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
