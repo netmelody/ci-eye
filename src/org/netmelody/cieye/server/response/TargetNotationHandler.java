@@ -1,8 +1,6 @@
 package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,19 +17,22 @@ public final class TargetNotationHandler implements Resource {
 
     private static final Log LOG = LogFactory.getLog(TargetNotationHandler.class);
     
+    private final RequestOriginTracker tracker;
+    
     private final LandscapeFetcher state;
     private final CiSpyAllocator witnessProvider;
 
-    public TargetNotationHandler(LandscapeFetcher state, CiSpyAllocator witnessProvider) {
+    public TargetNotationHandler(LandscapeFetcher state, CiSpyAllocator witnessProvider, RequestOriginTracker tracker) {
         this.state = state;
         this.witnessProvider = witnessProvider;
+        this.tracker = tracker;
     }
 
     @Override
     public void handle(Request request, Response response) {
         try {
             final String targetId = request.getForm().get("id");
-            final String note = request.getForm().get("note") + " by " + getOriginator(request);
+            final String note = request.getForm().get("note") + " by " + tracker.originOf(request);
             
             final String[] segments = request.getAddress().getPath().getSegments();
             final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
@@ -52,19 +53,5 @@ public final class TargetNotationHandler implements Resource {
                 LOG.error("Failed to close response object", e);
             }
         }
-    }
-
-    private String getOriginator(Request request) {
-        final String forwardedFor = request.getValue("X-Forwarded-For");
-        
-        if (null != forwardedFor && !forwardedFor.isEmpty()) {
-            try {
-                final InetAddress addr = InetAddress.getByName(forwardedFor);
-                return addr.getHostName();
-            } catch (UnknownHostException e) {
-                return forwardedFor;
-            }
-        }
-        return request.getClientAddress().getHostName();
     }
 }

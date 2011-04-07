@@ -15,6 +15,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
     private final LandscapeFetcher landscapeFetcher;
     private final PictureFetcher pictureFetcher;
     private final ConfigurationFetcher configurationFetcher;
+    private final CachedRequestOriginTracker tracker = new CachedRequestOriginTracker();
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
                                ConfigurationFetcher configurationFetcher, CiSpyAllocator allocator) {
@@ -30,7 +31,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             return new JsonResponder(jsonResponseBuilderFor(target));
         }
         if ("addNote".equals(target.getPath().getName())) {
-            return new TargetNotationHandler(landscapeFetcher, allocator);
+            return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
         }
         
         if ((target.getPath().getSegments().length > 0) && "/pictures".equals(target.getPath().getPath(0, 1))) {
