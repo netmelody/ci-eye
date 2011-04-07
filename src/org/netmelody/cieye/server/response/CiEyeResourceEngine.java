@@ -1,11 +1,15 @@
 package org.netmelody.cieye.server.response;
 
+import java.io.IOException;
+
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.simpleframework.http.Address;
-import org.simpleframework.http.Path;
+import org.simpleframework.http.Request;
+import org.simpleframework.http.Response;
+import org.simpleframework.http.Status;
 import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceEngine;
 
@@ -19,6 +23,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
                                ConfigurationFetcher configurationFetcher, CiSpyAllocator allocator) {
+        
         this.landscapeFetcher = landscapeFetcher;
         this.pictureFetcher = pictureFetcher;
         this.configurationFetcher = configurationFetcher;
@@ -27,39 +32,56 @@ public final class CiEyeResourceEngine implements ResourceEngine {
     
     @Override
     public Resource resolve(Address target) {
-        if ("json".equals(target.getPath().getExtension())) {
-            return new JsonResponder(jsonResponseBuilderFor(target));
-        }
-        if ("addNote".equals(target.getPath().getName())) {
-            return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
+        final String[] path = target.getPath().getSegments();
+        
+        if (path.length == 0) {
+            return new FileResponder("welcome.html");
         }
         
-        if ((target.getPath().getSegments().length > 0) && "/pictures".equals(target.getPath().getPath(0, 1))) {
-            return new PictureResponder(pictureFetcher, target.getPath());
-        }
-        return new FileResponder(target.getPath());
-    }
-
-    private JsonResponseBuilder jsonResponseBuilderFor(Address target) {
-        final String name = target.getPath().getName();
-        
-        if ("landscapeobservation.json".equals(name)) {
-            return new LandscapeObservationResponseBuilder(landscapeFetcher, allocator);
-        }
-        
-        if ("landscapelist.json".equals(name)) {
-            return new LandscapeListResponseBuilder(landscapeFetcher);
-        }
-        
-        if ("settingslocation.json".equals(name)) {
-            return new SettingsLocationResponseBuilder(configurationFetcher);
-        }
-        
-        return new JsonResponseBuilder() {
-            @Override
-            public JsonResponse buildResponse(Path path, String requestContent) {
-                return new JsonResponse("");
+        if (path.length == 1) {
+            if ("landscapelist.json".equals(path[0])) {
+                return new JsonResponder(new LandscapeListResponseBuilder(landscapeFetcher));
             }
-        };
+            if ("settingslocation.json".equals(path[0])) {
+                return new JsonResponder(new SettingsLocationResponseBuilder(configurationFetcher));
+            }
+            return new FileResponder(path[0]);
+        }
+        
+        if (path.length == 2) {
+            if ("pictures".equals(path[0])) {
+                return new PictureResponder(pictureFetcher, path[1]);
+            }
+            
+            if ("landscapes".equals(path[0])) {
+                return new FileResponder("cieye.html");
+            }
+        }
+        
+        if (path.length == 3) {
+            if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
+                return new JsonResponder(new LandscapeObservationResponseBuilder(landscapeFetcher, allocator));
+            }
+            
+            if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
+                return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
+            }
+        }
+        
+        return new NotFoundResource();
+    }
+    
+    public static final class NotFoundResource implements Resource {
+        @Override
+        public void handle(Request req, Response resp) {
+            resp.setCode(Status.NOT_FOUND.getCode());
+            resp.setText(Status.NOT_FOUND.getDescription());
+            try {
+                resp.getPrintStream().append("<!DOCTYPE html><html><head/><body>Page Not Found. Try <a href=\"/\">starting from the top<a></body></html>");
+                resp.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

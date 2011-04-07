@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
+import org.simpleframework.http.Status;
 import org.simpleframework.http.resource.Resource;
 
 public final class FileResponder implements Resource {
@@ -20,10 +20,10 @@ public final class FileResponder implements Resource {
     private final String name;
     private final String extension;
 
-    public FileResponder(Path path) {
-        this.name = defaultString(path.getName(), defaultFileFor(path));
-        this.extension = defaultString(path.getExtension(), "html");
-        LOG.info(path.getPath());
+    public FileResponder(String name) {
+        this.name = name;
+        this.extension = name.substring(name.lastIndexOf('.') + 1);
+        LOG.info(name);
     }
 
     @Override
@@ -42,7 +42,8 @@ public final class FileResponder implements Resource {
         }
         catch (Exception e) {
             LOG.error("Failed to respond to request for resource " + this.name);
-            response.setCode(500);
+            response.setCode(Status.NOT_FOUND.getCode());
+            response.setText(Status.NOT_FOUND.getDescription());
         }
         finally {
             IOUtils.closeQuietly(input);
@@ -50,22 +51,8 @@ public final class FileResponder implements Resource {
         }
     }
     
-    private static String defaultFileFor(Path path) {
-        final int pathLength = path.getSegments().length;
-        
-        if (pathLength <= 1) {
-            return "welcome.html";
-        }
-        
-        return "cieye.html";
-    }
-
     private static String contentTypeOf(String extension) {
         return MIME_TYPES.getString(extension);
-    }
-    
-    private static String defaultString(String value, String defaultValue) {
-        return (null == value || value.length() == 0) ? defaultValue : value;
     }
 }
 

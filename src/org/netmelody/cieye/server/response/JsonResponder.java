@@ -13,7 +13,6 @@ public final class JsonResponder implements Resource {
 
     private static final Log LOG = LogFactory.getLog(JsonResponder.class);
     
-    private final JsonTranslator json = new JsonTranslator();
     private final JsonResponseBuilder responseBuilder;
 
     public JsonResponder(JsonResponseBuilder responseBuilder) {
@@ -36,12 +35,11 @@ public final class JsonResponder implements Resource {
             
             JsonResponse jsonResponse = responseBuilder.buildResponse(request.getPath(), request.getContent());
             response.setDate("Expires", time + jsonResponse.millisecondsUntilExpiry());
-            body.println(json.toJson(jsonResponse.jsonContent()));
-            body.close();        
+            body.println(new JsonTranslator().toJson(jsonResponse.jsonContent()));
+            body.close();
         } catch (Exception e) {
             LOG.error(String.format("failed to respond to json request (%s)", path), e);
             response.setCode(500);
         }
     }
-
 }

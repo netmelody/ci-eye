@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.server.PictureFetcher;
-import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
@@ -24,11 +23,11 @@ public final class PictureResponder implements Resource {
     private final String extension;
     private final PictureFetcher state;
 
-    public PictureResponder(PictureFetcher state, Path path) {
+    public PictureResponder(PictureFetcher state, String name) {
         this.state = state;
-        this.name = defaultString(path.getName(), "vlad.jpg");
-        this.extension = defaultString(path.getExtension(), "jpg");
-        LOG.info(path.getPath());
+        this.name = name;
+        this.extension = name.substring(name.lastIndexOf('.') + 1);
+        LOG.info(name);
     }
 
     @Override
@@ -58,10 +57,6 @@ public final class PictureResponder implements Resource {
 
     private static String contentTypeOf(String extension) {
         return MIME_TYPES.getString(extension);
-    }
-    
-    private static String defaultString(String value, String defaultValue) {
-        return (null == value || value.length() == 0) ? defaultValue : value;
     }
 }
 
