@@ -148,7 +148,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function markAsFixed() {
-        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
+        $.post("addNote", { "id": targetJson.id, "note": "Fixed" } );
     }
     
     function refreshImages() {
