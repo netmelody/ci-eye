@@ -10,11 +10,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.server.PictureFetcher;
-import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
-import org.simpleframework.http.resource.Resource;
 
-public final class PictureResponder implements Resource {
+public final class PictureResponder implements CiEyeResponder {
 
     private static final Log LOG = LogFactory.getLog(PictureResponder.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
@@ -31,7 +29,7 @@ public final class PictureResponder implements Resource {
     }
 
     @Override
-    public void handle(Request request, Response response) {
+    public void writeTo(Response response) throws IOException {
         FileInputStream picture = null;
         OutputStream body = null;
         try {

@@ -50,7 +50,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         
         if (path.length == 2) {
             if ("pictures".equals(path[0])) {
-                return new PictureResponder(pictureFetcher, path[1]);
+                return new CiEyeResource(new PictureResponder(pictureFetcher, path[1]));
             }
             
             if ("landscapes".equals(path[0])) {
