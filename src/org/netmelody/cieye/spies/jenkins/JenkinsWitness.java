@@ -85,8 +85,4 @@ public final class JenkinsWitness implements CiSpy {
     private Collection<View> views() {
         return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views;
     }
-
-//    private Computer agentDetails(String agentName) {
-//        return makeJenkinsRestCall(endpoint + "/computer/" + agentName, Computer.class);
-//    }
 }
