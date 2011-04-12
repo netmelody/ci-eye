@@ -34,18 +34,11 @@ public final class PictureResponder implements CiEyeResponder {
         OutputStream body = null;
         try {
             body = response.getOutputStream();
-            File file = state.getPictureResource(name);
+            final File file = state.getPictureResource(name);
             picture = new FileInputStream(file);
-            long time = System.currentTimeMillis();
             response.set("Content-Type", contentTypeOf(extension));
-            response.set("Server", "CiEye/1.0 (Simple 4.0)");
-            response.setDate("Date", time);
             response.setDate("Last-Modified", file.lastModified());
             IOUtils.copy(picture, body);
-        }
-        catch (IOException e) {
-            LOG.error("Failed to get picture " + this.name, e);
-            response.setCode(500);
         }
         finally {
             IOUtils.closeQuietly(picture);
