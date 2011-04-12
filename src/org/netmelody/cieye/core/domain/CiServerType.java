@@ -1,6 +1,6 @@
 package org.netmelody.cieye.core.domain;
 
-public class CiServerType {
+public final class CiServerType {
     
     private final String name;
     

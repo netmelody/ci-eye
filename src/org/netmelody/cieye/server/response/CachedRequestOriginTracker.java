@@ -9,7 +9,7 @@ import org.simpleframework.http.Request;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public class CachedRequestOriginTracker implements RequestOriginTracker {
+public final class CachedRequestOriginTracker implements RequestOriginTracker {
     
     private final Map<String, String> reverseLookup = new MapMaker().makeComputingMap(new Function<String, String>() {
         @Override
