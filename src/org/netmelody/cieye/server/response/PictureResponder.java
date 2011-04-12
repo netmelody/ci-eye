@@ -19,10 +19,10 @@ public final class PictureResponder implements CiEyeResponder {
     
     private final String name;
     private final String extension;
-    private final PictureFetcher state;
+    private final PictureFetcher pictureFetcher;
 
-    public PictureResponder(PictureFetcher state, String name) {
-        this.state = state;
+    public PictureResponder(PictureFetcher pictureFetcher, String name) {
+        this.pictureFetcher = pictureFetcher;
         this.name = name;
         this.extension = name.substring(name.lastIndexOf('.') + 1);
         LOG.info(name);
@@ -34,7 +34,7 @@ public final class PictureResponder implements CiEyeResponder {
         OutputStream body = null;
         try {
             body = response.getOutputStream();
-            final File file = state.getPictureResource(name);
+            final File file = pictureFetcher.getPictureResource(name);
             picture = new FileInputStream(file);
             response.set("Content-Type", contentTypeOf(extension));
             response.setDate("Last-Modified", file.lastModified());
