@@ -34,6 +34,10 @@ public final class TargetNotationHandler implements Resource {
             final String targetId = request.getForm().get("id");
             final String note = request.getForm().get("note") + " by " + tracker.originOf(request);
             
+            if (targetId == null || targetId.isEmpty()) {
+                return;
+            }
+            
             final String[] segments = request.getAddress().getPath().getSegments();
             final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
             
