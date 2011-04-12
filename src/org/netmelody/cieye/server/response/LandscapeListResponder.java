@@ -5,11 +5,11 @@ import java.io.IOException;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.simpleframework.http.Response;
 
-public final class LandscapeListResponseBuilder implements CiEyeResponder {
+public final class LandscapeListResponder implements CiEyeResponder {
 
     private final LandscapeFetcher landscapeFetcher;
 
-    public LandscapeListResponseBuilder(LandscapeFetcher state) {
+    public LandscapeListResponder(LandscapeFetcher state) {
         this.landscapeFetcher = state;
     }
 

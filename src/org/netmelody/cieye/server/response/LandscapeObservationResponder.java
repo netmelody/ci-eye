@@ -11,12 +11,12 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.simpleframework.http.Response;
 
-public final class LandscapeObservationResponseBuilder implements CiEyeResponder {
+public final class LandscapeObservationResponder implements CiEyeResponder {
 
     private final CiSpyAllocator spyAllocator;
     private final Landscape landscape;
 
-    public LandscapeObservationResponseBuilder(Landscape landscape, CiSpyAllocator spyAllocator) {
+    public LandscapeObservationResponder(Landscape landscape, CiSpyAllocator spyAllocator) {
         this.landscape = landscape;
         this.spyAllocator = spyAllocator;
     }

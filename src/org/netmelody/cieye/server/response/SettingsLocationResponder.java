@@ -5,11 +5,11 @@ import java.io.IOException;
 import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.simpleframework.http.Response;
 
-public final class SettingsLocationResponseBuilder implements CiEyeResponder {
+public final class SettingsLocationResponder implements CiEyeResponder {
 
     private final ConfigurationFetcher configurationFetcher;
 
-    public SettingsLocationResponseBuilder(ConfigurationFetcher configurationFetcher) {
+    public SettingsLocationResponder(ConfigurationFetcher configurationFetcher) {
         this.configurationFetcher = configurationFetcher;
     }
 
