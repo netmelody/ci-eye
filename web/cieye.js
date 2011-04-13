@@ -283,7 +283,7 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
     var radiatorWidget = ORG.NETMELODY.CIEYE.newRadiatorWidget();
     
     function update() {
-        scheduler.guard(30000);
+        scheduler.guard(60000);
         $.getJSON("landscapeobservation.json", function(targetList) {
             scheduler.relax();
             radiatorWidget.updateFrom(targetList);
