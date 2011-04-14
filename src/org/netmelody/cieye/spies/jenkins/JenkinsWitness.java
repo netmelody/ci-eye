@@ -77,7 +77,7 @@ public final class JenkinsWitness implements CiSpy {
     
     public Collection<String> users() {
         final Users detail = communicator.makeJenkinsRestCallWithSuffix("people", Users.class);
-        return transform(detail.users, new Function<UserDetail, String>() {
+        return transform(detail.users(), new Function<UserDetail, String>() {
             @Override public String apply(UserDetail userDetail) { return userDetail.user.fullName; }
         });
     }

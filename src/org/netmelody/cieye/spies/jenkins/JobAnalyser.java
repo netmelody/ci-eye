@@ -89,7 +89,7 @@ public final class JobAnalyser {
         }
         
         long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
-        for (Build build : job.builds) {
+        for (Build build : job.builds()) {
             if (build.number > lastSuccessNumber) {
                 result.addAll(sponsorsOf(build.url));
             }
@@ -139,7 +139,7 @@ public final class JobAnalyser {
             result.append(changeSetItem.msg);
         }
         
-        for (User user : build.culprits) {
+        for (User user : build.culprits()) {
             result.append(user.fullName);
         }
         
