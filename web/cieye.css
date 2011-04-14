@@ -30,10 +30,12 @@ div.target {
     border: 1px solid #000000;
     margin: 2px 2px 2px 5px;
     padding: 1px;
+    cursor: pointer;
 }
 div.target.GREEN {
     color: #ffffff;
     background-color: #00aa00;
+    cursor: default;
 }
 div.target.BROKEN {
     color: #ffffff;
