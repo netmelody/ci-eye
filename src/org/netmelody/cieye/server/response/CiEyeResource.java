@@ -30,7 +30,7 @@ public final class CiEyeResource implements Resource {
             responder.writeTo(response);
         }
         catch (Exception e) {
-            LOG.error("Failed to respond to request for resource " + request.getPath().getPath());
+            LOG.error("Failed to respond to request for resource " + request.getPath().getPath(), e);
             response.setCode(Status.NOT_FOUND.getCode());
             response.setText(Status.NOT_FOUND.getDescription());
         }
@@ -38,7 +38,7 @@ public final class CiEyeResource implements Resource {
             try {
                 response.close();
             } catch (IOException e) {
-                LOG.error("Failed to close response for resource " + request.getPath().getPath());
+                LOG.error("Failed to close response for resource " + request.getPath().getPath(), e);
             }
         }
     }
