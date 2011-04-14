@@ -5,4 +5,4 @@ push user/pass for ci into settings
 FIX: a rename of a project on hudson duplicates it on the radiator.
 support for Cruise, AnthillPro, CI Joe, Buildomatic?
 Auto-update?
-resource generator refactoring.
+give immediate feedback when marking a build.
