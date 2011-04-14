@@ -5,6 +5,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +46,10 @@ public final class JobDetail extends Job {
         }
         
         return lexographicallyLastFrom(candidates);
+    }
+    
+    public List<Build> builds() {
+        return (builds == null) ? new ArrayList<Build>() : builds;
     }
     
     private String lexographicallyLastFrom(final Collection<String> candidates) {

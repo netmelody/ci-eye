@@ -23,11 +23,9 @@ public final class BuildDetail extends Build {
     public List<String> upstreamBuildUrls() {
         final List<String> result = new ArrayList<String>();
         
-        if (null != actions) {
-            for (Action action : actions) {
-                if (null != action) {
-                    result.addAll(action.upstreamBuildUrls());
-                }
+        for (Action action : actions()) {
+            if (null != action) {
+                result.addAll(action.upstreamBuildUrls());
             }
         }
         return result;
@@ -38,15 +36,21 @@ public final class BuildDetail extends Build {
             return ("SUCCESS".equals(result)) ? Status.GREEN : Status.BROKEN;
         }
         
-        if (null != actions) {
-            for (Action action : actions) {
-                if (null != action) {
-                    if (action.failCount > 0) {
-                        return Status.BROKEN;
-                    }
+        for (Action action : actions()) {
+            if (null != action) {
+                if (action.failCount > 0) {
+                    return Status.BROKEN;
                 }
             }
         }
         return Status.UNKNOWN;
+    }
+
+    public List<User> culprits() {
+        return (null == culprits) ? new ArrayList<User>() : culprits;
+    }
+    
+    public List<Action> actions() {
+        return (null == actions) ? new ArrayList<Action>() : actions;
     }
 }

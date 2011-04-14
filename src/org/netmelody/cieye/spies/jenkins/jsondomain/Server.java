@@ -1,5 +1,6 @@
 package org.netmelody.cieye.spies.jenkins.jsondomain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,4 +18,8 @@ public final class Server {
     public boolean useCrumbs;
     public boolean useSecurity;
     public List<View> views;
+    
+    public List<View> views() {
+        return (views == null) ? new ArrayList<View>() : views;
+    }
 }

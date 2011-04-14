@@ -88,8 +88,8 @@ public final class TeamCityWitness implements CiSpy {
         final BuildTypeDetail buildTypeDetail = makeTeamCityRestCall(targetId, BuildTypeDetail.class);
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
         
-        if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
-            final Build lastCompletedBuild = completedBuilds.build.iterator().next();
+        if (!completedBuilds.build().isEmpty()) {
+            final Build lastCompletedBuild = completedBuilds.build().iterator().next();
             if (Status.BROKEN.equals(lastCompletedBuild.status())) {
                 contact.performBasicAuthentication("cieye", "cieye");
                 contact.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
@@ -127,8 +127,8 @@ public final class TeamCityWitness implements CiSpy {
         
         Status currentStatus = Status.GREEN;
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
-        if (completedBuilds.build != null && !completedBuilds.build.isEmpty()) {
-            final Build lastCompletedBuild = completedBuilds.build.iterator().next();
+        if (!completedBuilds.build().isEmpty()) {
+            final Build lastCompletedBuild = completedBuilds.build().iterator().next();
             currentStatus = lastCompletedBuild.status();
             if (runningBuilds.isEmpty() || Status.BROKEN.equals(currentStatus)) {
                 final BuildDetail buildDetail = detailsOf(lastCompletedBuild);
@@ -142,8 +142,7 @@ public final class TeamCityWitness implements CiSpy {
     }
 
     private List<Build> runningBuildsFor(BuildType buildType) {
-        final List<Build> result = makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build;
-        return (result == null) ? new ArrayList<Build>() : result;
+        return makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build();
     }
     
     private BuildDetail detailsOf(Build build) {

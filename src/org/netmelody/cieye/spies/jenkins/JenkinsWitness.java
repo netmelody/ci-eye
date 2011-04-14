@@ -83,6 +83,6 @@ public final class JenkinsWitness implements CiSpy {
     }
     
     private Collection<View> views() {
-        return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views;
+        return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views();
     }
 }

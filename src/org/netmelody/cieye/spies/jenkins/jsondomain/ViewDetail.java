@@ -9,6 +9,6 @@ public final class ViewDetail extends View {
     public List<Job> jobs;
     
     public Collection<Job> jobs() {
-        return (null != jobs) ? jobs : new ArrayList<Job>();
+        return (null == jobs) ? new ArrayList<Job>() : jobs;
     }
 }
