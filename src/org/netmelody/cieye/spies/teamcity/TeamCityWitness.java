@@ -100,11 +100,11 @@ public final class TeamCityWitness implements CiSpy {
     }
     
     private Collection<Project> projects() {
-        return makeTeamCityRestCall(endpoint + "/app/rest/projects", TeamCityProjects.class).project;
+        return makeTeamCityRestCall(endpoint + "/app/rest/projects", TeamCityProjects.class).project();
     }
 
     private Collection<BuildType> buildTypesFor(Project projectDigest) {
-        return makeTeamCityRestCall(endpoint + projectDigest.href, ProjectDetail.class).buildTypes.buildType;
+        return makeTeamCityRestCall(endpoint + projectDigest.href, ProjectDetail.class).buildTypes.buildType();
     }
     
     private Target targetFrom(BuildType buildType) {
@@ -163,7 +163,7 @@ public final class TeamCityWitness implements CiSpy {
             changes.add(makeTeamCityRestCall(endpoint + build.changes.href, ChangesOne.class).change);
         }
         else {
-            changes.addAll(makeTeamCityRestCall(endpoint + build.changes.href, ChangesMany.class).change);
+            changes.addAll(makeTeamCityRestCall(endpoint + build.changes.href, ChangesMany.class).change());
         }
         
         final StringBuilder result = new StringBuilder();
