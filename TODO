@@ -6,3 +6,4 @@ FIX: a rename of a project on hudson duplicates it on the radiator.
 support for Cruise, AnthillPro, CI Joe, Buildomatic?
 Auto-update?
 give immediate feedback when marking a build.
+bug getting last failed build from hudson.
