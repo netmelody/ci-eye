@@ -255,6 +255,10 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
         };
     }
     
+    function raiseAlarm() {
+    
+    }
+    
     function repeat(callback, interval) {
         browser.setInterval(safeCallableFor(callback), interval);
     }
