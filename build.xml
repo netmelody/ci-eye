@@ -49,7 +49,7 @@
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Implementation-Vendor" value="netmelody.org"/>
                 <attribute name="Implementation-Title" value="Ci-Eye"/>
-                <attribute name="Implementation-Version" value="0.0.1beta1"/>
+                <attribute name="Implementation-Version" value="0.0.1"/>
             </manifest>
         </jar>
     </target>
