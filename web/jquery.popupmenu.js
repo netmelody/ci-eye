@@ -1,5 +1,5 @@
 "use strict";
-(function() {
+(function($) {
     var style = {
             "menuStyle": {
                 "position": "absolute",
@@ -128,4 +128,4 @@
         });
         return this;
     };
-})();
+})(jQuery);
