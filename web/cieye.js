@@ -238,7 +238,8 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
 };
 
 ORG.NETMELODY.CIEYE.scheduler = function(browser) {
-    var protector;
+    var protector,
+        alarm;
     
     function reloadPage() {
         browser.location.reload();
@@ -256,7 +257,8 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
     }
     
     function raiseAlarm() {
-    
+        alarm = true;
+        $.announcer.announce("Lost contact with Ci-Eye server");
     }
     
     function repeat(callback, interval) {
@@ -265,11 +267,14 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
     
     function guard(timeout) {
         if (!protector) {
-            protector = browser.setTimeout(reloadPage, timeout);
+            protector = browser.setTimeout(raiseAlarm, timeout);
         }
     }
     
     function relax() {
+        if (alarm) {
+            reloadPage();
+        }
         if (protector) {
             browser.clearTimeout(protector);
             protector = null;
