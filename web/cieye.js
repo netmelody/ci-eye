@@ -258,7 +258,7 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
     
     function raiseAlarm() {
         alarm = true;
-        $.announcer.announce("Lost contact with Ci-Eye server");
+        $().announcer("announce", "Lost contact with Ci-Eye server");
     }
     
     function repeat(callback, interval) {

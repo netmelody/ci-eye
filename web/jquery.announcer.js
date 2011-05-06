@@ -19,17 +19,20 @@
                 "height": "16px"
             },
             "contentStyle": {
+                "color": "#000000",
                 "padding": "1px",
                 "margin": "0",
                 "backgroundColor": "#ffffff",
-                "border": "1px solid #999"
+                "border": "1px solid #999",
+                "font-family": "Verdana,sans-serif",
+                "font-size": "3em"
             },
             "closeButtonStyle": {
                 "color": "#000000",
                 "float": "right",
                 "padding": "0 1px 0 0",
                 "cursor": "pointer",
-                "font-family": "verdana,sans-serif",
+                "font-family": "Verdana,sans-serif",
                 "font-size": "0.8em"
             }
         },
@@ -61,15 +64,17 @@
         content.text(message);
         
         announcement.css({
-                        "left": "10",
-                        "top": "10"})
+                        "left": "50%",
+                        "margin-left": announcement.width() / -2,
+                        "top": 50})
                     .show();
         
         shadow.css({
                   "width": announcement.width(),
                   "height": announcement.height(),
-                  "left": "12",
-                  "top": "12"})
+                  "left": "50%",
+                  "margin-left": (announcement.width() / -2) +2,
+                  "top": 52})
               .show();
     }
     
@@ -80,7 +85,7 @@
     });
     
     $.fn.announcer = function(action, message) {
-        if ("show" === action) {
+        if ("announce" === action) {
             announce(message);
         }
         if ("hide" === action) {
