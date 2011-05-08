@@ -42,7 +42,9 @@ public final class JsUnitTest {
 
         //eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.TrivialReporter());");
         //eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('C:\\\\temp\\\\'));");
-        eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.ConsoleReporter());");
+//        eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.ConsoleReporter());");
+        eval(cx, global, "jasmine.getEnv().addReporter(new Packages.org.netmelody.cieye.test.Reporter());");
+        
         
         File loader = File.createTempFile("jasmine", ".html");
         FileUtils.writeStringToFile(loader, HTML);
