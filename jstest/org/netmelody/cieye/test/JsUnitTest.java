@@ -1,8 +1,10 @@
 package org.netmelody.cieye.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
@@ -11,6 +13,8 @@ import org.mozilla.javascript.tools.shell.Global;
 import org.mozilla.javascript.tools.shell.Main;
 
 public final class JsUnitTest {
+    
+    private static final String HTML = "<html><script type=\"text/javascript\">jasmine.getEnv().execute();</script></html>";
     
     @Test public void
     executeJUnitTests() throws IOException {
@@ -37,22 +41,23 @@ public final class JsUnitTest {
         loadJavaScript(cx, global, "/PlayerSpec.js");
 
         //eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.TrivialReporter());");
-        eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('C:\\\\temp\\\\'));");
-        //eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.ConsoleReporter());");
-        eval(cx, global, "jasmine.getEnv().execute();");
+        //eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('C:\\\\temp\\\\'));");
+        eval(cx, global, "jasmine.getEnv().addReporter(new jasmine.ConsoleReporter());");
         
-        System.out.println("");
+        File loader = File.createTempFile("jasmine", ".html");
+        FileUtils.writeStringToFile(loader, HTML);
+        final String uri = loader.toURI().toString().replaceFirst("^file:/([^/])", "file:///$1");
+        eval(cx, global, String.format("window.location = '%s';", uri));
     }
 
-    private void loadJavaScript(Context context, Global scope, String resource) throws IOException {
+    private Object loadJavaScript(Context context, Global scope, String resource) throws IOException {
         URL url = getClass().getResource(resource);
         String scriptSource = IOUtils.toString(url.openStream());
         String path = url.toExternalForm();
-        Main.evaluateScript(Main.loadScriptFromSource(context, scriptSource, path, 1, null), context, scope);
+        return Main.loadScriptFromSource(context, scriptSource, path, 1, null).exec(context, scope);
     }
     
-    private void eval(Context cx, Global global, String script) {
-        Main.evaluateScript(Main.loadScriptFromSource(cx, script, "local.js", 1, null), cx, global);
+    private Object eval(Context context, Global scope, String script) {
+        return Main.loadScriptFromSource(context, script, "local.js", 1, null).exec(context, scope);
     }
-    
 }
