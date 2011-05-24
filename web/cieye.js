@@ -316,6 +316,10 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
 };
 
 $(document).ready(function() {
+    if (!$("#radiator").length) {
+        return;
+    }
+    
     var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler);
     
