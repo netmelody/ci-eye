@@ -3,7 +3,7 @@ describe("BuildWidget", function() {
     var widget;
 
     beforeEach(function() {
-        widget = ORG.NETMELODY.CIEYE.newBuildWidget({"status": "GREEN", "progress": "85"});
+        widget = ORG.NETMELODY.CIEYE.newBuildWidget({"status": "GREEN", "progress": 85});
     });
 
     it("displays the build status", function() {
@@ -17,12 +17,12 @@ describe("BuildWidget", function() {
         var progressBar = widget.getContent(),
             progressBarFilling = progressBar.children().first();
     
-        expect(progressBarFilling.css("width")).toEqual("85%");
+        expect(progressBarFilling.attr("style")).toEqual("width: 85%");
     });
 
     describe("when the status has been updated", function() {
         beforeEach(function() {
-            widget.updateFrom({"status": "BROKEN", "progress": "11"});
+            widget.updateFrom({"status": "BROKEN", "progress": 11});
         });
 
         it("displays the new build status", function() {
@@ -36,7 +36,7 @@ describe("BuildWidget", function() {
             var progressBar = widget.getContent(),
                 progressBarFilling = progressBar.children().first();
         
-            expect(progressBarFilling.css("width")).toEqual("11%");
+            expect(progressBarFilling.attr("style")).toEqual("width: 11%");
         });
     });
 });
