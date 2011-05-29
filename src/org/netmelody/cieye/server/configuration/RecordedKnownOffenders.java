@@ -1,7 +1,5 @@
 package org.netmelody.cieye.server.configuration;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,9 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
@@ -21,25 +16,15 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory {
     
     private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
-    private static final Log LOG = LogFactory.getLog(RecordedKnownOffenders.class);
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     
-    public RecordedKnownOffenders(File picturesFile) {
+    public RecordedKnownOffenders(SettingsFile picturesFile) {
         loadPictureSettings(picturesFile);
     }
 
-    private void loadPictureSettings(File picturesFile) {
+    private void loadPictureSettings(SettingsFile picturesFile) {
         userMap.clear();
-        if (!picturesFile.canRead()) {
-            return;
-        }
-        
-        try {
-            final List<String> content = FileUtils.readLines(picturesFile);
-            extractPicuresFrom(content);
-        } catch (IOException e) {
-            LOG.error("failed to read picture settings file", e);
-        }
+        extractPicuresFrom(picturesFile.readContent());
     }
 
     private void extractPicuresFrom(List<String> content) {

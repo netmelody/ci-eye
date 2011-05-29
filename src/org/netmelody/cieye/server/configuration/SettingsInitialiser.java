@@ -59,12 +59,12 @@ public final class SettingsInitialiser {
         return SettingsInitialiser.class.getResourceAsStream("templates/" + name);
     }
 
-    public File viewsFile() {
-        return viewsFile;
+    public SettingsFile viewsFile() {
+        return new SettingsFile(viewsFile);
     }
 
-    public File picturesFile() {
-        return picturesFile;
+    public SettingsFile picturesFile() {
+        return new SettingsFile(picturesFile);
     }
 
     public File picturesDirectory() {
