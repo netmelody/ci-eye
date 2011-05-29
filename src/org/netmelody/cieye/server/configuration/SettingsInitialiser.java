@@ -67,8 +67,8 @@ public final class SettingsInitialiser {
         return picturesFile;
     }
 
-    public File pictureNamed(String name) {
-        return new File(picturesDir, name);
+    public File picturesDirectory() {
+        return picturesDir;
     }
 
     public String settingsLocation() {

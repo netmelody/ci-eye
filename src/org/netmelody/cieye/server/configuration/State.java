@@ -38,7 +38,7 @@ public final class State implements LandscapeFetcher, PictureFetcher, Configurat
 
     @Override
     public File getPictureResource(String name) {
-        return settings.pictureNamed(name);
+        return new File(settings.picturesDirectory(), name);
     }
 
     @Override
