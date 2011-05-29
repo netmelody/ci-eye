@@ -20,7 +20,7 @@ public final class State implements LandscapeFetcher, PictureFetcher, Configurat
     
     private final SettingsInitialiser settings = new SettingsInitialiser();
     private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
-    private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
+    private LandscapeGroup landscapes = new ViewsRepository(new SettingsFile(settings.viewsFile())).landscapes();
 
     @Override
     public LandscapeGroup landscapes() {

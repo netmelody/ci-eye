@@ -2,16 +2,11 @@ package org.netmelody.cieye.server.configuration;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
@@ -19,33 +14,27 @@ import org.netmelody.cieye.core.domain.LandscapeGroup;
 
 public final class ViewsRepository {
 
-    private static final Log LOG = LogFactory.getLog(ViewsRepository.class);
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
 
-    private final File viewsFile;
+    private final SettingsFile viewsFile;
     
-    public ViewsRepository(File viewsFile) {
+    public ViewsRepository(SettingsFile viewsFile) {
         this.viewsFile = viewsFile;
     }
     
     public LandscapeGroup landscapes() {
-        if (!viewsFile.canRead()) {
+        final List<Landscape> landscapes = extractLandscapeFrom(viewsFile.readContent());
+        
+        if (landscapes.isEmpty()) {
             return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
         }
         
-        try {
-            final List<String> content = FileUtils.readLines(viewsFile);
-            return extractLandscapeFrom(content);
-        } catch (IOException e) {
-            LOG.error("failed to read view settings file", e);
-        }
-        
-        return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
+        return new LandscapeGroup(landscapes);
     }
 
-    private static LandscapeGroup extractLandscapeFrom(List<String> content) {
-        LandscapeGroup result = new LandscapeGroup();
+    private static List<Landscape> extractLandscapeFrom(List<String> content) {
+        final List<Landscape> result = new ArrayList<Landscape>();
         
         String landscapeName = "";
         List<Feature> features = new ArrayList<Feature>();
@@ -54,7 +43,7 @@ public final class ViewsRepository {
             Matcher landscapeMatcher = LANDSCAPE_NAME_REGEX.matcher(line);
             if (landscapeMatcher.matches()) {
                 if (landscapeName.length() > 0) {
-                    result = result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
+                    result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
                 }
                 landscapeName = landscapeMatcher.group(1);
                 features.clear();
@@ -70,7 +59,7 @@ public final class ViewsRepository {
         }
         
         if (landscapeName.length() > 0) {
-            result = result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
+            result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
         }
         
         return result;
