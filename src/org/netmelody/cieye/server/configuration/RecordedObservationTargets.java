@@ -11,26 +11,33 @@ import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
+import org.netmelody.cieye.server.LandscapeFetcher;
 
-public final class ViewsRepository {
+public final class RecordedObservationTargets implements LandscapeFetcher {
 
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
 
-    private final SettingsFile viewsFile;
+    private final LandscapeGroup landscapeGroup;
     
-    public ViewsRepository(SettingsFile viewsFile) {
-        this.viewsFile = viewsFile;
-    }
-    
-    public LandscapeGroup landscapes() {
+    public RecordedObservationTargets(SettingsFile viewsFile) {
         final List<Landscape> landscapes = extractLandscapeFrom(viewsFile.readContent());
         
         if (landscapes.isEmpty()) {
-            return new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
+            this.landscapeGroup = new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
+            return;
         }
         
-        return new LandscapeGroup(landscapes);
+        this.landscapeGroup = new LandscapeGroup(landscapes);
+    }
+    
+    public LandscapeGroup landscapes() {
+        return this.landscapeGroup;
+    }
+    
+    @Override
+    public Landscape landscapeNamed(String name) {
+        return this.landscapeGroup.landscapeNamed(name);
     }
 
     private static List<Landscape> extractLandscapeFrom(List<String> content) {
@@ -64,5 +71,4 @@ public final class ViewsRepository {
         
         return result;
     }
-
 }

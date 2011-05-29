@@ -7,33 +7,25 @@ import java.util.jar.Manifest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.netmelody.cieye.core.domain.Landscape;
-import org.netmelody.cieye.core.domain.LandscapeGroup;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 
-public final class State implements LandscapeFetcher, PictureFetcher, ConfigurationFetcher {
+public final class State implements PictureFetcher, ConfigurationFetcher {
 
     private static final Log LOG = LogFactory.getLog(State.class);
     
     private final SettingsInitialiser settings = new SettingsInitialiser();
     private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
-    private LandscapeGroup landscapes = new ViewsRepository(settings.viewsFile()).landscapes();
+    private final LandscapeFetcher targets = new RecordedObservationTargets(settings.viewsFile());
 
-    @Override
-    public LandscapeGroup landscapes() {
-        return this.landscapes;
-    }
-    
     public KnownOffendersDirectory detective() {
         return this.detective;
     }
 
-    @Override
-    public Landscape landscapeNamed(String name) {
-        return landscapes.landscapeNamed(name);
+    public LandscapeFetcher observationTargetDirectory() {
+        return targets;
     }
 
     @Override
