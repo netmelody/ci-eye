@@ -2,14 +2,14 @@ package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
 
-import org.netmelody.cieye.server.ConfigurationFetcher;
+import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.simpleframework.http.Response;
 
 public final class SettingsLocationResponder implements CiEyeResponder {
 
-    private final ConfigurationFetcher configurationFetcher;
+    private final CiEyeServerInformationFetcher configurationFetcher;
 
-    public SettingsLocationResponder(ConfigurationFetcher configurationFetcher) {
+    public SettingsLocationResponder(CiEyeServerInformationFetcher configurationFetcher) {
         this.configurationFetcher = configurationFetcher;
     }
 

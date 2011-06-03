@@ -1,8 +1,7 @@
 package org.netmelody.cieye.server;
 
-public interface ConfigurationFetcher {
+public interface CiEyeServerInformationFetcher {
 
     String settingsLocation();
     String getVersion();
-
 }

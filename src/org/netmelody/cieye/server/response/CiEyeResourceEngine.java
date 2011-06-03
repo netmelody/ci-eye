@@ -3,7 +3,7 @@ package org.netmelody.cieye.server.response;
 import java.io.IOException;
 
 import org.netmelody.cieye.server.CiSpyAllocator;
-import org.netmelody.cieye.server.ConfigurationFetcher;
+import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.simpleframework.http.Address;
@@ -18,11 +18,11 @@ public final class CiEyeResourceEngine implements ResourceEngine {
     private final CiSpyAllocator allocator;
     private final LandscapeFetcher landscapeFetcher;
     private final PictureFetcher pictureFetcher;
-    private final ConfigurationFetcher configurationFetcher;
+    private final CiEyeServerInformationFetcher configurationFetcher;
     private final CachedRequestOriginTracker tracker = new CachedRequestOriginTracker();
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
-                               ConfigurationFetcher configurationFetcher, CiSpyAllocator allocator) {
+                               CiEyeServerInformationFetcher configurationFetcher, CiSpyAllocator allocator) {
         
         this.landscapeFetcher = landscapeFetcher;
         this.pictureFetcher = pictureFetcher;
