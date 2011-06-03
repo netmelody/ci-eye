@@ -18,7 +18,7 @@ public final class CiEyeServer {
     private final State state = new State();
     private final Container container =
         new ResourceContainer(new CiEyeResourceEngine(state.observationTargetDirectory(),
-                                                      state,
+                                                      state.album(),
                                                       state.serverInformation(),
                                                       new DefaultWitnessProvider(new JsonRestRequesterBuilder(),
                                                                                  state.detective())));
