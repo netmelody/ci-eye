@@ -31,8 +31,8 @@ public final class ServerConfiguration {
     
     public ServerConfiguration() {
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
-        executor.scheduleWithFixedDelay(new Refresher(detective), 1L, 1L, TimeUnit.MINUTES);
-        executor.scheduleWithFixedDelay(new Refresher(targets), 1L, 1L, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(new Refresher(detective), 1L, 10L, TimeUnit.SECONDS);
+        executor.scheduleWithFixedDelay(new Refresher(targets), 1L, 10L, TimeUnit.SECONDS);
     }
     
     public KnownOffendersDirectory detective() {
