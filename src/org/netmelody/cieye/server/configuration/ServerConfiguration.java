@@ -5,7 +5,7 @@ import org.netmelody.cieye.server.ConfigurationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 
-public final class State {
+public final class ServerConfiguration {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
     
@@ -22,7 +22,7 @@ public final class State {
         return targets;
     }
 
-    public ConfigurationFetcher serverInformation() {
+    public ConfigurationFetcher information() {
         return information;
     }
     

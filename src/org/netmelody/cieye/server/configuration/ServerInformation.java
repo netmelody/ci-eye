@@ -35,7 +35,7 @@ public final class ServerInformation implements  ConfigurationFetcher {
     public String getVersion() {
         String result = "";
         try {
-            final Manifest manifest = new Manifest(State.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
+            final Manifest manifest = new Manifest(ServerConfiguration.class.getResourceAsStream("/META-INF/MANIFEST.MF"));
             result = manifest.getMainAttributes().getValue("Implementation-Version");
         } catch (IOException e) {
             LOG.warn("Failed to read Implementation-Version", e);

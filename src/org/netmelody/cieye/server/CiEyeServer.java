@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import org.netmelody.cieye.server.configuration.State;
+import org.netmelody.cieye.server.configuration.ServerConfiguration;
 import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.server.response.CiEyeResourceEngine;
@@ -15,13 +15,13 @@ import org.simpleframework.transport.connect.SocketConnection;
 
 public final class CiEyeServer {
 
-    private final State state = new State();
+    private final ServerConfiguration agency = new ServerConfiguration();
     private final Container container =
-        new ResourceContainer(new CiEyeResourceEngine(state.observationTargetDirectory(),
-                                                      state.album(),
-                                                      state.serverInformation(),
+        new ResourceContainer(new CiEyeResourceEngine(agency.observationTargetDirectory(),
+                                                      agency.album(),
+                                                      agency.information(),
                                                       new DefaultWitnessProvider(new JsonRestRequesterBuilder(),
-                                                                                 state.detective())));
+                                                                                 agency.detective())));
     private final Connection connection;
     private final InetSocketAddress address;
     
