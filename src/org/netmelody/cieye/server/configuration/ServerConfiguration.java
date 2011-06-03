@@ -1,5 +1,9 @@
 package org.netmelody.cieye.server.configuration;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
@@ -9,11 +13,28 @@ public final class ServerConfiguration {
 
     private final SettingsInitialiser settings = new SettingsInitialiser();
     
-    private final CiEyeServerInformationFetcher information = new ServerInformation(settings.settingsLocation());
-    private final KnownOffendersDirectory detective = new RecordedKnownOffenders(settings.picturesFile());
-    private final LandscapeFetcher targets = new RecordedObservationTargets(settings.viewsFile());
-    private final PictureFetcher album = new Album(settings.picturesDirectory());
+    private final ServerInformation information = new ServerInformation(settings.settingsLocation());
+    private final RecordedKnownOffenders detective = new RecordedKnownOffenders(settings.picturesFile());
+    private final RecordedObservationTargets targets = new RecordedObservationTargets(settings.viewsFile());
+    private final Album album = new Album(settings.picturesDirectory());
 
+    private static final class Refresher implements Runnable {
+        private final Refreshable refreshable;
+        public Refresher(Refreshable refreshable) {
+            this.refreshable = refreshable;
+        }
+        @Override
+        public void run() {
+            refreshable.refresh();
+        }
+    }
+    
+    public ServerConfiguration() {
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+        executor.scheduleWithFixedDelay(new Refresher(detective), 1L, 1L, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(new Refresher(targets), 1L, 1L, TimeUnit.MINUTES);
+    }
+    
     public KnownOffendersDirectory detective() {
         return this.detective;
     }
