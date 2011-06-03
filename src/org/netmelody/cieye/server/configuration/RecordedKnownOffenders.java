@@ -16,8 +16,8 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
 
-    private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     private final SettingsFile picturesFile;
+    private Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
     
     public RecordedKnownOffenders(SettingsFile picturesFile) {
         this.picturesFile = picturesFile;
@@ -45,19 +45,19 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     }
     
     private void loadPictureSettings() {
-        userMap.clear();
-        extractPicuresFrom(picturesFile.readContent());
+        userMap = extractPicuresFrom(picturesFile.readContent());
     }
 
-    private void extractPicuresFrom(List<String> content) {
-        String pictureFilename = "";
+    private static Map<String, Sponsor> extractPicuresFrom(List<String> content) {
+        final Map<String, Sponsor> result = new HashMap<String, Sponsor>();
         final List<String> aliases = new ArrayList<String>();
+        String pictureFilename = "";
         
         for (String line : content) {
             Matcher pictureFilenameMatcher = PICTURE_FILENAME_REGEX.matcher(line);
             if (pictureFilenameMatcher.matches()) {
                 if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
-                    registerUser(aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
+                    registerUser(result, aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
                 }
                 pictureFilename = pictureFilenameMatcher.group(1);
                 aliases.clear();
@@ -70,15 +70,16 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
         }
         
         if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
-            registerUser(aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
+            registerUser(result, aliases.get(0), "/pictures/" + pictureFilename, aliases.toArray(new String[aliases.size()]));
         }
+        return result;
     }
     
-    private void registerUser(String name, String pictureUrl, String... keywords) {
+    private static void registerUser(Map<String, Sponsor> resultMap, String name, String pictureUrl, String... keywords) {
         final Sponsor user = new Sponsor(name, pictureUrl);
-        userMap.put(name.toUpperCase(), user);
+        resultMap.put(name.toUpperCase(), user);
         for (String keyword : keywords) {
-            userMap.put(keyword.toUpperCase(), user);
+            resultMap.put(keyword.toUpperCase(), user);
         }
     }
 }
