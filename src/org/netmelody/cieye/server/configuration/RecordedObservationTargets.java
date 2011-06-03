@@ -13,14 +13,28 @@ import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
 import org.netmelody.cieye.server.LandscapeFetcher;
 
-public final class RecordedObservationTargets implements LandscapeFetcher {
+public final class RecordedObservationTargets implements LandscapeFetcher, Refreshable {
 
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
     private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
 
-    private final LandscapeGroup landscapeGroup;
+    private final SettingsFile viewsFile;
+    
+    private LandscapeGroup landscapeGroup;
     
     public RecordedObservationTargets(SettingsFile viewsFile) {
+        this.viewsFile = viewsFile;
+        loadFromFile();
+    }
+
+    @Override
+    public void refresh() {
+        if (viewsFile.updateAvailable()) {
+            loadFromFile();
+        }
+    }
+
+    private void loadFromFile() {
         final List<Landscape> landscapes = extractLandscapeFrom(viewsFile.readContent());
         
         if (landscapes.isEmpty()) {

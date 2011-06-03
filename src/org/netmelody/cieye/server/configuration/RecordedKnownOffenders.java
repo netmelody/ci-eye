@@ -12,17 +12,39 @@ import java.util.regex.Pattern;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
-public final class RecordedKnownOffenders implements KnownOffendersDirectory {
-    
-    private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
+public final class RecordedKnownOffenders implements KnownOffendersDirectory, Refreshable {
     
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
+
+    private final Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
+    private final SettingsFile picturesFile;
     
     public RecordedKnownOffenders(SettingsFile picturesFile) {
-        loadPictureSettings(picturesFile);
+        this.picturesFile = picturesFile;
+        loadPictureSettings();
     }
 
-    private void loadPictureSettings(SettingsFile picturesFile) {
+    @Override
+    public void refresh() {
+        if (picturesFile.updateAvailable()) {
+            loadPictureSettings();
+        }
+    }
+    
+    @Override
+    public List<Sponsor> search(String fingerprint) {
+        final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
+        
+        final String upperChangeText = fingerprint.toUpperCase();
+        for (String keyword : userMap.keySet()) {
+            if (upperChangeText.contains(keyword)) {
+                sponsors.add(userMap.get(keyword));
+            }
+        }
+        return new ArrayList<Sponsor>(sponsors);
+    }
+    
+    private void loadPictureSettings() {
         userMap.clear();
         extractPicuresFrom(picturesFile.readContent());
     }
@@ -58,18 +80,5 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory {
         for (String keyword : keywords) {
             userMap.put(keyword.toUpperCase(), user);
         }
-    }
-    
-    @Override
-    public List<Sponsor> search(String fingerprint) {
-        final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
-        
-        final String upperChangeText = fingerprint.toUpperCase();
-        for (String keyword : userMap.keySet()) {
-            if (upperChangeText.contains(keyword)) {
-                sponsors.add(userMap.get(keyword));
-            }
-        }
-        return new ArrayList<Sponsor>(sponsors);
     }
 }
