@@ -1,5 +1,7 @@
 package org.netmelody.cieye.server.observation;
 
+import static java.lang.System.currentTimeMillis;
+
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,7 +22,7 @@ public final class PollingSpy implements CiSpy {
                                                                     .expireAfterWrite(10, TimeUnit.MINUTES)
                                                                     .makeMap();
     
-    private final ConcurrentMap<Feature, TargetGroup> statuses = new MapMaker().makeMap();
+    private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
     
     public PollingSpy(CiSpy delegate) {
         this.delegate = delegate;
@@ -29,13 +31,20 @@ public final class PollingSpy implements CiSpy {
     
     @Override
     public TargetGroup statusOf(Feature feature) {
-        trackedFeatures.put(feature, System.currentTimeMillis());
-        return statuses.putIfAbsent(feature, new TargetGroup());
+        final long currentTimeMillis = currentTimeMillis();
+        trackedFeatures.put(feature, currentTimeMillis);
+        return statuses.putIfAbsent(feature, new StatusResult(new TargetGroup(), currentTimeMillis())).status;
     }
 
     @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
-        return delegate.millisecondsUntilNextUpdate(feature);
+        long result = 0L;
+        
+        final StatusResult statusResult = statuses.get(feature);
+        if (null != statusResult) {
+            result = currentTimeMillis() - statusResult.timestamp;
+        }
+        return Math.max(result, delegate.millisecondsUntilNextUpdate(feature));
     }
 
     @Override
@@ -45,7 +54,16 @@ public final class PollingSpy implements CiSpy {
     
     private void update() {
         for (Feature feature : trackedFeatures.keySet()) {
-            statuses.put(feature, delegate.statusOf(feature));
+            statuses.put(feature, new StatusResult(delegate.statusOf(feature), currentTimeMillis()));
+        }
+    }
+    
+    private final class StatusResult {
+        private final TargetGroup status;
+        private final long timestamp;
+        public StatusResult(TargetGroup status, long timestamp) {
+            this.status = status;
+            this.timestamp = timestamp;
         }
     }
     
