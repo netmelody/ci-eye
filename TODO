@@ -1,8 +1,4 @@
-change to a pop-up when comms are lost with the server (and keep re-trying)
-allow a different set of pictures for each landscape
-don't require restart when settings are changed
 push user/pass for ci into settings
-FIX: a rename of a project on hudson duplicates it on the radiator.
 support for Cruise/Go, Bamboo, AnthillPro, CI Joe, Buildomatic, cruisecontrol?
 Auto-update? http://github.com/api/v2/json/repos/show/schacon/ruby-git/tags http://github.com/downloads/netmelody/ci-eye/ci-eye-201104161819.jar
 give immediate feedback when marking a build.
