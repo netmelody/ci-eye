@@ -45,6 +45,9 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             if ("settingslocation.json".equals(path[0])) {
                 return new CiEyeResource(new SettingsLocationResponder(configurationFetcher));
             }
+            if ("version.json".equals(path[0])) {
+                return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher));
+            }
             return new CiEyeResource(new FileResponder(path[0]));
         }
         
