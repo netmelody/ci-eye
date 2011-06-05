@@ -27,6 +27,14 @@ import com.google.common.collect.MapMaker;
 
 public final class DemoModeWitness implements CiSpy {
 
+    private final Map<String, DemoModeFakeCiServer> demoCiServers =
+        new MapMaker().makeComputingMap(new Function<String, DemoModeFakeCiServer>() {
+            @Override
+            public DemoModeFakeCiServer apply(String featureName) {
+                return new DemoModeFakeCiServer(featureName);
+            }
+        });
+    
     private final Map<String, TargetGroupGenerator> generatorMap;
     private final Map<String, TargetGroup> groupMap;
 
@@ -51,6 +59,10 @@ public final class DemoModeWitness implements CiSpy {
     
     @Override
     public TargetGroup statusOf(Feature feature) {
+        final DemoModeFakeCiServer ciServer = demoCiServers.get(feature.name());
+        
+        final List<String> targetNames = ciServer.getTargetNames();
+        
         return groupMap.get(feature.name());
     }
 
