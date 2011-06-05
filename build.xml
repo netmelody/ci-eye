@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="CI-Eye" default="build" basedir=".">
 
+    <property name="target.version" value="0.0.2"/>
+    <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
+    <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
+
+    <target name="version-for-snapshot" unless="release.build">
+        <property name="version.label" value="${target.version}-SNAPSHOT-${build.number}"/>
+    </target>
+
+    <target name="version-for-release" if="release.build">
+        <property name="version.label" value="${target.version}"/>
+    </target>
+
+    <target name="version" depends="version-for-snapshot,version-for-release"/>
+
     <path id="project.compile.class.path">
         <fileset dir="vendor/lib" includes="**/*.jar"/>
     </path>
@@ -49,8 +63,14 @@
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Implementation-Vendor" value="netmelody.org"/>
                 <attribute name="Implementation-Title" value="Ci-Eye"/>
-                <attribute name="Implementation-Version" value="0.0.2"/>
+                <attribute name="Implementation-Version" value="${version.label}"/>
+                <attribute name="Built-Date" value="${build.timestamp}"/>
             </manifest>
         </jar>
+    </target>
+
+    <target name="release" description="Create a release jar file">
+        <property name="release.build" value="true"/>
+        <antcall target="jar"/>
     </target>
 </project>
