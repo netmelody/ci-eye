@@ -220,7 +220,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             radiatorDiv.append(targetWidgets[targetJson.id].getContent());
         });
         $.each(deadTargetWidgets, function(index, deadTargetWidget) {
-            radiatorDiv.remove(deadTargetWidget.getContent());
+            deadTargetWidget.getContent().remove();
         });
     }
     
