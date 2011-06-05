@@ -284,7 +284,8 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
     return {
         "repeat": repeat,
         "guard": guard,
-        "relax": relax
+        "relax": relax,
+        "reload": reloadPage
     };
 };
 
@@ -315,17 +316,49 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
     };
 };
 
+ORG.NETMELODY.CIEYE.newVersionChecker = function(scheduler) {
+    var currentVersion;
+    
+    function assessVersion(versionString) {
+        if (!currentVersion) {
+            currentVersion = versionString;
+            return;
+        }
+        
+        if (currentVersion !== versionString) {
+            scheduler.reload();
+        }
+    }
+    
+    function checkForNewVersion() {
+        $.getJSON("/version.json", function(versionJson) {
+            assessVersion(versionJson);
+        });
+    }
+    
+    function startup() {
+        checkForNewVersion();
+        scheduler.repeat(checkForNewVersion, 30000);
+    }
+    
+    return {
+        "start": startup
+    };
+};
+
 $(document).ready(function() {
     if (!$("#radiator").length) {
         return;
     }
     
     var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
-        radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler);
+        radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
+        updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler);
     
     $(window).bind("resize", function() {
         radiator.refresh();
     });
     
     radiator.start();
+    updater.start();
 });
