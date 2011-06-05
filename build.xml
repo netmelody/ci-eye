@@ -22,7 +22,15 @@
     <target name="javac" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
-        <javac srcdir="src" includes="**" encoding="utf-8" destdir="build/main" source="1.5" target="1.5" debug="true" debuglevel="lines,source">
+        <javac srcdir="src"
+               includes="**"
+               includeantruntime="false"
+               encoding="utf-8"
+               destdir="build/main"
+               source="1.5"
+               target="1.5"
+               debug="true"
+               debuglevel="lines,source">
             <classpath refid="project.compile.class.path"/>
         </javac>
         
@@ -53,10 +61,22 @@
         </classycleDependencyCheck>
     </target>
 
-    <target name="jar" depends="clean,build,dependencycheck" description="Create a jar file">
-        <jar destfile="build/ci-eye.jar">
+    <target name="jar" depends="clean,build,dependencycheck,version" description="Create a jar file">
+        <jar destfile="build/ci-eye-${version.label}.jar">
             <fileset dir="build/main"/>
-            <zipgroupfileset dir="vendor/lib" includes="*.jar"/>
+            <fileset dir="." includes="LICENSE NOTICE README"/>
+            
+            <zipfileset src="vendor/lib/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/commons-logging-1.1.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/gson-1.7.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/guava-r09.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/httpclient-4.1.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/httpclient-cache-4.1.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/httpcore-4.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/httpcore-nio-4.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/httpmime-4.1.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="vendor/lib/simple-4.1.21.jar" excludes="**/META-INF/**"/>
             
             <manifest>
                 <attribute name="Main-Class" value="org.netmelody.cieye.CiEye"/>
