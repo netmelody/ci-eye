@@ -33,7 +33,8 @@ public final class PollingSpy implements CiSpy {
     public TargetGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
-        return statuses.putIfAbsent(feature, new StatusResult(new TargetGroup(), currentTimeMillis())).status;
+        StatusResult result = statuses.get(feature);
+        return (null == result) ? new TargetGroup() : result.status;
     }
 
     @Override
@@ -42,7 +43,7 @@ public final class PollingSpy implements CiSpy {
         
         final StatusResult statusResult = statuses.get(feature);
         if (null != statusResult) {
-            result = currentTimeMillis() - statusResult.timestamp;
+            result = 10000L - (currentTimeMillis() - statusResult.timestamp);
         }
         return Math.max(result, delegate.millisecondsUntilNextUpdate(feature));
     }
@@ -58,9 +59,9 @@ public final class PollingSpy implements CiSpy {
         }
     }
     
-    private final class StatusResult {
-        private final TargetGroup status;
-        private final long timestamp;
+    private static final class StatusResult {
+        public final TargetGroup status;
+        public final long timestamp;
         public StatusResult(TargetGroup status, long timestamp) {
             this.status = status;
             this.timestamp = timestamp;

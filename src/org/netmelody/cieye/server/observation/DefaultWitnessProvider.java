@@ -33,12 +33,12 @@ public final class DefaultWitnessProvider implements CiSpyAllocator {
     @Override
     public CiSpy spyFor(Feature feature) {
         if (!witnesses.containsKey(feature.endpoint())) {
-            witnesses.put(feature.endpoint(), createWitnessFor(feature));
+            witnesses.put(feature.endpoint(), createSpyFor(feature));
         }
         return witnesses.get(feature.endpoint());
     }
 
-    private CiSpy createWitnessFor(Feature feature) {
+    private CiSpy createSpyFor(Feature feature) {
         final String featureTypeName = feature.type().name();
         if (!agencyConfiguration.containsKey(featureTypeName)) {
             throw new IllegalStateException("No CI Observation Module for " + featureTypeName);
@@ -48,7 +48,7 @@ public final class DefaultWitnessProvider implements CiSpyAllocator {
             @SuppressWarnings("unchecked")
             final Class<? extends ObservationAgency> agencyClass =
                  (Class<? extends ObservationAgency>) Class.forName(agencyConfiguration.getProperty(featureTypeName));
-            return new BufferedWitness(agencyClass.newInstance().provideSpyFor(feature, network, directory));
+            return new PollingSpy(agencyClass.newInstance().provideSpyFor(feature, network, directory));
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load CI Observation Module for " + featureTypeName, e);
         }
