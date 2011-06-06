@@ -1,20 +1,19 @@
 package org.netmelody.cieye.spies.demo;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public final class DemoModeFakeCiServer {
 
-    private final String featureName;
-    
     private final Map<String, BuildTarget> targets = new HashMap<String, BuildTarget>();
 
     public DemoModeFakeCiServer(String featureName) {
-        this.featureName = featureName;
-        
         targets.put(featureName + " - Smoke", new BuildTarget(featureName + " - Smoke"));
         targets.put(featureName + " - Integration", new BuildTarget(featureName + " - Integration"));
         targets.put(featureName + " - Acceptance", new BuildTarget(featureName + " - Acceptance"));
@@ -30,18 +29,59 @@ public final class DemoModeFakeCiServer {
     }
     
     public void addNote(String targetName, String note) {
-        targets.get(targetName).addNote(note);
+        final BuildTarget buildTarget = targets.get(targetName);
+        if (null != buildTarget) {
+            buildTarget.addNote(note);
+        }
+    }
+    
+    public TargetData getDataFor(String targetName) {
+        final BuildTarget buildTarget = targets.get(targetName);
+        synchronized(buildTarget) {
+            buildTarget.recalculate();
+            final List<BuildData> buildData = new ArrayList<BuildData>();
+            for (RunningBuild build : buildTarget.builds) {
+                buildData.add(new BuildData(build.progress, build.green, "dracula"));
+            }
+            return new TargetData(buildTarget.url, buildTarget.green, buildTarget.note, buildData);
+        }
+    }
+
+    public static final class TargetData {
+        public final String url;
+        public final boolean green;
+        public final List<BuildData> builds;
+        public final String note;
+        public TargetData(String url, boolean green, String note, List<BuildData> buildData) {
+            this.url = url;
+            this.green = green;
+            this.note = note;
+            this.builds = unmodifiableList(new ArrayList<BuildData>(buildData));
+        }
+    }
+    
+    public static final class BuildData {
+        public final int progress;
+        public final boolean green;
+        public final String checkinComments;
+        public BuildData(int progress, boolean green, String comment) {
+            this.progress = progress;
+            this.green = green;
+            this.checkinComments = comment;
+        }
     }
     
     private static final class BuildTarget {
+        private final Random random = new Random();
         private final String targetName;
         private final String url = "http://www.example.com/";
         
         private boolean green;
+        private String note = "";
         private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
+        private long lastUpdateTime = System.currentTimeMillis();
 
         public BuildTarget(String targetName) {
-            final Random random = new Random();
             this.targetName = targetName;
             green = random.nextBoolean();
             
@@ -50,37 +90,67 @@ public final class DemoModeFakeCiServer {
             }
         }
 
+        public void recalculate() {
+            final long currentTime = System.currentTimeMillis();
+            final long ticksPassed = (currentTime - lastUpdateTime) / 500;
+            advanceBy((int)ticksPassed);
+            this.lastUpdateTime  = currentTime;
+        }
+
         public void addNote(String note) {
-            for (RunningBuild build : builds) {
-                if (!build.green) {
-                    build.addNote(note);
-                }
+            if (!green) {
+                this.note = note;
             }
         }
 
         public String getName() {
             return targetName;
         }
+        
+        public void advanceBy(int percent) {
+            Iterator<RunningBuild> buildIterator = builds.iterator();
+            while (buildIterator.hasNext()) {
+                RunningBuild build = buildIterator.next();
+                build.advanceBy(percent);
+                if (build.progress == 100) {
+                    buildIterator.remove();
+                    green = build.green;
+                    note = "";
+                }
+            }
+            
+            if (builds.isEmpty()) {
+                if (random.nextInt(green ? 30 : 10) == 0) {
+                    builds.add(new RunningBuild());
+                }
+            }
+        }
     }
     
     private static final class RunningBuild {
-        private final String checkinComments = "dracula: fixed some stuff";
-        
+        private final Random random = new Random();
         private boolean green = true;
         private int progress;
-        private String notes = "";
         
         public RunningBuild() {
-            final Random random = new Random();
             progress = random.nextInt(101);
         }
 
-        public void addNote(String note) {
-            notes = notes + note + "\n";
-        }
-        
         public void advanceBy(int percent) {
+            final int oldProgress;
             
+            synchronized(this) {
+                oldProgress = progress;
+                progress = Math.min(100, progress + percent);
+            }
+            
+            if (oldProgress > 90 || progress < 60) {
+                return;
+            }
+            
+            if (random.nextInt(50 / (Math.max(progress, 90) - 60)) == 0) {
+                green = false;
+            }
         }
     }
 }
