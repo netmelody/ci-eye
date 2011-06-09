@@ -12,7 +12,7 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.CiSpyAllocator;
 
-public final class DefaultWitnessProvider implements CiSpyAllocator {
+public final class IntelligenceAgency implements CiSpyAllocator {
 
     private final Properties agencyConfiguration = new Properties();
     private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
@@ -20,11 +20,11 @@ public final class DefaultWitnessProvider implements CiSpyAllocator {
     private final CommunicationNetwork network;
     private final KnownOffendersDirectory directory;
     
-    public DefaultWitnessProvider(CommunicationNetwork network, KnownOffendersDirectory directory) {
+    public IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory) {
         this.network = network;
         this.directory = directory;
         try {
-            agencyConfiguration.load(DefaultWitnessProvider.class.getResourceAsStream("CiObservationModules.properties"));
+            agencyConfiguration.load(IntelligenceAgency.class.getResourceAsStream("CiObservationModules.properties"));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load CI Observation Modules");
         }

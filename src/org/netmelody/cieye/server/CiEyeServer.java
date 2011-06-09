@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import org.netmelody.cieye.server.configuration.ServerConfiguration;
-import org.netmelody.cieye.server.observation.DefaultWitnessProvider;
+import org.netmelody.cieye.server.observation.IntelligenceAgency;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.server.response.CiEyeResourceEngine;
 import org.simpleframework.http.core.Container;
@@ -20,7 +20,7 @@ public final class CiEyeServer {
         new ResourceContainer(new CiEyeResourceEngine(agency.observationTargetDirectory(),
                                                       agency.album(),
                                                       agency.information(),
-                                                      new DefaultWitnessProvider(new JsonRestRequesterBuilder(),
+                                                      new IntelligenceAgency(new JsonRestRequesterBuilder(),
                                                                                  agency.detective())));
     private final Connection connection;
     private final InetSocketAddress address;
