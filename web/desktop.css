@@ -10,7 +10,7 @@ div.target {
     cursor: pointer;
 }
 div.target.GREEN {
-	display: none;
+    display: none;
 }
 div.target.GREEN.building {
     display: block;
