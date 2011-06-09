@@ -15,6 +15,8 @@ import com.google.common.collect.MapMaker;
 
 public final class PollingSpy implements CiSpy {
 
+    private static final long POLLING_PERIOD_SECONDS = 5L;
+    
     private final CiSpy delegate;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
@@ -26,7 +28,7 @@ public final class PollingSpy implements CiSpy {
     
     public PollingSpy(CiSpy delegate) {
         this.delegate = delegate;
-        executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, 10L, TimeUnit.SECONDS);
+        executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
     
     @Override
@@ -43,7 +45,7 @@ public final class PollingSpy implements CiSpy {
         
         final StatusResult statusResult = statuses.get(feature);
         if (null != statusResult) {
-            result = 10000L - (currentTimeMillis() - statusResult.timestamp);
+            result = Math.max(0L, (POLLING_PERIOD_SECONDS * 1000L) - (currentTimeMillis() - statusResult.timestamp));
         }
         return Math.max(result, delegate.millisecondsUntilNextUpdate(feature));
     }
