@@ -83,16 +83,16 @@ public final class DemoModeFakeCiServer {
 
         public BuildTarget(String targetName) {
             this.targetName = targetName;
-            green = random.nextBoolean();
+            green = random.nextInt(5) != 0;
             
-            if (random.nextBoolean()) {
+            if (random.nextInt(5) == 0) {
                 builds.add(new RunningBuild());
             }
         }
 
         public void recalculate() {
             final long currentTime = System.currentTimeMillis();
-            final long ticksPassed = (currentTime - lastUpdateTime) / 500;
+            final long ticksPassed = (currentTime - lastUpdateTime) / 1000;
             advanceBy((int)ticksPassed);
             this.lastUpdateTime  = currentTime;
         }
@@ -121,7 +121,7 @@ public final class DemoModeFakeCiServer {
             
             if (builds.isEmpty()) {
                 if (random.nextInt(green ? 30 : 10) == 0) {
-                    builds.add(new RunningBuild());
+                    builds.add(new RunningBuild(2));
                 }
             }
         }
@@ -136,6 +136,10 @@ public final class DemoModeFakeCiServer {
             progress = random.nextInt(101);
         }
 
+        public RunningBuild(int initialProgress) {
+            progress = initialProgress;
+        }
+
         public void advanceBy(int percent) {
             final int oldProgress;
             
@@ -148,7 +152,8 @@ public final class DemoModeFakeCiServer {
                 return;
             }
             
-            if (random.nextInt(50 / (Math.max(progress, 90) - 60)) == 0) {
+            int prob = Math.max(Math.min(progress, 90) - 60, 0) - Math.min(oldProgress - 60, 0);
+            if (random.nextInt(100) < prob) {
                 green = false;
             }
         }

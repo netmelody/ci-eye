@@ -49,7 +49,7 @@ public final class DemoModeSpy implements CiSpy {
             String commentry = "";
             for (BuildData buildData : data.builds) {
                 builds.add(new Build(Percentage.percentageOf(buildData.progress),
-                                     buildData.green ? Status.GREEN : Status.BROKEN));
+                                     buildData.green ? Status.GREEN : data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION));
                 commentry += buildData.checkinComments;
             }
             
