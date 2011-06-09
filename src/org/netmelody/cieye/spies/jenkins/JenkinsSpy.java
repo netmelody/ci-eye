@@ -23,14 +23,14 @@ import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public final class JenkinsWitness implements CiSpy {
+public final class JenkinsSpy implements CiSpy {
     
-    private static final Log LOG = LogFactory.getLog(JenkinsWitness.class);
+    private static final Log LOG = LogFactory.getLog(JenkinsSpy.class);
     
     private final JenkinsCommunicator communicator;
     private final ViewAnalyser viewAnalsyer;
 
-    public JenkinsWitness(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
+    public JenkinsSpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
         this.communicator = new JenkinsCommunicator(endpoint, network, "ci", "");
         this.viewAnalsyer = new ViewAnalyser(communicator, detective);
     }

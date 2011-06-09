@@ -10,6 +10,6 @@ public final class JenkinsObservationAgency implements ObservationAgency {
 
     @Override
     public CiSpy provideSpyFor(Feature feature, CommunicationNetwork network, KnownOffendersDirectory directory) {
-        return new JenkinsWitness(feature.endpoint(), network, directory);
+        return new JenkinsSpy(feature.endpoint(), network, directory);
     }
 }

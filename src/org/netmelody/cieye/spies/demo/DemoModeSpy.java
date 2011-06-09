@@ -20,7 +20,7 @@ import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.TargetData;
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public final class DemoModeWitness implements CiSpy {
+public final class DemoModeSpy implements CiSpy {
 
     private final Map<String, DemoModeFakeCiServer> demoCiServers =
         new MapMaker().makeComputingMap(new Function<String, DemoModeFakeCiServer>() {
@@ -32,7 +32,7 @@ public final class DemoModeWitness implements CiSpy {
     
     private final KnownOffendersDirectory detective;
 
-    public DemoModeWitness(final KnownOffendersDirectory detective) {
+    public DemoModeSpy(final KnownOffendersDirectory detective) {
         this.detective = detective;
     }
     

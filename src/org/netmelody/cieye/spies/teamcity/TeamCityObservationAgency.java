@@ -10,6 +10,6 @@ public final class TeamCityObservationAgency implements ObservationAgency {
 
     @Override
     public CiSpy provideSpyFor(Feature feature, CommunicationNetwork network, KnownOffendersDirectory directory) {
-        return new TeamCityWitness(feature.endpoint(), network, directory);
+        return new TeamCitySpy(feature.endpoint(), network, directory);
     }
 }

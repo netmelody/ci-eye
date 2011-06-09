@@ -10,6 +10,6 @@ public final class DemoModeObservationAgency implements ObservationAgency {
 
     @Override
     public CiSpy provideSpyFor(Feature feature, CommunicationNetwork network, KnownOffendersDirectory directory) {
-        return new DemoModeWitness(directory);
+        return new DemoModeSpy(directory);
     }
 }

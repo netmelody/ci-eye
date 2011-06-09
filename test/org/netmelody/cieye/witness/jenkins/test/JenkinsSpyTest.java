@@ -13,13 +13,13 @@ import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
-import org.netmelody.cieye.spies.jenkins.JenkinsWitness;
+import org.netmelody.cieye.spies.jenkins.JenkinsSpy;
 
-public final class JenkinsWitnessTest {
+public final class JenkinsSpyTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        final JenkinsWitness witness = new JenkinsWitness("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new SettingsFile(new File(""))));
+        final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new SettingsFile(new File(""))));
         
         TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));

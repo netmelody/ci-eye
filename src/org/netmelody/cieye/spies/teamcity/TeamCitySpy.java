@@ -34,13 +34,13 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public final class TeamCityWitness implements CiSpy {
+public final class TeamCitySpy implements CiSpy {
 
     private final Contact contact;
     private final String endpoint;
     private final KnownOffendersDirectory detective;
 
-    public TeamCityWitness(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
+    public TeamCitySpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
         this.endpoint = endpoint;
         this.detective = detective;
         this.contact = network.makeContact(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"));
