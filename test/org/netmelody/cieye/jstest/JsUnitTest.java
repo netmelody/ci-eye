@@ -1,4 +1,4 @@
-package org.netmelody.cieye.test;
+package org.netmelody.cieye.jstest;
 
 import org.junit.runner.RunWith;
 import org.netmelody.menodora.JasmineJavascriptContext;

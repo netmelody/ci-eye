@@ -19,7 +19,11 @@
         <fileset dir="vendor/lib" includes="**/*.jar"/>
     </path>
 
-    <target name="javac" description="Compile java source to bytecode">
+    <path id="project.build.class.path">
+        <fileset dir="vendor/buildlib" includes="**/*.jar"/>
+    </path>
+
+    <target name="compile-src" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
         <javac srcdir="src"
@@ -42,7 +46,56 @@
         </copy>
     </target>
 
-    <target name="build" depends="javac" description="Build this project" />
+    <target name="compile-test" description="Compile java test source to bytecode">
+        <mkdir dir="build"/>
+        <mkdir dir="build/test"/>
+        <javac srcdir="test"
+               includes="**"
+               includeantruntime="false"
+               encoding="utf-8"
+               destdir="build/test"
+               source="1.5"
+               target="1.5"
+               debug="true"
+               debuglevel="lines,source">
+            <classpath refid="project.compile.class.path"/>
+            <classpath refid="project.build.class.path"/>
+            <classpath>
+                <pathelement location="build/main"/>
+            </classpath>
+        </javac>
+        
+        <copy todir="build/test">
+            <fileset dir="test" excludes="**/*.java"/>
+        </copy>
+        <copy todir="build/test">
+            <fileset dir="jstest" excludes="**/*.java"/>
+        </copy>
+        <copy todir="build/test">
+            <fileset dir="build/main"/>
+        </copy>
+    </target>
+
+    <target name="test" depends="compile-src,compile-test" description="Tests this project">
+        <mkdir dir="build/doc"/>
+        
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath refid="project.compile.class.path"/>
+            <classpath refid="project.build.class.path"/>
+            <classpath>
+                <pathelement location="build/test"/>
+            </classpath>
+          
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="build/doc">
+                <fileset dir="test">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="build" depends="compile-src" description="Build this project" />
 
     <target name="clean" description="Cleans this project">
         <delete dir="build" failonerror="false" />
@@ -61,7 +114,7 @@
         </classycleDependencyCheck>
     </target>
 
-    <target name="jar" depends="clean,build,dependencycheck,version" description="Create a jar file">
+    <target name="jar" depends="clean,build,test,dependencycheck,version" description="Create a jar file">
         <jar destfile="build/ci-eye-${version.label}.jar">
             <fileset dir="build/main"/>
             <fileset dir="." includes="LICENSE NOTICE README"/>
