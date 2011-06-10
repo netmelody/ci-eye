@@ -193,6 +193,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
         targetWidgets = {},
+        dohMugshots = {},
         statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
 
     function targetComparator(a, b) {
@@ -219,12 +220,23 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
         
-        if (targetGroupJson.dohGroup && dohDiv.is(":hidden")) {
-            $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
-                dohDiv.append(ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, function(){ return 500; }).getContent());
-                radiatorDiv.append(dohDiv);
-                dohDiv.show();
-            });
+        function dohSizeCalculator() {
+            return (radiatorDiv.width() / targetGroupJson.dohGroup.length) - 50;
+        }
+        
+        if (targetGroupJson.dohGroup) {
+            if (dohDiv.is(":hidden")) {
+                $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
+                    dohMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, dohSizeCalculator);
+                    dohDiv.append(dohMugshots[sponsorJson.picture].getContent());
+                    radiatorDiv.append(dohDiv);
+                    dohDiv.show();
+                });
+            }
+        }
+        else {
+            dohDiv.hide();
+            dohDiv.empty();
         }
             
         $.each(targets, function(index, targetJson) {
@@ -244,6 +256,9 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     }
     
     function refresh() {
+        $.each(dohMugshots, function(key, mugshotWidget) {
+            mugshotWidget.refresh();
+        });
         $.each(targetWidgets, function(index, targetWidget) {
             targetWidget.refresh();
         });
