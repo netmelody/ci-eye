@@ -52,6 +52,7 @@ public final class SettingsInitialiser {
         if (!picturesDir.exists()) {
             FileUtils.copyInputStreamToFile(resource("picture1.png.template"), new File(picturesDir, "vlad.png"));
             FileUtils.copyInputStreamToFile(resource("picture2.png.template"), new File(picturesDir, "stupid.png"));
+            FileUtils.copyInputStreamToFile(resource("picture3.png.template"), new File(picturesDir, "doh.png"));
         }
     }
 

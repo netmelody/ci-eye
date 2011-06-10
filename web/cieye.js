@@ -191,6 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
+        dohDiv = $("<div></div>").addClass("doh").hide(),
         targetWidgets = {},
         statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
 
@@ -218,6 +219,14 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
         
+        if (targetGroupJson.dohGroup && dohDiv.is(":hidden")) {
+            $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
+                dohDiv.append(ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, function(){ return 500; }).getContent());
+                radiatorDiv.append(dohDiv);
+                dohDiv.show();
+            });
+        }
+            
         $.each(targets, function(index, targetJson) {
             if (targetWidgets[targetJson.id]) {
                 targetWidgets[targetJson.id].updateFrom(targetJson);

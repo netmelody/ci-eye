@@ -3,13 +3,13 @@
     var style = {
             "announcementStyle": {
                 "position": "absolute",
-                "zIndex": "500"
+                "z-index": "500"
             },
             "shadowStyle": {
                 "backgroundColor": "#000000",
                 "position": "absolute",
                 "opacity": "0.4",
-                "zIndex": "499"
+                "z-index": "499"
             },
             "titleBarStyle": {
                 "padding": "1px",

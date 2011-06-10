@@ -25,6 +25,11 @@ body {
 #configuration > a:hover {
     color: #ffffff;
 }
+div.doh {
+    z-index: 10;
+    position: absolute;
+    margin: 50px 50px 50px 50px;
+}
 div.target {
     overflow: auto;
     border: 1px solid #000000;
