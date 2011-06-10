@@ -1,5 +1,8 @@
-push user/pass for ci into settings
+push user/pass for ci into settings -- or at least standardise on cieye/cieye (and document this).
 support for Cruise/Go, Bamboo, AnthillPro, CI Joe, Buildomatic, cruisecontrol?
 Auto-update? http://github.com/api/v2/json/repos/show/schacon/ruby-git/tags http://github.com/downloads/netmelody/ci-eye/ci-eye-201104161819.jar
 give immediate feedback when marking a build.
-bug getting last failed build from hudson.
+bug getting last failed build from hudson
+indicate when targets are pending a build, but it is in the queue
+allow users to view the details of green builds, but not to mark them as under investigation
+add a "d'oh" button for a user to hit when they have broken the whole world.
