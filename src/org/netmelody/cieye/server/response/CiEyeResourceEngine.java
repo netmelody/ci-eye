@@ -2,8 +2,8 @@ package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
 
-import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
+import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.simpleframework.http.Address;
@@ -19,14 +19,17 @@ public final class CiEyeResourceEngine implements ResourceEngine {
     private final LandscapeFetcher landscapeFetcher;
     private final PictureFetcher pictureFetcher;
     private final CiEyeServerInformationFetcher configurationFetcher;
-    private final CachedRequestOriginTracker tracker = new CachedRequestOriginTracker();
+    private final RequestOriginTracker tracker;
+    private final Prison prison = new Prison();
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
-                               CiEyeServerInformationFetcher configurationFetcher, CiSpyAllocator allocator) {
+                               CiEyeServerInformationFetcher configurationFetcher,
+                               RequestOriginTracker tracker, CiSpyAllocator allocator) {
         
         this.landscapeFetcher = landscapeFetcher;
         this.pictureFetcher = pictureFetcher;
         this.configurationFetcher = configurationFetcher;
+        this.tracker = tracker;
         this.allocator = allocator;
     }
     
@@ -63,11 +66,15 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         
         if (path.length == 3) {
             if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
-                return new CiEyeResource(new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), allocator));
+                return new CiEyeResource(new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), allocator, prison));
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
                 return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
+            }
+            
+            if ("landscapes".equals(path[0]) && "doh".equals(path[2])) {
+                return new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker);
             }
         }
         

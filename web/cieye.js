@@ -142,6 +142,10 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     function markAs(note) {
         return function() { $.post("addNote", { "id": targetJson.id, "note": note }); };
     }
+    
+    function doh() {
+        $.post("doh", { "id": targetJson.id });
+    }
         
     function getMenuItems() {
         var result = [];
@@ -155,6 +159,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             result.push({"label": "Mark as Under Investigation", "handler": markAs("Under Investigation")});
             result.push({"label": "Mark as Under Investigation", "handler": markAs("Fixed")});
         }
+        result.push({"label": "D'OH", "handler": doh});
         return result;
     }
     
