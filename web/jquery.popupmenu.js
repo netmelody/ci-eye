@@ -94,7 +94,13 @@
         return item;
     }
     
-    function showMenu(x, y, items) {
+    function showMenu(x, y, itemsProvider) {
+        var items = itemsProvider();
+        
+        if (items.length === 0) {
+            return;
+        }
+        
         content.empty();
         $.each(items, function(index, item) {
             content.append(listItemFor(item));
@@ -119,12 +125,10 @@
         closeButton.click(hideMenu);
     });
     
-    $.fn.popupMenu = function(items, guardFunction) {
+    $.fn.popupMenu = function(itemsProvider) {
         $(this).bind("click", function(event) {
-            if (!guardFunction || guardFunction()) {
-                showMenu(event.pageX, event.pageY, items);
-                return false;
-            }
+            showMenu(event.pageX, event.pageY, itemsProvider);
+            return false;
         });
         return this;
     };

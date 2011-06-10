@@ -4,5 +4,4 @@ Auto-update? http://github.com/api/v2/json/repos/show/schacon/ruby-git/tags http
 give immediate feedback when marking a build.
 bug getting last failed build from hudson
 indicate when targets are pending a build, but it is in the queue
-allow users to view the details of green builds, but not to mark them as under investigation
 add a "d'oh" button for a user to hit when they have broken the whole world.

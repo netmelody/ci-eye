@@ -135,20 +135,27 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         });
     }
     
-    function clickable() {
-        return (targetDiv.css("cursor") === "pointer");
-    }
-    
     function viewDetails() {
         window.open(targetJson.webUrl);
     }
     
-    function markAsUnderInvestigation() {
-        $.post("addNote", { "id": targetJson.id, "note": "Under Investigation" } );
+    function markAs(note) {
+        return function() { $.post("addNote", { "id": targetJson.id, "note": note }); };
     }
-    
-    function markAsFixed() {
-        $.post("addNote", { "id": targetJson.id, "note": "Fixed" } );
+        
+    function getMenuItems() {
+        var result = [];
+        
+        if (targetDiv.css("cursor") !== "pointer") {
+            return result;
+        }
+        
+        result.push({"label": "View Details", "handler": viewDetails});
+        if (currentTargetJson.status !== "GREEN") {
+            result.push({"label": "Mark as Under Investigation", "handler": markAs("Under Investigation")});
+            result.push({"label": "Mark as Under Investigation", "handler": markAs("Fixed")});
+        }
+        return result;
     }
     
     function refreshImages() {
@@ -163,10 +170,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         targetDiv.append(sponsorDiv);
         targetDiv.append(buildsDiv);
         targetDiv.addClass("target");
-        targetDiv.popupMenu([{"label": "View Details", "handler": viewDetails},
-                             {"label": "Mark as Under Investigation", "handler": markAsUnderInvestigation},
-                             {"label": "Mark as Fixed", "handler": markAsFixed}],
-                            clickable);
+        targetDiv.popupMenu(getMenuItems);
         
         updateFrom(targetJson);
     }
@@ -221,6 +225,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         });
         $.each(deadTargetWidgets, function(index, deadTargetWidget) {
             deadTargetWidget.getContent().remove();
+            delete targetWidgets[index];
         });
     }
     
