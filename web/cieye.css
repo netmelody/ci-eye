@@ -29,6 +29,7 @@ div.doh {
     z-index: 10;
     position: absolute;
     margin: 50px 50px 50px 50px;
+    cursor: pointer;
 }
 div.target {
     overflow: auto;

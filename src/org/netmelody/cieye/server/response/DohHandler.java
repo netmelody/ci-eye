@@ -27,7 +27,14 @@ public final class DohHandler implements Resource {
     @Override
     public void handle(Request request, Response response) {
         try {
-            prison.imprison(tracker.sponsorsOf(request, "-doh-"), landscape);
+            final String active = request.getForm().get("active");
+            if ("true".equals(active)) {
+                prison.imprison(tracker.sponsorsOf(request, "-doh-"), landscape);
+            }
+            else {
+                prison.paroleAllPrisonersFor(landscape);
+            }
+            
         } catch (Exception e) {
             LOG.error("Failed to handle request to doh", e);
         }

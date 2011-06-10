@@ -144,7 +144,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function doh() {
-        $.post("doh", { "id": targetJson.id });
+        $.post("doh", { "active": true });
     }
         
     function getMenuItems() {
@@ -224,6 +224,10 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             return (radiatorDiv.width() / targetGroupJson.dohGroup.length) - 50;
         }
         
+        function unDoh() {
+            $.post("doh", { "active": false });
+        }
+        
         if (targetGroupJson.dohGroup) {
             if (dohDiv.is(":hidden")) {
                 $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
@@ -231,6 +235,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                     dohDiv.append(dohMugshots[sponsorJson.picture].getContent());
                     radiatorDiv.append(dohDiv);
                     dohDiv.show();
+                    dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
                 });
             }
         }
