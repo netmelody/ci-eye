@@ -157,7 +157,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         result.push({"label": "View Details", "handler": viewDetails});
         if (currentTargetJson.status !== "GREEN") {
             result.push({"label": "Mark as Under Investigation", "handler": markAs("Under Investigation")});
-            result.push({"label": "Mark as Under Investigation", "handler": markAs("Fixed")});
+            result.push({"label": "Fixed", "handler": markAs("Fixed")});
         }
         result.push({"label": "D'OH", "handler": doh});
         return result;
