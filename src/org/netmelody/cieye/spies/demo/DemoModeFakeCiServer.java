@@ -40,7 +40,7 @@ public final class DemoModeFakeCiServer {
         synchronized(buildTarget) {
             buildTarget.recalculate();
             final List<BuildData> buildData = new ArrayList<BuildData>();
-            for (RunningBuild build : buildTarget.builds) {
+            for (ActiveBuild build : buildTarget.builds) {
                 buildData.add(new BuildData(build.progress, build.green, "dracula"));
             }
             return new TargetData(buildTarget.url, buildTarget.green, buildTarget.note, buildData);
@@ -78,7 +78,7 @@ public final class DemoModeFakeCiServer {
         
         private boolean green;
         private String note = "";
-        private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
+        private final List<ActiveBuild> builds = new ArrayList<ActiveBuild>();
         private long lastUpdateTime = System.currentTimeMillis();
 
         public BuildTarget(String targetName) {
@@ -86,7 +86,7 @@ public final class DemoModeFakeCiServer {
             green = random.nextInt(5) != 0;
             
             if (random.nextInt(5) == 0) {
-                builds.add(new RunningBuild());
+                builds.add(new ActiveBuild());
             }
         }
 
@@ -108,9 +108,9 @@ public final class DemoModeFakeCiServer {
         }
         
         public void advanceBy(int percent) {
-            Iterator<RunningBuild> buildIterator = builds.iterator();
+            Iterator<ActiveBuild> buildIterator = builds.iterator();
             while (buildIterator.hasNext()) {
-                RunningBuild build = buildIterator.next();
+                ActiveBuild build = buildIterator.next();
                 build.advanceBy(percent);
                 if (build.progress == 100) {
                     buildIterator.remove();
@@ -121,22 +121,22 @@ public final class DemoModeFakeCiServer {
             
             if (builds.isEmpty()) {
                 if (random.nextInt(green ? 30 : 10) == 0) {
-                    builds.add(new RunningBuild(2));
+                    builds.add(new ActiveBuild(2));
                 }
             }
         }
     }
     
-    private static final class RunningBuild {
+    private static final class ActiveBuild {
         private final Random random = new Random();
         private boolean green = true;
         private int progress;
         
-        public RunningBuild() {
+        public ActiveBuild() {
             progress = random.nextInt(101);
         }
 
-        public RunningBuild(int initialProgress) {
+        public ActiveBuild(int initialProgress) {
             progress = initialProgress;
         }
 
