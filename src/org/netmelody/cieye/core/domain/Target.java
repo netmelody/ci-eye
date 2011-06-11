@@ -18,13 +18,13 @@ public final class Target {
     private final Status status;
     private final long lastStartTime;
     private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
-    private final List<Build> builds = new ArrayList<Build>();
+    private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
     
     public Target(String id, String webUrl, String name, Status status) {
-        this(id, webUrl, name, status, 0L, new ArrayList<Build>(), new ArrayList<Sponsor>());
+        this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new ArrayList<Sponsor>());
     }
     
-    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<Build> builds, List<Sponsor> sponsors) {
+    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<RunningBuild> builds, List<Sponsor> sponsors) {
         this.id = id;
         this.webUrl = webUrl;
         this.name = name;
@@ -32,8 +32,8 @@ public final class Target {
         this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
         this.builds.addAll(builds);
         
-        this.status = find(transform(builds.iterator(), new Function<Build, Status>() {
-                                                            @Override public Status apply(Build build) {
+        this.status = find(transform(builds.iterator(), new Function<RunningBuild, Status>() {
+                                                            @Override public Status apply(RunningBuild build) {
                                                                 return build.status();
                                                             }
                                                         }),
@@ -65,11 +65,11 @@ public final class Target {
         return new ArrayList<Sponsor>(sponsors);
     }
 
-    public List<Build> builds() {
-        return new ArrayList<Build>(builds);
+    public List<RunningBuild> builds() {
+        return new ArrayList<RunningBuild>(builds);
     }
 
-    public Target withBuilds(List<Build> builds) {
+    public Target withBuilds(List<RunningBuild> builds) {
         return new Target(id, webUrl, name, status, lastStartTime, builds, sponsors);
     }
 

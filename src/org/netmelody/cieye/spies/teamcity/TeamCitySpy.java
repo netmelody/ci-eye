@@ -115,14 +115,14 @@ public final class TeamCitySpy implements CiSpy {
         }
         
         final List<Sponsor> sponsors = new ArrayList<Sponsor>();
-        final List<org.netmelody.cieye.core.domain.Build> runningBuilds = new ArrayList<org.netmelody.cieye.core.domain.Build>();
+        final List<org.netmelody.cieye.core.domain.RunningBuild> runningBuilds = new ArrayList<org.netmelody.cieye.core.domain.RunningBuild>();
         long startTime = 0L;
             
         for(Build build : runningBuildsFor(buildType)) {
             final BuildDetail buildDetail = detailsOf(build);
             startTime = Math.max(buildDetail.startDateTime(), startTime);
             sponsors.addAll(sponsorsOf(buildDetail));
-            runningBuilds.add(new org.netmelody.cieye.core.domain.Build(percentageOf(build.percentageComplete), buildDetail.status()));
+            runningBuilds.add(new org.netmelody.cieye.core.domain.RunningBuild(percentageOf(build.percentageComplete), buildDetail.status()));
         }
         
         Status currentStatus = Status.GREEN;

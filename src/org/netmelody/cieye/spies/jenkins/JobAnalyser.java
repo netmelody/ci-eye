@@ -1,7 +1,7 @@
 package org.netmelody.cieye.spies.jenkins;
 
 import static java.util.Collections.unmodifiableList;
-import static org.netmelody.cieye.core.domain.Build.buildAt;
+import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 import java.util.ArrayList;
@@ -146,8 +146,8 @@ public final class JobAnalyser {
         return result.toString();
     }
     
-    private List<org.netmelody.cieye.core.domain.Build> buildsFor(final JobDetail job) {
-        final List<org.netmelody.cieye.core.domain.Build> result = new ArrayList<org.netmelody.cieye.core.domain.Build>();
+    private List<org.netmelody.cieye.core.domain.RunningBuild> buildsFor(final JobDetail job) {
+        final List<org.netmelody.cieye.core.domain.RunningBuild> result = new ArrayList<org.netmelody.cieye.core.domain.RunningBuild>();
         
         if (!job.building() || job.lastBuild == null) {
             return result;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.Build;
+import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.Status;
@@ -44,11 +44,11 @@ public final class DemoModeSpy implements CiSpy {
         final List<String> targetNames = ciServer.getTargetNames();
         for (String targetName : targetNames) {
             final TargetData data = ciServer.getDataFor(targetName);
-            final List<Build> builds = new ArrayList<Build>();
+            final List<RunningBuild> builds = new ArrayList<RunningBuild>();
             
             String commentry = "";
             for (BuildData buildData : data.builds) {
-                builds.add(new Build(Percentage.percentageOf(buildData.progress),
+                builds.add(new RunningBuild(Percentage.percentageOf(buildData.progress),
                                      buildData.green ? Status.GREEN : data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION));
                 commentry += buildData.checkinComments;
             }
