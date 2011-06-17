@@ -31,4 +31,9 @@ public final class Sponsor {
     public int hashCode() {
         return picture.hashCode();
     }
+    
+    @Override
+    public String toString() {
+        return "<" + name + " " + picture + ">";
+    }
 }
