@@ -1,3 +1,7 @@
 CI-Eye is a Continuous Integration build radiator that talks to many different CI servers through their public APIs, allowing for a single consolidated view regardless of your CI infrastructure.
 
+CI-Eye talks to Hudson, Jenkins, and TeamCity at present, with plans for expansion to include other favourites.
+
 CI-Eye runs as a standalone web application, providing a buffer between the radiator clients and CI.
+
+CI-Eye requires no installation and almost no setup.
