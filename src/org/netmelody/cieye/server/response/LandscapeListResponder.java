@@ -9,8 +9,8 @@ public final class LandscapeListResponder implements CiEyeResponder {
 
     private final LandscapeFetcher landscapeFetcher;
 
-    public LandscapeListResponder(LandscapeFetcher state) {
-        this.landscapeFetcher = state;
+    public LandscapeListResponder(LandscapeFetcher landscapeFetcher) {
+        this.landscapeFetcher = landscapeFetcher;
     }
 
     @Override

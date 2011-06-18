@@ -19,11 +19,11 @@ public final class TargetNotationHandler implements Resource {
     
     private final RequestOriginTracker tracker;
     
-    private final LandscapeFetcher state;
+    private final LandscapeFetcher landscapeFetcher;
     private final CiSpyAllocator witnessProvider;
 
-    public TargetNotationHandler(LandscapeFetcher state, CiSpyAllocator witnessProvider, RequestOriginTracker tracker) {
-        this.state = state;
+    public TargetNotationHandler(LandscapeFetcher landscapeFetcher, CiSpyAllocator witnessProvider, RequestOriginTracker tracker) {
+        this.landscapeFetcher = landscapeFetcher;
         this.witnessProvider = witnessProvider;
         this.tracker = tracker;
     }
@@ -39,7 +39,7 @@ public final class TargetNotationHandler implements Resource {
             }
             
             final String[] segments = request.getAddress().getPath().getSegments();
-            final Landscape landscape = state.landscapeNamed(segments[segments.length - 2]);
+            final Landscape landscape = landscapeFetcher.landscapeNamed(segments[segments.length - 2]);
             
             for (Feature feature : landscape.features()) {
                 final CiSpy witness = witnessProvider.spyFor(feature);
