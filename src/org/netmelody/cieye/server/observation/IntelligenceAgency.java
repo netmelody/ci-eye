@@ -1,7 +1,6 @@
 package org.netmelody.cieye.server.observation;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -12,10 +11,18 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.CiSpyAllocator;
 
+import com.google.common.base.Function;
+import com.google.common.collect.MapMaker;
+
 public final class IntelligenceAgency implements CiSpyAllocator {
 
     private final Properties agencyConfiguration = new Properties();
-    private final Map<String, CiSpy> witnesses = new HashMap<String, CiSpy>();
+    private final Map<Feature, CiSpy> witnesses = new MapMaker().makeComputingMap(new Function<Feature, CiSpy>() {
+        @Override
+        public CiSpy apply(Feature feature) {
+            return createSpyFor(feature);
+        }
+    });
     
     private final CommunicationNetwork network;
     private final KnownOffendersDirectory directory;
@@ -32,10 +39,7 @@ public final class IntelligenceAgency implements CiSpyAllocator {
     
     @Override
     public CiSpy spyFor(Feature feature) {
-        if (!witnesses.containsKey(feature.endpoint())) {
-            witnesses.put(feature.endpoint(), createSpyFor(feature));
-        }
-        return witnesses.get(feature.endpoint());
+        return witnesses.get(feature);
     }
 
     private CiSpy createSpyFor(Feature feature) {
