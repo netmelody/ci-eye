@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness.jenkins.test;
+package org.netmelody.cieye.spies.jenkins.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

@@ -1,4 +1,4 @@
-package org.netmelody.cieye.witness.jenkins.test;
+package org.netmelody.cieye.spies.jenkins.test;
 
 import java.io.File;
 import java.util.ArrayList;
