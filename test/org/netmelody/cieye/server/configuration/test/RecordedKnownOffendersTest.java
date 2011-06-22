@@ -40,6 +40,11 @@ public final class RecordedKnownOffendersTest {
     }
     
     @Test public void
+    looksUpSimpleOffenderStringsCaseInsensitively() {
+        assertThat(offenders.search("VlAd"), contains(new Sponsor("", "/pictures/vlad.png")));
+    }
+    
+    @Test public void
     looksUpWrappedOffenderStrings() {
         assertThat(offenders.search("-vlad-"), contains(new Sponsor("", "/pictures/vlad.png")));
     }
@@ -58,6 +63,6 @@ public final class RecordedKnownOffendersTest {
     @Ignore("pending implementation")
     @Test public void
     ignoresOffenderNamesAppearingInTheMiddleOfAWord() {
-        assertThat(offenders.search("markovladies"), is(Matchers.<Sponsor>empty()));
+        assertThat(offenders.search("markoVLADies"), is(Matchers.<Sponsor>empty()));
     }
 }
