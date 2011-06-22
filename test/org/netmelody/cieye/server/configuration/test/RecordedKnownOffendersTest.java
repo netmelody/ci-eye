@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -15,13 +17,14 @@ import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
 
+import static org.hamcrest.Matchers.is;
+
 
 public final class RecordedKnownOffendersTest {
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
     private RecordedKnownOffenders offenders;
-    
 
     @Before
     public void createOffendersFile() throws IOException {
@@ -36,4 +39,25 @@ public final class RecordedKnownOffendersTest {
         assertThat(offenders.search("vlad"), contains(new Sponsor("", "/pictures/vlad.png")));
     }
     
+    @Test public void
+    looksUpWrappedOffenderStrings() {
+        assertThat(offenders.search("-vlad-"), contains(new Sponsor("", "/pictures/vlad.png")));
+    }
+    
+    @Test public void
+    looksUpOffenderStringsAtTheBegginingOfALine() {
+        assertThat(offenders.search("someguff\nvlad: did stuff"), contains(new Sponsor("", "/pictures/vlad.png")));
+    }
+    
+    @Test public void
+    looksUpMultipleOffenders() {
+        assertThat(offenders.search("vlad/stupid:"), contains(new Sponsor("", "/pictures/vlad.png"),
+                                                              new Sponsor("", "/pictures/stupid.png")));
+    }
+    
+    @Ignore("pending implementation")
+    @Test public void
+    ignoresOffenderNamesAppearingInTheMiddleOfAWord() {
+        assertThat(offenders.search("markovladies"), is(Matchers.<Sponsor>empty()));
+    }
 }
