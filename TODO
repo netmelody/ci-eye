@@ -5,3 +5,5 @@ give immediate feedback when marking a build
 be more clever when detecting users from check-in comments... don't just look for the string, but check it is surrounded by non alpha characters
 bug getting last failed build from hudson
 indicate when targets are pending a build, but it is in the queue
+have another think on logging, and perhaps expose the log as a page.
+thing about adding a link to bugtracker/project home somewhere
