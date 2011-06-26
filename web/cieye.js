@@ -35,7 +35,7 @@ ORG.NETMELODY.CIEYE.newBuildWidget = function(buildJson) {
 };
 
 ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
-    var image,
+    var image = $("<img></img>"),
         heightFactor = 1.0,
         widthFactor = 1.0,
         currentMaxSize = -1;
@@ -67,10 +67,9 @@ ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
     }
     
     function initialise() {
-        image = $("<img></img>")
-                    .attr({ "src": sponsorJson.picture,
-                            "title": sponsorJson.name })
-                    .load(initialiseImage);
+        image.attr({ "src": sponsorJson.picture,
+                     "title": sponsorJson.name })
+             .load(initialiseImage);
     }
     
     initialise();
@@ -277,8 +276,8 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
 };
 
 ORG.NETMELODY.CIEYE.scheduler = function(browser) {
-    var protector,
-        alarm;
+    var protector = undefined,
+        alarm = false;
     
     function reloadPage() {
         browser.location.reload();
@@ -316,7 +315,7 @@ ORG.NETMELODY.CIEYE.scheduler = function(browser) {
         }
         if (protector) {
             browser.clearTimeout(protector);
-            protector = null;
+            protector = undefined;
         }
     }
     
@@ -356,7 +355,7 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
 };
 
 ORG.NETMELODY.CIEYE.newVersionChecker = function(scheduler) {
-    var currentVersion;
+    var currentVersion = undefined;
     
     function assessVersion(versionString) {
         if (!currentVersion) {

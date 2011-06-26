@@ -56,21 +56,27 @@ ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function(landscapeListDiv) {
 };
 
 ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
-    var fadeIn, fadeOut;
+    var displayed = false;
 
-    fadeIn = function() {
+    function fadeIn() {
         content.fadeIn();
-        trigger.unbind("click");
-        trigger.click(fadeOut);
+        displayed = true;
     };
     
-    fadeOut = function() {
+    function fadeOut() {
         content.fadeOut();
-        trigger.unbind("click");
-        trigger.click(fadeIn);
+        displayed = false;
     };
 
-    trigger.click(fadeIn);
+    function toggle() {
+        if (displayed) {
+            fadeOut();
+            return;
+        }
+        fadeIn();
+    }
+    
+    trigger.click(toggle);
     content.click(fadeOut);
     return {
     };

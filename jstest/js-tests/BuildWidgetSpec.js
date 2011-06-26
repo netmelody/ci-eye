@@ -1,6 +1,6 @@
 "use strict";
 describe("BuildWidget", function() {
-    var widget;
+    var widget = undefined;
 
     beforeEach(function() {
         widget = ORG.NETMELODY.CIEYE.newBuildWidget({"status": "GREEN", "progress": 85});

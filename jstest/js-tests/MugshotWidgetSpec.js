@@ -1,7 +1,7 @@
 "use strict";
 describe("MugshotWidget", function() {
-    var maxSize,
-        widget;
+    var maxSize = 100,
+        widget = undefined;
 
     beforeEach(function() {
         maxSize = 100;
