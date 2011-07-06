@@ -17,7 +17,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
 
     private final SettingsFile picturesFile;
-    private Map<String, Sponsor> userMap = new HashMap<String, Sponsor>();
+    private Map<Pattern, Sponsor> userMap = new HashMap<Pattern, Sponsor>();
     
     public RecordedKnownOffenders(SettingsFile picturesFile) {
         this.picturesFile = picturesFile;
@@ -35,9 +35,8 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     public List<Sponsor> search(String fingerprint) {
         final Collection<Sponsor> sponsors = new HashSet<Sponsor>();
         
-        final String upperChangeText = fingerprint.toUpperCase();
-        for (String keyword : userMap.keySet()) {
-            if (upperChangeText.contains(keyword)) {
+        for (Pattern keyword : userMap.keySet()) {
+            if (keyword.matcher(fingerprint).find()) {
                 sponsors.add(userMap.get(keyword));
             }
         }
@@ -48,8 +47,8 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
         userMap = extractPicuresFrom(picturesFile.readContent());
     }
 
-    private static Map<String, Sponsor> extractPicuresFrom(List<String> content) {
-        final Map<String, Sponsor> result = new HashMap<String, Sponsor>();
+    private static Map<Pattern, Sponsor> extractPicuresFrom(List<String> content) {
+        final Map<Pattern, Sponsor> result = new HashMap<Pattern, Sponsor>();
         final List<String> aliases = new ArrayList<String>();
         String pictureFilename = "";
         
@@ -75,11 +74,15 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
         return result;
     }
     
-    private static void registerUser(Map<String, Sponsor> resultMap, String name, String pictureUrl, String... keywords) {
+    private static void registerUser(Map<Pattern, Sponsor> resultMap, String name, String pictureUrl, String... keywords) {
         final Sponsor user = new Sponsor(name, pictureUrl);
-        resultMap.put(name.toUpperCase(), user);
+        resultMap.put(regexFor(name), user);
         for (String keyword : keywords) {
-            resultMap.put(keyword.toUpperCase(), user);
+            resultMap.put(regexFor(keyword), user);
         }
+    }
+
+    private static Pattern regexFor(String name) {
+        return Pattern.compile("\\b" + Pattern.quote(name) + "\\b", Pattern.CASE_INSENSITIVE);
     }
 }
