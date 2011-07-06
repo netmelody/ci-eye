@@ -1,11 +1,11 @@
 package org.netmelody.cieye.core.observation;
 
-import java.util.List;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Sponsor;
 
 public interface KnownOffendersDirectory {
 
-    List<Sponsor> search(String fingerprint);
+    Set<Sponsor> search(String fingerprint);
 
 }

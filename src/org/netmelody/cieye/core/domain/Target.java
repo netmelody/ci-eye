@@ -4,6 +4,7 @@ import static com.google.common.collect.Iterators.find;
 import static com.google.common.collect.Iterators.transform;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public final class Target {
         this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new ArrayList<Sponsor>());
     }
     
-    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<RunningBuild> builds, List<Sponsor> sponsors) {
+    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<RunningBuild> builds, Collection<Sponsor> sponsors) {
         this.id = id;
         this.webUrl = webUrl;
         this.name = name;

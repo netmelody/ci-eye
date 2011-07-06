@@ -1,6 +1,7 @@
 package org.netmelody.cieye.server.response;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public final class Prison {
 
     private final Map<String, List<Sponsor>> cells = new MapMaker().makeMap();
     
-    public void imprison(List<Sponsor> criminals, Landscape crime) {
+    public void imprison(Collection<Sponsor> criminals, Landscape crime) {
         cells.put(crime.name(), new ArrayList<Sponsor>(criminals));
     }
     

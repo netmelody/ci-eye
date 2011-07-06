@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Sponsor;
@@ -149,7 +150,7 @@ public final class TeamCitySpy implements CiSpy {
         return makeTeamCityRestCall(endpoint + build.href, BuildDetail.class);
     }
     
-    private List<Sponsor> sponsorsOf(BuildDetail build) {
+    private Set<Sponsor> sponsorsOf(BuildDetail build) {
         return detective.search(analyseChanges(build));
     }
 

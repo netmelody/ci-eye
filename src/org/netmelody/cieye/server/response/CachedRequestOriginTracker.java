@@ -2,8 +2,8 @@ package org.netmelody.cieye.server.response;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -43,7 +43,7 @@ public final class CachedRequestOriginTracker implements RequestOriginTracker {
     }
 
     @Override
-    public List<Sponsor> sponsorsOf(Request request, String operation) {
+    public Set<Sponsor> sponsorsOf(Request request, String operation) {
         return detective.search(originOf(request) + " " + operation);
     }
 }

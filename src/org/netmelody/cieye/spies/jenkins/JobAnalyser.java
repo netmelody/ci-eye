@@ -112,7 +112,7 @@ public final class JobAnalyser {
             return new ArrayList<Sponsor>();
         }
         
-        final List<Sponsor> sponsors = detective.search(commitMessagesOf(buildData));
+        final List<Sponsor> sponsors = new ArrayList<Sponsor>(detective.search(commitMessagesOf(buildData)));
         
         if (sponsors.isEmpty()) {
             for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {
