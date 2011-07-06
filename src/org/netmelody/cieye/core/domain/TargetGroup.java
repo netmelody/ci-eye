@@ -2,12 +2,14 @@ package org.netmelody.cieye.core.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class TargetGroup {
 
     private final List<Target> targets = new ArrayList<Target>();
-    private final List<Sponsor> dohGroup;
+    private final Set<Sponsor> dohGroup;
     
     public TargetGroup() {
         this(new ArrayList<Target>());
@@ -17,9 +19,9 @@ public final class TargetGroup {
         this(targets, null);
     }
     
-    private TargetGroup(Collection<Target> targets, List<Sponsor> dohGroup) {
+    private TargetGroup(Collection<Target> targets, Set<Sponsor> dohGroup) {
         this.targets.addAll(targets);
-        this.dohGroup = (null == dohGroup) ? null : new ArrayList<Sponsor>(dohGroup);
+        this.dohGroup = (null == dohGroup) ? null : new HashSet<Sponsor>(dohGroup);
     }
 
     public TargetGroup add(TargetGroup group) {
@@ -35,8 +37,8 @@ public final class TargetGroup {
         return new ArrayList<Target>(targets);
     }
     
-    public List<Sponsor> dohGroup() {
-        return (null == dohGroup) ? new ArrayList<Sponsor>() : new ArrayList<Sponsor>(dohGroup);
+    public Set<Sponsor> dohGroup() {
+        return (null == dohGroup) ? new HashSet<Sponsor>() : new HashSet<Sponsor>(dohGroup);
     }
 
     public Target targetIdentifiedBy(String targetId) {
@@ -48,7 +50,7 @@ public final class TargetGroup {
         return null;
     }
 
-    public TargetGroup withDoh(List<Sponsor> dohGroup) {
+    public TargetGroup withDoh(Set<Sponsor> dohGroup) {
         return new TargetGroup(this.targets, dohGroup);
     }
 }

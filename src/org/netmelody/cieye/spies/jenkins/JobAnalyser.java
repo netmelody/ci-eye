@@ -1,14 +1,16 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static java.util.Collections.unmodifiableList;
-import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
+import static java.util.Collections.unmodifiableSet;
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.Sponsor;
@@ -26,7 +28,7 @@ public final class JobAnalyser {
     
     private final JenkinsCommunicator communicator;
     private final String jobEndpoint;
-    private final Map<String, List<Sponsor>> sponsorCache = new HashMap<String, List<Sponsor>>();
+    private final Map<String, Set<Sponsor>> sponsorCache = new HashMap<String, Set<Sponsor>>();
     private final KnownOffendersDirectory detective;
     private final BuildDetailFetcher buildDetailFetcher;
     private final BuildDurationFetcher buildDurationFetcher;
@@ -81,8 +83,8 @@ public final class JobAnalyser {
         return Status.UNDER_INVESTIGATION;
     }
     
-    private List<Sponsor> sponsorsOf(JobDetail job) {
-        final List<Sponsor> result = new ArrayList<Sponsor>();
+    private Set<Sponsor> sponsorsOf(JobDetail job) {
+        final Set<Sponsor> result = new HashSet<Sponsor>();
         
         if (job.lastBuild == null) {
             return result;
@@ -98,9 +100,9 @@ public final class JobAnalyser {
         return result;
     }
     
-    private List<Sponsor> sponsorsOf(String buildUrl) {
+    private Set<Sponsor> sponsorsOf(String buildUrl) {
         if (null == buildUrl || buildUrl.length() == 0) {
-            return new ArrayList<Sponsor>();
+            return new HashSet<Sponsor>();
         }
         
         if (sponsorCache.containsKey(buildUrl)) {
@@ -109,10 +111,10 @@ public final class JobAnalyser {
         
         final BuildDetail buildData = this.buildDetailFetcher.detailsOf(buildUrl);
         if (null == buildData) {
-            return new ArrayList<Sponsor>();
+            return new HashSet<Sponsor>();
         }
         
-        final List<Sponsor> sponsors = new ArrayList<Sponsor>(detective.search(commitMessagesOf(buildData)));
+        final Set<Sponsor> sponsors = new HashSet<Sponsor>(detective.search(commitMessagesOf(buildData)));
         
         if (sponsors.isEmpty()) {
             for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {
@@ -120,7 +122,7 @@ public final class JobAnalyser {
             }
         }
         
-        final List<Sponsor> result = unmodifiableList(sponsors);
+        final Set<Sponsor> result = unmodifiableSet(sponsors);
         if (!buildData.building) {
             sponsorCache.put(buildUrl, result);
         }

@@ -1,12 +1,13 @@
 package org.netmelody.cieye.core.domain;
 
+import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterators.find;
-import static com.google.common.collect.Iterators.transform;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -18,32 +19,38 @@ public final class Target {
     private final String name;
     private final Status status;
     private final long lastStartTime;
-    private final List<Sponsor> sponsors = new ArrayList<Sponsor>();
+    private final Set<Sponsor> sponsors = new HashSet<Sponsor>();
     private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
     
     public Target(String id, String webUrl, String name, Status status) {
-        this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new ArrayList<Sponsor>());
+        this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new HashSet<Sponsor>());
     }
     
-    public Target(String id, String webUrl, String name, Status status, long lastStartTime, List<RunningBuild> builds, Collection<Sponsor> sponsors) {
+    public Target(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {
         this.id = id;
         this.webUrl = webUrl;
         this.name = name;
         this.lastStartTime = lastStartTime;
-        this.sponsors.addAll(new HashSet<Sponsor>(sponsors));
+        this.sponsors.addAll(sponsors);
         this.builds.addAll(builds);
-        
-        this.status = find(transform(builds.iterator(), new Function<RunningBuild, Status>() {
-                                                            @Override public Status apply(RunningBuild build) {
-                                                                return build.status();
-                                                            }
-                                                        }),
-                           new Predicate<Status>() {
-                               @Override public boolean apply(Status status) {
-                                   return Status.BROKEN.equals(status);
-                               }
-                           },
-                           status);
+        this.status = find(transform(builds, toStatus()).iterator(), isBroken(), status);
+    }
+
+    private Predicate<Status> isBroken() {
+        return new Predicate<Status>() {
+            @Override public boolean apply(Status status) {
+                return Status.BROKEN.equals(status);
+            }
+        };
+    }
+
+    private Function<RunningBuild, Status> toStatus() {
+        return new Function<RunningBuild, Status>() {
+            @Override
+            public Status apply(RunningBuild build) {
+                return build.status();
+            }
+        };
     }
 
     public String id() {
@@ -62,8 +69,8 @@ public final class Target {
         return lastStartTime;
     }
     
-    public List<Sponsor> sponsors() {
-        return new ArrayList<Sponsor>(sponsors);
+    public Set<Sponsor> sponsors() {
+        return new HashSet<Sponsor>(sponsors);
     }
 
     public List<RunningBuild> builds() {

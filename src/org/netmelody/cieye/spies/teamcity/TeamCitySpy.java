@@ -7,6 +7,7 @@ import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -115,7 +116,7 @@ public final class TeamCitySpy implements CiSpy {
             return new Target(endpoint + buildType.href, buildType.webUrl, buildType.name, Status.DISABLED);
         }
         
-        final List<Sponsor> sponsors = new ArrayList<Sponsor>();
+        final Set<Sponsor> sponsors = new HashSet<Sponsor>();
         final List<org.netmelody.cieye.core.domain.RunningBuild> runningBuilds = new ArrayList<org.netmelody.cieye.core.domain.RunningBuild>();
         long startTime = 0L;
             

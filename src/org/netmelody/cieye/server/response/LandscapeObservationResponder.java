@@ -3,7 +3,7 @@ package org.netmelody.cieye.server.response;
 import static java.lang.Math.min;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
@@ -36,7 +36,7 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
         }
         
         if (prison.crimeReported(landscape)) {
-            List<Sponsor> dohGroup = prison.prisonersFor(landscape);
+            Set<Sponsor> dohGroup = prison.prisonersFor(landscape);
             result = result.withDoh(dohGroup);
         }
         

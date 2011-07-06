@@ -1,9 +1,9 @@
 package org.netmelody.cieye.server.response;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.Sponsor;
@@ -12,10 +12,10 @@ import com.google.common.collect.MapMaker;
 
 public final class Prison {
 
-    private final Map<String, List<Sponsor>> cells = new MapMaker().makeMap();
+    private final Map<String, Set<Sponsor>> cells = new MapMaker().makeMap();
     
     public void imprison(Collection<Sponsor> criminals, Landscape crime) {
-        cells.put(crime.name(), new ArrayList<Sponsor>(criminals));
+        cells.put(crime.name(), new HashSet<Sponsor>(criminals));
     }
     
     public void paroleAllPrisonersFor(Landscape crime) {
@@ -26,10 +26,10 @@ public final class Prison {
         return cells.containsKey(crime.name());
     }
     
-    public List<Sponsor> prisonersFor(Landscape crime) {
+    public Set<Sponsor> prisonersFor(Landscape crime) {
         if (!cells.containsKey(crime.name())) {
-            return new ArrayList<Sponsor>();
+            return new HashSet<Sponsor>();
         }
-        return new ArrayList<Sponsor>(cells.get(crime.name()));
+        return new HashSet<Sponsor>(cells.get(crime.name()));
     }
 }
