@@ -1,7 +1,7 @@
 package org.netmelody.cieye.core.domain;
 
-import static com.google.common.collect.Collections2.transform;
-import static com.google.common.collect.Iterators.find;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Iterables.find;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +33,7 @@ public final class Target {
         this.lastStartTime = lastStartTime;
         this.sponsors.addAll(sponsors);
         this.builds.addAll(builds);
-        this.status = find(transform(builds, toStatus()).iterator(), isBroken(), status);
+        this.status = find(transform(builds, toStatus()), isBroken(), status);
     }
 
     private Predicate<Status> isBroken() {
