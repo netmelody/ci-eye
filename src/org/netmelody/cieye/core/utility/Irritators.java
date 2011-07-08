@@ -53,9 +53,6 @@ public final class Irritators {
                     nextResult = newArrayList();
                     return result;
                 }
-                if (nextResult.isEmpty()) {
-                    nextResult.add(iterator.next());
-                }
                 
                 final List<T> result = nextResult;
                 nextResult  = newArrayList();
