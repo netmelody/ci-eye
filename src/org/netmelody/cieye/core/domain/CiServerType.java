@@ -11,4 +11,19 @@ public final class CiServerType {
     public String name() {
         return this.name;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CiServerType)) {
+            return false;
+        }
+        
+        final CiServerType other = (CiServerType)obj;
+        return other.name.equals(name);
+    }
+    
+    @Override
+    public int hashCode() {
+        return 17 + name.hashCode();
+    }
 }

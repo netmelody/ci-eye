@@ -1,7 +1,5 @@
 package org.netmelody.cieye.server.configuration;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,6 +10,15 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeGroup;
 import org.netmelody.cieye.server.LandscapeFetcher;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.skip;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.netmelody.cieye.core.utility.Irritables.partition;
 
 public final class RecordedObservationTargets implements LandscapeFetcher, Refreshable {
 
@@ -35,7 +42,7 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
     }
 
     private void loadFromFile() {
-        final List<Landscape> landscapes = extractLandscapeFrom(viewsFile.readContent());
+        final List<Landscape> landscapes = extractLandscapesFrom(viewsFile.readContent());
         
         if (landscapes.isEmpty()) {
             this.landscapeGroup = new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
@@ -53,36 +60,49 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
     public Landscape landscapeNamed(String name) {
         return this.landscapeGroup.landscapeNamed(name);
     }
+    
+    private static Predicate<String> byLandscape() {
+        return new Predicate<String>() {
+            @Override public boolean apply(String line) {
+                return LANDSCAPE_NAME_REGEX.matcher(line).matches();
+            }
+        };
+    }
+    
+    private static List<Landscape> extractLandscapesFrom(List<String> content) {
+        return newArrayList(transform(skip(partition(content, byLandscape()), 1), toLandscape()));
+    }
 
-    private static List<Landscape> extractLandscapeFrom(List<String> content) {
-        final List<Landscape> result = new ArrayList<Landscape>();
-        
-        String landscapeName = "";
-        List<Feature> features = new ArrayList<Feature>();
-        
-        for (String line : content) {
-            Matcher landscapeMatcher = LANDSCAPE_NAME_REGEX.matcher(line);
-            if (landscapeMatcher.matches()) {
-                if (landscapeName.length() > 0) {
-                    result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
+    private static Function<List<String>, Landscape> toLandscape() {
+        return new Function<List<String>, Landscape>() {
+            @Override public Landscape apply(List<String> data) {
+                final Matcher matcher = LANDSCAPE_NAME_REGEX.matcher(data.get(0));
+                if (!matcher.matches()) {
+                    throw new IllegalStateException();
                 }
-                landscapeName = landscapeMatcher.group(1);
-                features.clear();
-                continue;
+                
+                final String landscapeName = matcher.group(1);
+                final Iterable<String> featuresNames = filter(skip(data, 1), notBlank());
+                
+                final List<Feature> features = new ArrayList<Feature>();
+                for (String featurename : featuresNames) {
+                    Matcher featureMatcher = FEATURE_REGEX.matcher(featurename);
+                    if (featureMatcher.matches()) {
+                        features.add(new Feature(featureMatcher.group(3),
+                                                 featureMatcher.group(2),
+                                                 new CiServerType(featureMatcher.group(1))));
+                    }
+                }
+                return new Landscape(landscapeName, features.toArray(new Feature[features.size()]));
             }
-            
-            Matcher featureMatcher = FEATURE_REGEX.matcher(line);
-            if (featureMatcher.matches()) {
-                features.add(new Feature(featureMatcher.group(3),
-                                         featureMatcher.group(2),
-                                         new CiServerType(featureMatcher.group(1))));
+        };
+    }
+    
+    private static Predicate<String> notBlank() {
+        return new Predicate<String>() {
+            @Override public boolean apply(String line) {
+                return line.trim().length() > 0;
             }
-        }
-        
-        if (landscapeName.length() > 0) {
-            result.add(new Landscape(landscapeName, features.toArray(new Feature[features.size()])));
-        }
-        
-        return result;
+        };
     }
 }
