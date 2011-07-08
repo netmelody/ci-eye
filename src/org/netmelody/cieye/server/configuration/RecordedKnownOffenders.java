@@ -1,15 +1,6 @@
 package org.netmelody.cieye.server.configuration;
 
-import static com.google.common.collect.Collections2.transform;
-import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Maps.filterValues;
-import static java.util.Collections.unmodifiableSet;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,12 +11,23 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.skip;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Collections.unmodifiableSet;
+import static org.netmelody.cieye.core.utility.Irritables.partition;
+
 public final class RecordedKnownOffenders implements KnownOffendersDirectory, Refreshable {
     
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
 
     private final SettingsFile picturesFile;
-    private Map<Sponsor, Collection<Pattern>> userMap = new HashMap<Sponsor, Collection<Pattern>>();
+    
+    private Iterable<Biometric> biometrics = newArrayList();
     
     public RecordedKnownOffenders(SettingsFile picturesFile) {
         this.picturesFile = picturesFile;
@@ -40,69 +42,93 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     }
     
     @Override
-    public Set<Sponsor> search(String fingerprint) {
-        return unmodifiableSet(filterValues(userMap, matching(fingerprint)).keySet());
+    public Set<Sponsor> search(String crimeScene) {
+        return unmodifiableSet(newHashSet(transform(filter(biometrics, foundAt(crimeScene)), toSponsor())));
     }
     
-    private Predicate<Collection<Pattern>> matching(final String fingerprint) {
-        return new Predicate<Collection<Pattern>>() {
-            @Override
-            public boolean apply(Collection<Pattern> fingers) {
-                return any(fingers, leftPrint(fingerprint));
-            }
-        };
-    }
-
-    private Predicate<Pattern> leftPrint(final String fingerprint) {
-        return new Predicate<Pattern>() {
-            @Override
-            public boolean apply(Pattern finger) {
-                return finger.matcher(fingerprint).find();
-            }
-        };
-    }
-
     private void loadPictureSettings() {
-        userMap = extractPicuresFrom(picturesFile.readContent());
+        biometrics = extractPicuresFrom(picturesFile.readContent());
     }
 
-    private static Map<Sponsor, Collection<Pattern>> extractPicuresFrom(List<String> content) {
-        final Map<Sponsor, Collection<Pattern>> result = new HashMap<Sponsor, Collection<Pattern>>();
-        final List<String> aliases = new ArrayList<String>();
-        String pictureFilename = "";
-        
-        for (String line : content) {
-            Matcher pictureFilenameMatcher = PICTURE_FILENAME_REGEX.matcher(line);
-            if (pictureFilenameMatcher.matches()) {
-                if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
-                    registerUser(result, aliases.get(0), "/pictures/" + pictureFilename, aliases);
-                }
-                pictureFilename = pictureFilenameMatcher.group(1);
-                aliases.clear();
-                continue;
-            }
-            
-            if (line.trim().length() > 0) {
-                aliases.add(line);
-            }
-        }
-        
-        if (pictureFilename.length() != 0 && !aliases.isEmpty()) {
-            registerUser(result, aliases.get(0), "/pictures/" + pictureFilename, aliases);
-        }
-        return result;
-    }
-    
-    private static void registerUser(Map<Sponsor, Collection<Pattern>> resultMap, String name, String pictureUrl, List<String> keywords) {
-        resultMap.put(new Sponsor(name, pictureUrl), transform(new ArrayList<String>(keywords), toRegex()));
+    private static Iterable<Biometric> extractPicuresFrom(List<String> content) {
+        return transform(skip(partition(content, byPicture()), 1), toBiometric());
     }
 
-    private static Function<String, Pattern> toRegex() {
-        return new Function<String, Pattern>() {
-            @Override
-            public Pattern apply(String keyword) {
-                return Pattern.compile("\\b" + Pattern.quote(keyword) + "\\b", Pattern.CASE_INSENSITIVE);
+    private Function<Biometric, Sponsor> toSponsor() {
+        return new Function<Biometric, Sponsor>() {
+            @Override public Sponsor apply(Biometric bio) {
+                return bio.sponsor;
             }
         };
+    }
+
+    private Predicate<Biometric> foundAt(final String crimescene) {
+        return new Predicate<Biometric>() {
+            @Override public boolean apply(Biometric bio) {
+                return bio.matches(crimescene);
+            }
+        };
+    }
+    
+    private static Predicate<String> byPicture() {
+        return new Predicate<String>() {
+            @Override public boolean apply(String line) {
+                return PICTURE_FILENAME_REGEX.matcher(line).matches();
+            }
+        };
+    }
+    
+    private static Function<List<String>, Biometric> toBiometric() {
+        return new Function<List<String>, Biometric>() {
+            @Override public Biometric apply(List<String> data) {
+                final Matcher matcher = PICTURE_FILENAME_REGEX.matcher(data.get(0));
+                if (!matcher.matches()) {
+                    throw new IllegalStateException();
+                }
+                
+                final String pictureUrl = "/pictures/" + matcher.group(1);
+                final Iterable<String> fingerprints = filter(skip(data, 1), notBlank());
+                final String name = getFirst(fingerprints, pictureUrl);
+                return new Biometric(new Sponsor(name, pictureUrl), fingerprints);
+            }
+        };
+    }
+
+    private static Predicate<String> notBlank() {
+        return new Predicate<String>() {
+            @Override public boolean apply(String line) {
+                return line.trim().length() > 0;
+            }
+        };
+    }
+    
+    private static final class Biometric {
+        private final Sponsor sponsor;
+        private final Iterable<Pattern> fingerprints;
+        
+        public Biometric(Sponsor sponsor, Iterable<String> fingerprints) {
+            this.sponsor = sponsor;
+            this.fingerprints = transform(fingerprints, toPattern());
+        }
+        
+        public boolean matches(final String crimescene) {
+            return any(fingerprints, foundAt(crimescene));
+        }
+        
+        private static Predicate<Pattern> foundAt(final String crimescene) {
+            return new Predicate<Pattern>() {
+                @Override public boolean apply(Pattern fingerprint) {
+                    return fingerprint.matcher(crimescene).find();
+                }
+            };
+        }
+        
+        private static Function<String, Pattern> toPattern() {
+            return new Function<String, Pattern>() {
+                @Override public Pattern apply(String keyword) {
+                    return Pattern.compile("\\b" + Pattern.quote(keyword.trim()) + "\\b", Pattern.CASE_INSENSITIVE);
+                }
+            };
+        }
     }
 }
