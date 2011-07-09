@@ -60,7 +60,7 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
         return this.landscapeGroup.landscapeNamed(name);
     }
     
-    private static Predicate<String> byLandscape() {
+    private static Predicate<String> byLandscapeHeader() {
         return new Predicate<String>() {
             @Override public boolean apply(String line) {
                 return LANDSCAPE_NAME_REGEX.matcher(line).matches();
@@ -69,7 +69,7 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
     }
     
     private static List<Landscape> extractLandscapesFrom(List<String> content) {
-        return newArrayList(transform(skip(partition(content, byLandscape()), 1), toLandscape()));
+        return newArrayList(transform(skip(partition(content, byLandscapeHeader()), 1), toLandscape()));
     }
 
     private static Function<List<String>, Landscape> toLandscape() {
