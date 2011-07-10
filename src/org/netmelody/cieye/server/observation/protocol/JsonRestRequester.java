@@ -12,16 +12,21 @@ public final class JsonRestRequester implements Contact {
     private static final Log LOG = LogFactory.getLog(JsonRestRequester.class);
     
     private final Gson json;
-    private final RestRequester restRequester = new RestRequester();
+    private final RestRequester restRequester;
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, new Function<String, String>() {
+        this(jsonTranslator, 80);
+    }
+    
+    public JsonRestRequester(Gson jsonTranslator, int port) {
+        this(jsonTranslator, port, new Function<String, String>() {
             @Override public String apply(String input) {  return input.replace("\"@", "\""); }
         });
     }
     
-    private JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
+    private JsonRestRequester(Gson jsonTranslator, int port, Function<String, String> contentMunger) {
+        this.restRequester = new RestRequester(port);
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }
@@ -69,5 +74,9 @@ public final class JsonRestRequester implements Contact {
     @Override
     public void doPut(String url, String content) {
         restRequester.doPut(url, content);
+    }
+
+    public void shutdown() {
+        restRequester.shutdown();
     }
 }
