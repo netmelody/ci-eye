@@ -38,8 +38,12 @@ public final class RestRequester {
     private final DefaultHttpClient client;
 
     public RestRequester() {
+        this(80);
+    }
+    
+    public RestRequester(int port) {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+        schemeRegistry.register(new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
 
         final ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(schemeRegistry);
         connectionManager.setMaxTotal(200);
@@ -50,7 +54,7 @@ public final class RestRequester {
         
         client = new DefaultHttpClient(connectionManager, params);
     }
-    
+
     public String makeRequest(String url) {
         LOG.info(url);
         try {
