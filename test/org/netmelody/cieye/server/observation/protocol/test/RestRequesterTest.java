@@ -1,11 +1,11 @@
 package org.netmelody.cieye.server.observation.protocol.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import org.junit.After;
 import org.junit.Test;
 import org.netmelody.cieye.server.observation.protocol.RestRequester;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 
 public final class RestRequesterTest {
 
@@ -21,6 +21,6 @@ public final class RestRequesterTest {
     @Test public void
     makesASuccessfulRequest() {
         server.respondWith("some response text");
-        assertThat(requester.makeRequest("http://localhost/"), is("some response text"));
+        assertThat(requester.makeRequest("http://localhost/"), startsWith("some response text"));
     }
 }
