@@ -30,4 +30,4 @@ check strictLayeringOf foundation spy-network
 
 check absenceOfPackageCycles > 1 in [core]
 check absenceOfPackageCycles > 1 in [spies]
-check absenceOfPackageCycles > 4 in [server]
+check absenceOfPackageCycles > 5 in [server]

@@ -1,8 +1,10 @@
-package org.netmelody.cieye.server.response;
+package org.netmelody.cieye.server.response.responder;
 
 import java.io.IOException;
 
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
+import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.JsonTranslator;
 import org.simpleframework.http.Response;
 
 public final class CiEyeVersionResponder implements CiEyeResponder {

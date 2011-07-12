@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.response;
+package org.netmelody.cieye.server.response.responder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.server.PictureFetcher;
+import org.netmelody.cieye.server.response.CiEyeResponder;
 import org.simpleframework.http.Response;
 
 public final class PictureResponder implements CiEyeResponder {

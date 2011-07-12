@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.response;
+package org.netmelody.cieye.server.response.responder;
 
 import static java.lang.Math.min;
 
@@ -11,6 +11,9 @@ import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.JsonTranslator;
+import org.netmelody.cieye.server.response.Prison;
 import org.simpleframework.http.Response;
 
 public final class LandscapeObservationResponder implements CiEyeResponder {
