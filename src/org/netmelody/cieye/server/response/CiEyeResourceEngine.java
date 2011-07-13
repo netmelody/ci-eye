@@ -1,11 +1,14 @@
 package org.netmelody.cieye.server.response;
 
-import java.io.IOException;
 
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
+import org.netmelody.cieye.server.response.resource.CiEyeResource;
+import org.netmelody.cieye.server.response.resource.DohHandler;
+import org.netmelody.cieye.server.response.resource.NotFoundResource;
+import org.netmelody.cieye.server.response.resource.TargetNotationHandler;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.FileResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeListResponder;
@@ -13,9 +16,6 @@ import org.netmelody.cieye.server.response.responder.LandscapeObservationRespond
 import org.netmelody.cieye.server.response.responder.PictureResponder;
 import org.netmelody.cieye.server.response.responder.SettingsLocationResponder;
 import org.simpleframework.http.Address;
-import org.simpleframework.http.Request;
-import org.simpleframework.http.Response;
-import org.simpleframework.http.Status;
 import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceEngine;
 
@@ -85,19 +85,5 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         }
         
         return new NotFoundResource();
-    }
-    
-    public static final class NotFoundResource implements Resource {
-        @Override
-        public void handle(Request req, Response resp) {
-            resp.setCode(Status.NOT_FOUND.getCode());
-            resp.setText(Status.NOT_FOUND.getDescription());
-            try {
-                resp.getPrintStream().append("<!DOCTYPE html><html><head/><body>Page Not Found. Try <a href=\"/\">starting from the top<a></body></html>");
-                resp.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

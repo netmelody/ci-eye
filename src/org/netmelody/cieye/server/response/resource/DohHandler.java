@@ -1,10 +1,12 @@
-package org.netmelody.cieye.server.response;
+package org.netmelody.cieye.server.response.resource;
 
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.server.response.Prison;
+import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.resource.Resource;
