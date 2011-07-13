@@ -3,11 +3,9 @@ package org.netmelody.cieye.server.response.responder;
 import static java.lang.Math.min;
 
 import java.io.IOException;
-import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
-import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyAllocator;
@@ -33,14 +31,13 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
         TargetGroup result = new TargetGroup();
         long timeToLive = Long.MAX_VALUE;
         for (Feature feature : landscape.features()) {
-            final CiSpy witness = spyAllocator.spyFor(feature);
-            result = result.add(witness.statusOf(feature));
-            timeToLive = min(timeToLive, witness.millisecondsUntilNextUpdate(feature));
+            final CiSpy spy = spyAllocator.spyFor(feature);
+            result = result.add(spy.statusOf(feature));
+            timeToLive = min(timeToLive, spy.millisecondsUntilNextUpdate(feature));
         }
         
         if (prison.crimeReported(landscape)) {
-            Set<Sponsor> dohGroup = prison.prisonersFor(landscape);
-            result = result.withDoh(dohGroup);
+            result = result.withDoh(prison.prisonersFor(landscape));
         }
         
         response.set("Content-Type", "application/json");
