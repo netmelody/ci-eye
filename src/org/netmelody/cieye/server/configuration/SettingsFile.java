@@ -40,4 +40,8 @@ public final class SettingsFile {
     public boolean updateAvailable() {
         return FileUtils.isFileNewer(file, lastReadDate);
     }
+    
+    public SettingsFile newReference() {
+        return new SettingsFile(this.file);
+    }
 }

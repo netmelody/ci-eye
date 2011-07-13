@@ -29,7 +29,7 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
     private LandscapeGroup landscapeGroup;
     
     public RecordedObservationTargets(SettingsFile viewsFile) {
-        this.viewsFile = viewsFile;
+        this.viewsFile = viewsFile.newReference();
         loadFromFile();
     }
 

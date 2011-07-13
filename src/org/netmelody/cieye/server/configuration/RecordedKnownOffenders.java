@@ -30,7 +30,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     private Iterable<Biometric> biometrics = newArrayList();
     
     public RecordedKnownOffenders(SettingsFile picturesFile) {
-        this.picturesFile = picturesFile;
+        this.picturesFile = picturesFile.newReference();
         loadPictureSettings();
     }
 
