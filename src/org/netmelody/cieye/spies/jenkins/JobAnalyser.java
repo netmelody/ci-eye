@@ -138,11 +138,14 @@ public final class JobAnalyser {
         final StringBuilder result = new StringBuilder();
         for (ChangeSetItem changeSetItem : build.changeSet.items) {
             result.append(changeSetItem.user);
+            result.append(' ');
             result.append(changeSetItem.msg);
+            result.append(' ');
         }
         
         for (User user : build.culprits()) {
             result.append(user.fullName);
+            result.append(' ');
         }
         
         return result.toString();
