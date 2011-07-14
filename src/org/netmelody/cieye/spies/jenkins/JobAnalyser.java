@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.netmelody.cieye.core.domain.Percentage;
+import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
@@ -151,8 +152,8 @@ public final class JobAnalyser {
         return result.toString();
     }
     
-    private List<org.netmelody.cieye.core.domain.RunningBuild> buildsFor(final JobDetail job) {
-        final List<org.netmelody.cieye.core.domain.RunningBuild> result = new ArrayList<org.netmelody.cieye.core.domain.RunningBuild>();
+    private List<RunningBuild> buildsFor(final JobDetail job) {
+        final List<RunningBuild> result = new ArrayList<RunningBuild>();
         
         if (!job.building() || job.lastBuild == null) {
             return result;
