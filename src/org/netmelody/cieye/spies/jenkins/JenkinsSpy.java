@@ -1,7 +1,6 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Collection;
@@ -16,11 +15,8 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Server;
-import org.netmelody.cieye.spies.jenkins.jsondomain.UserDetail;
-import org.netmelody.cieye.spies.jenkins.jsondomain.Users;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public final class JenkinsSpy implements CiSpy {
@@ -41,18 +37,21 @@ public final class JenkinsSpy implements CiSpy {
             return new TargetGroup();
         }
         
-        final Collection<View> views = filter(views(), new Predicate<View>() {
-            @Override public boolean apply(View viewDigest) {
-                return viewDigest.name.trim().equals(feature.name().trim());
-            }
-        });
-        if (views.isEmpty()) {
+        final View viewDigest = find(views(), withName(feature.name()), null);
+        if (null == viewDigest) {
             LOG.error("No view named <" + feature.name() + "> found");
             return new TargetGroup();
         }
         
-        final View viewDigest = views.iterator().next();
         return new TargetGroup(viewAnalsyer.analyse(viewDigest));
+    }
+
+    private Predicate<View> withName(final String featureName) {
+        return new Predicate<View>() {
+            @Override public boolean apply(View viewDigest) {
+                return viewDigest.name.trim().equals(featureName.trim());
+            }
+        };
     }
     
     @Override
@@ -64,22 +63,14 @@ public final class JenkinsSpy implements CiSpy {
     public boolean takeNoteOf(String targetId, String note) {
         final String buildUrl = this.viewAnalsyer.lastBadBuildUrlFor(targetId);
         
-        if (null == buildUrl || buildUrl.isEmpty()) {
+        if (buildUrl.isEmpty()) {
             return false;
         }
         
         communicator.doJenkinsPost(buildUrl +
                                    "submitDescription?" +
-                                   URLEncodedUtils.format(newArrayList(new BasicNameValuePair("description", note)),
-                                                          "UTF-8"));
+                                   URLEncodedUtils.format(newArrayList(new BasicNameValuePair("description", note)), "UTF-8"));
         return true;
-    }
-    
-    public Collection<String> users() {
-        final Users detail = communicator.makeJenkinsRestCallWithSuffix("people", Users.class);
-        return transform(detail.users(), new Function<UserDetail, String>() {
-            @Override public String apply(UserDetail userDetail) { return userDetail.user.fullName; }
-        });
     }
     
     private Collection<View> views() {
