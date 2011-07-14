@@ -55,12 +55,12 @@ public final class JobAnalyser {
     }
 
     public Target analyse() {
-        final JobDetail job = communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class);
+        final JobDetail job = communicator.jobDetailFor(jobEndpoint);
         return new Target(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
     public String lastBadBuildUrl() {
-        return communicator.makeJenkinsRestCall(jobEndpoint, JobDetail.class).lastBadBuildUrl();
+        return communicator.lastBadBuildFor(jobEndpoint);
     }
     
     private long startTimeOf(JobDetail job) {

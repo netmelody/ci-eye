@@ -9,7 +9,6 @@ import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
-import org.netmelody.cieye.spies.jenkins.jsondomain.ViewDetail;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
@@ -26,7 +25,7 @@ public final class ViewAnalyser {
     }
     
     public Collection<Target> analyse(View viewDigest) {
-        return transform(jobsFor(viewDigest), toTargets());
+        return transform(communicator.jobsFor(viewDigest), toTargets());
     }
 
     public String lastBadBuildUrlFor(String jobId) {
@@ -34,10 +33,6 @@ public final class ViewAnalyser {
             return analyserMap.get(jobId).lastBadBuildUrl();
         }
         return "";
-    }
-    
-    private Collection<Job> jobsFor(View viewDigest) {
-        return communicator.makeJenkinsRestCall(viewDigest.url, ViewDetail.class).jobs();
     }
     
     private Function<Job, Target> toTargets() {

@@ -3,8 +3,6 @@ package org.netmelody.cieye.spies.jenkins;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -14,7 +12,6 @@ import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
-import org.netmelody.cieye.spies.jenkins.jsondomain.Server;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
 import com.google.common.base.Predicate;
@@ -33,11 +30,11 @@ public final class JenkinsSpy implements CiSpy {
 
     @Override
     public TargetGroup statusOf(final Feature feature) {
-        if (!communicator.endpoint().equals(feature.endpoint())) {
+        if (!communicator.canSpeakFor(feature)) {
             return new TargetGroup();
         }
         
-        final View viewDigest = find(views(), withName(feature.name()), null);
+        final View viewDigest = find(communicator.views(), withName(feature.name()), null);
         if (null == viewDigest) {
             LOG.error("No view named <" + feature.name() + "> found");
             return new TargetGroup();
@@ -63,10 +60,6 @@ public final class JenkinsSpy implements CiSpy {
                                    "submitDescription?" +
                                    URLEncodedUtils.format(newArrayList(new BasicNameValuePair("description", note)), "UTF-8"));
         return true;
-    }
-    
-    private Collection<View> views() {
-        return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views();
     }
     
     private Predicate<View> withName(final String featureName) {

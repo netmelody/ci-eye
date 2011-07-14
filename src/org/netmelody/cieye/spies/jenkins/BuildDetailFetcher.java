@@ -18,7 +18,7 @@ public final class BuildDetailFetcher {
                  .expireAfterWrite(2, TimeUnit.SECONDS)
                  .makeComputingMap(new Function<String, BuildDetail>() {
                                        public BuildDetail apply(String buildUrl) {
-                                           return communicator.makeJenkinsRestCall(buildUrl, BuildDetail.class);
+                                           return communicator.buildDetailsFor(buildUrl);
                                        }
                                    });
     }
