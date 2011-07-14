@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
@@ -23,16 +24,24 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
 
-public final class TeamCityRestRequester {
+public final class TeamCityCommunicator {
 
     private final Contact contact;
     private final String endpoint;
 
-    public TeamCityRestRequester(CommunicationNetwork network, String endpoint) {
+    public TeamCityCommunicator(CommunicationNetwork network, String endpoint) {
         this.contact = network.makeContact(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"));
         this.endpoint = endpoint;
     }
     
+    public String endpoint() {
+        return this.endpoint;
+    }
+
+    public boolean canSpeakFor(Feature feature) {
+        return endpoint.equals(feature.endpoint());
+    }
+
     public void loginAsGuest() {
         contact.performBasicLogin(endpoint + "/guestAuth/");
     }

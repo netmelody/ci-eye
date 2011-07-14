@@ -20,31 +20,29 @@ import com.google.common.base.Predicate;
 
 public final class TeamCitySpy implements CiSpy {
 
-    private final TeamCityRestRequester requester;
-    private final String endpoint;
+    private final TeamCityCommunicator communicator;
     private final BuildTypeAnalyser buildTypeAnalyser;
 
     public TeamCitySpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
-        this.endpoint = endpoint;
-        this.requester = new TeamCityRestRequester(network, this.endpoint);
-        this.buildTypeAnalyser = new BuildTypeAnalyser(this.requester, this.endpoint, detective);
+        this.communicator = new TeamCityCommunicator(network, endpoint);
+        this.buildTypeAnalyser = new BuildTypeAnalyser(this.communicator, detective);
     }
 
     @Override
     public TargetGroup statusOf(final Feature feature) {
-        if (!endpoint.equals(feature.endpoint())) {
+        if (!communicator.canSpeakFor(feature)) {
             return new TargetGroup();
         }
         
-        requester.loginAsGuest();
+        communicator.loginAsGuest();
         
-        final Project project = find(requester.projects(), withName(feature.name()), null);
+        final Project project = find(communicator.projects(), withName(feature.name()), null);
         
         if (null == project) {
             return new TargetGroup();
         }
         
-        return new TargetGroup(transform(requester.buildTypesFor(project), toTargets()));
+        return new TargetGroup(transform(communicator.buildTypesFor(project), toTargets()));
     }
 
     @Override
@@ -54,23 +52,17 @@ public final class TeamCitySpy implements CiSpy {
     
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        if (!targetId.startsWith(endpoint)) {
+        if (!targetId.startsWith(communicator.endpoint())) {
             return false;
         }
         
-        final BuildTypeDetail buildTypeDetail = requester.detailsFor(targetId);
-        final Build lastCompletedBuild = requester.lastCompletedBuildFor(buildTypeDetail);
-        
-        if (null == lastCompletedBuild) {
-            return false;
-        }
-        
-        if (Status.BROKEN.equals(lastCompletedBuild.status())) {
-            requester.commentOn(lastCompletedBuild, note);
-            return true;
+        final BuildTypeDetail buildTypeDetail = communicator.detailsFor(targetId);
+        final Build lastCompletedBuild = communicator.lastCompletedBuildFor(buildTypeDetail);
+        if (null != lastCompletedBuild && Status.BROKEN.equals(lastCompletedBuild.status())) {
+            communicator.commentOn(lastCompletedBuild, note);
         }
 
-        return false;
+        return true;
     }
     
     private Function<BuildType, Target> toTargets() {
