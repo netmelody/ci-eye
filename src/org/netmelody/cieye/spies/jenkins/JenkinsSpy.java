@@ -46,14 +46,6 @@ public final class JenkinsSpy implements CiSpy {
         return new TargetGroup(viewAnalsyer.analyse(viewDigest));
     }
 
-    private Predicate<View> withName(final String featureName) {
-        return new Predicate<View>() {
-            @Override public boolean apply(View viewDigest) {
-                return viewDigest.name.trim().equals(featureName.trim());
-            }
-        };
-    }
-    
     @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
         return 0L;
@@ -75,5 +67,13 @@ public final class JenkinsSpy implements CiSpy {
     
     private Collection<View> views() {
         return communicator.makeJenkinsRestCallWithSuffix("", Server.class).views();
+    }
+    
+    private Predicate<View> withName(final String featureName) {
+        return new Predicate<View>() {
+            @Override public boolean apply(View viewDigest) {
+                return viewDigest.name.trim().equals(featureName.trim());
+            }
+        };
     }
 }

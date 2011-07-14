@@ -36,8 +36,8 @@ public final class ViewAnalyser {
         return "";
     }
     
-    private Collection<Job> jobsFor(View view) {
-        return communicator.makeJenkinsRestCall(view.url, ViewDetail.class).jobs();
+    private Collection<Job> jobsFor(View viewDigest) {
+        return communicator.makeJenkinsRestCall(viewDigest.url, ViewDetail.class).jobs();
     }
     
     private Function<Job, Target> toTargets() {
