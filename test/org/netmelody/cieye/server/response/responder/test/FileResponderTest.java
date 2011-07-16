@@ -15,7 +15,7 @@ import org.simpleframework.http.Response;
 
 import com.google.common.io.NullOutputStream;
 
-public class FileResponderTest {
+public final class FileResponderTest {
 
     private final Mockery context = new Mockery();
     

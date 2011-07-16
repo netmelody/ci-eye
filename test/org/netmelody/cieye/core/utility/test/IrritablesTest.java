@@ -13,7 +13,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.netmelody.cieye.core.utility.Irritables.partition;
 
-public class IrritablesTest {
+public final class IrritablesTest {
 
     @Test
     public void canPartitionAListWithAPredicate() {
