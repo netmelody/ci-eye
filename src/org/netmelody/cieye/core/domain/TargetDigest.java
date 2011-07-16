@@ -26,7 +26,7 @@ public final class TargetDigest {
         return status;
     }
 
-    public String getWebUrl() {
+    public String webUrl() {
         return webUrl;
     }
 }

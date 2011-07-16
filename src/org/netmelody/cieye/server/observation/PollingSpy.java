@@ -42,7 +42,7 @@ public final class PollingSpy implements CiSpy {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
         StatusResult result = statuses.get(feature);
-        return (null == result) ? new TargetGroup() : result.status;
+        return (null == result) ? new TargetGroup(delegate.targetsConstituting(feature)) : result.status;
     }
 
     @Override
