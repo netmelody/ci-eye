@@ -6,6 +6,7 @@ import static com.google.common.collect.Iterables.find;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
@@ -28,6 +29,11 @@ public final class TeamCitySpy implements CiSpy {
         this.buildTypeAnalyser = new BuildTypeAnalyser(this.communicator, detective);
     }
 
+    @Override
+    public TargetDigestGroup targetsConstituting(Feature feature) {
+        return new TargetDigestGroup();
+    }
+    
     @Override
     public TargetGroup statusOf(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {

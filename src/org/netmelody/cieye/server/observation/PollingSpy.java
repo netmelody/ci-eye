@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 
@@ -31,6 +32,11 @@ public final class PollingSpy implements CiSpy {
         executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
     
+    @Override
+    public TargetDigestGroup targetsConstituting(Feature feature) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public TargetGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();

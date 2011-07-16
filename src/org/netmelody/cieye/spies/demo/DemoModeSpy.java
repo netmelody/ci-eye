@@ -11,6 +11,7 @@ import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -34,6 +35,11 @@ public final class DemoModeSpy implements CiSpy {
 
     public DemoModeSpy(final KnownOffendersDirectory detective) {
         this.detective = detective;
+    }
+    
+    @Override
+    public TargetDigestGroup targetsConstituting(Feature feature) {
+        return new TargetDigestGroup();
     }
     
     @Override

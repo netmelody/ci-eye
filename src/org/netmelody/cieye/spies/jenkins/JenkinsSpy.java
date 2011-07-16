@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
@@ -28,6 +29,11 @@ public final class JenkinsSpy implements CiSpy {
         this.viewAnalsyer = new ViewAnalyser(communicator, detective);
     }
 
+    @Override
+    public TargetDigestGroup targetsConstituting(Feature feature) {
+        return new TargetDigestGroup();
+    }
+    
     @Override
     public TargetGroup statusOf(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
