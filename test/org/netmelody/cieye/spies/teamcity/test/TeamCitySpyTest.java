@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.LandscapeObservation;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -40,7 +40,7 @@ public final class TeamCitySpyTest {
     givesEmptyStatusForAnUnknownEndpoint() {
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
-        final LandscapeObservation result = spy.statusOf(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
+        final TargetGroup result = spy.statusOf(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
         
         assertThat(result.targets(), is(Matchers.<Target>empty()));
     }

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Percentage;
+import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.LandscapeObservation;
+import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.BuildData;
@@ -37,9 +37,9 @@ public final class DemoModeSpy implements CiSpy {
     }
     
     @Override
-    public LandscapeObservation statusOf(Feature feature) {
+    public TargetGroup statusOf(Feature feature) {
         final DemoModeFakeCiServer ciServer = demoCiServers.get(feature.name());
-        LandscapeObservation result = new LandscapeObservation();
+        TargetGroup result = new TargetGroup();
         
         final List<String> targetNames = ciServer.getTargetNames();
         for (String targetName : targetNames) {
@@ -55,7 +55,7 @@ public final class DemoModeSpy implements CiSpy {
             
             Status status = data.green ? Status.GREEN : (data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION);
             Target target = new Target(targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
-            result = result.add(new LandscapeObservation(newArrayList(target )));
+            result = result.add(new TargetGroup(newArrayList(target)));
         }
         return result;
     }

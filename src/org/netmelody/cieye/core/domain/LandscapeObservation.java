@@ -12,11 +12,11 @@ public final class LandscapeObservation {
     private final Set<Sponsor> dohGroup;
     
     public LandscapeObservation() {
-        this(new ArrayList<Target>());
+        this(new TargetGroup());
     }
     
-    public LandscapeObservation(Collection<Target> targets) {
-        this(targets, null);
+    public LandscapeObservation(TargetGroup targets) {
+        this(targets.targets(), null);
     }
     
     private LandscapeObservation(Collection<Target> targets, Set<Sponsor> dohGroup) {
@@ -24,12 +24,12 @@ public final class LandscapeObservation {
         this.dohGroup = (null == dohGroup) ? null : new HashSet<Sponsor>(dohGroup);
     }
 
-    public LandscapeObservation add(LandscapeObservation group) {
+    public LandscapeObservation add(TargetGroup group) {
         if (null == group) {
             return this;
         }
-        final LandscapeObservation result = new LandscapeObservation(targets);
-        result.targets.addAll(group.targets);
+        final LandscapeObservation result = new LandscapeObservation(targets, dohGroup);
+        result.targets.addAll(group.targets());
         return result;
     }
 
@@ -39,15 +39,6 @@ public final class LandscapeObservation {
     
     public Set<Sponsor> dohGroup() {
         return (null == dohGroup) ? new HashSet<Sponsor>() : new HashSet<Sponsor>(dohGroup);
-    }
-
-    public Target targetIdentifiedBy(String targetId) {
-        for(Target target : targets) {
-            if (targetId.equals(target.id())) {
-                return target;
-            }
-        }
-        return null;
     }
 
     public LandscapeObservation withDoh(Set<Sponsor> dohGroup) {
