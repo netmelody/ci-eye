@@ -67,11 +67,6 @@ public final class DemoModeSpy implements CiSpy {
     }
 
     @Override
-    public long millisecondsUntilNextUpdate(Feature feature) {
-        return 0L;
-    }
-    
-    @Override
     public boolean takeNoteOf(String targetId, String note) {
         for (DemoModeFakeCiServer server : demoCiServers.values()) {
             server.addNote(targetId, note);

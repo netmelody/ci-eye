@@ -8,13 +8,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.server.CiSpyHandler;
 
 import com.google.common.collect.MapMaker;
 
-public final class PollingSpy implements CiSpy {
+public final class PollingSpy implements CiSpyHandler {
 
     private static final long POLLING_PERIOD_SECONDS = 5L;
     
@@ -33,11 +33,6 @@ public final class PollingSpy implements CiSpy {
     }
     
     @Override
-    public TargetDigestGroup targetsConstituting(Feature feature) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public TargetGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
@@ -47,13 +42,11 @@ public final class PollingSpy implements CiSpy {
 
     @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
-        long result = 0L;
-        
         final StatusResult statusResult = statuses.get(feature);
         if (null != statusResult) {
-            result = Math.max(0L, (POLLING_PERIOD_SECONDS * 1000L) - (currentTimeMillis() - statusResult.timestamp));
+            return Math.max(0L, (POLLING_PERIOD_SECONDS * 1000L) - (currentTimeMillis() - statusResult.timestamp));
         }
-        return Math.max(result, delegate.millisecondsUntilNextUpdate(feature));
+        return 0L;
     }
 
     @Override

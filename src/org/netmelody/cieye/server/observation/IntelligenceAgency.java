@@ -7,6 +7,7 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.CiSpyHandler;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
@@ -14,9 +15,9 @@ import com.google.common.collect.MapMaker;
 public final class IntelligenceAgency implements CiSpyAllocator {
 
     private final ObservationAgencyConfiguration agencyConfiguration = new ObservationAgencyConfiguration();
-    private final Map<Feature, CiSpy> witnesses = new MapMaker().makeComputingMap(new Function<Feature, CiSpy>() {
+    private final Map<Feature, CiSpyHandler> handlers = new MapMaker().makeComputingMap(new Function<Feature, CiSpyHandler>() {
         @Override
-        public CiSpy apply(Feature feature) {
+        public CiSpyHandler apply(Feature feature) {
             return createSpyFor(feature);
         }
     });
@@ -30,11 +31,11 @@ public final class IntelligenceAgency implements CiSpyAllocator {
     }
     
     @Override
-    public CiSpy spyFor(Feature feature) {
-        return witnesses.get(feature);
+    public CiSpyHandler spyFor(Feature feature) {
+        return handlers.get(feature);
     }
 
-    private CiSpy createSpyFor(Feature feature) {
+    private CiSpyHandler createSpyFor(Feature feature) {
         final CiSpy spy = agencyConfiguration.agencyFor(feature.type()).provideSpyFor(feature, network, directory);
         return new PollingSpy(spy);
     }

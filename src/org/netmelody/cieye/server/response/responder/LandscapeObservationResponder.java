@@ -7,8 +7,8 @@ import java.io.IOException;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.domain.LandscapeObservation;
-import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.response.CiEyeResponder;
 import org.netmelody.cieye.server.response.JsonTranslator;
 import org.netmelody.cieye.server.response.Prison;
@@ -31,7 +31,7 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
         LandscapeObservation result = new LandscapeObservation();
         long timeToLive = Long.MAX_VALUE;
         for (Feature feature : landscape.features()) {
-            final CiSpy spy = spyAllocator.spyFor(feature);
+            final CiSpyHandler spy = spyAllocator.spyFor(feature);
             result = result.add(spy.statusOf(feature));
             timeToLive = min(timeToLive, spy.millisecondsUntilNextUpdate(feature));
         }

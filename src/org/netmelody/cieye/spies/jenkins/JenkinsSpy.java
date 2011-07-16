@@ -47,11 +47,6 @@ public final class JenkinsSpy implements CiSpy {
     }
 
     @Override
-    public long millisecondsUntilNextUpdate(Feature feature) {
-        return 0L;
-    }
-    
-    @Override
     public boolean takeNoteOf(String targetId, String note) {
         final String buildUrl = this.laboratory.lastBadBuildUrlFor(targetId);
         

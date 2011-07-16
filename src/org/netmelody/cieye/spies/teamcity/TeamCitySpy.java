@@ -45,11 +45,6 @@ public final class TeamCitySpy implements CiSpy {
     }
 
     @Override
-    public long millisecondsUntilNextUpdate(Feature feature) {
-        return 0L;
-    }
-    
-    @Override
     public boolean takeNoteOf(String targetId, String note) {
         if (!targetId.startsWith(communicator.endpoint())) {
             return false;

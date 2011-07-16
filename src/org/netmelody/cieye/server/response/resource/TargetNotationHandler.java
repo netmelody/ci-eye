@@ -6,9 +6,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
-import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.LandscapeFetcher;
+import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -42,7 +42,7 @@ public final class TargetNotationHandler implements Resource {
             final Landscape landscape = landscapeFetcher.landscapeNamed(segments[segments.length - 2]);
             
             for (Feature feature : landscape.features()) {
-                final CiSpy spy = spyAllocator.spyFor(feature);
+                final CiSpyHandler spy = spyAllocator.spyFor(feature);
                 if (spy.takeNoteOf(targetId, note)) {
                     return;
                 }
