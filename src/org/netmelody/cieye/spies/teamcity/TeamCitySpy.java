@@ -2,10 +2,15 @@ package org.netmelody.cieye.spies.teamcity;
 
 import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
+
+import java.util.Collection;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
@@ -31,24 +36,12 @@ public final class TeamCitySpy implements CiSpy {
 
     @Override
     public TargetDigestGroup targetsConstituting(Feature feature) {
-        return new TargetDigestGroup();
+        return new TargetDigestGroup(transform(buildTypesFor(feature), toTargetDigests()));
     }
     
     @Override
     public TargetGroup statusOf(final Feature feature) {
-        if (!communicator.canSpeakFor(feature)) {
-            return new TargetGroup();
-        }
-        
-        communicator.loginAsGuest();
-        
-        final Project project = find(communicator.projects(), withName(feature.name()), null);
-        
-        if (null == project) {
-            return new TargetGroup();
-        }
-        
-        return new TargetGroup(transform(communicator.buildTypesFor(project), toTargets()));
+        return new TargetGroup(transform(buildTypesFor(feature), toTargets()));
     }
 
     @Override
@@ -71,6 +64,21 @@ public final class TeamCitySpy implements CiSpy {
         return true;
     }
     
+    private Collection<BuildType> buildTypesFor(final Feature feature) {
+        if (!communicator.canSpeakFor(feature)) {
+            return newArrayList();
+        }
+        
+        communicator.loginAsGuest();
+        
+        final Project project = find(communicator.projects(), withName(feature.name()), null);
+        if (null == project) {
+            return newArrayList();
+        }
+        
+        return communicator.buildTypesFor(project);
+    }
+
     private Function<BuildType, Target> toTargets() {
         return new Function<BuildType, Target>() {
             @Override public Target apply(BuildType buildType) {
@@ -79,6 +87,14 @@ public final class TeamCitySpy implements CiSpy {
         };
     }
 
+    private Function<BuildType, TargetDigest> toTargetDigests() {
+        return new Function<BuildType, TargetDigest>() {
+            @Override public TargetDigest apply(BuildType buildType) {
+                return new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, UNKNOWN);
+            }
+        };
+    }
+    
     private Predicate<Project> withName(final String featureName) {
         return new Predicate<Project>() {
             @Override public boolean apply(Project project) {

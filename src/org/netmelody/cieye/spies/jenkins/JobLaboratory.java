@@ -1,31 +1,27 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static com.google.common.collect.Collections2.transform;
-
-import java.util.Collection;
 import java.util.Map;
 
 import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
-import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
-public final class ViewAnalyser {
+public final class JobLaboratory {
 
     private final JenkinsCommunicator communicator;
     private final KnownOffendersDirectory detective;
     private final Map<String, JobAnalyser> analyserMap = new MapMaker().makeComputingMap(toAnalysers());
     
-    public ViewAnalyser(JenkinsCommunicator communicator, KnownOffendersDirectory detective) {
+    public JobLaboratory(JenkinsCommunicator communicator, KnownOffendersDirectory detective) {
         this.communicator = communicator;
         this.detective = detective;
     }
-    
-    public Collection<Target> analyse(View viewDigest) {
-        return transform(communicator.jobsFor(viewDigest), toTargets());
+       
+    public Target analyseJob(Job jobDigest) {
+        return analyserMap.get(jobDigest.url).analyse(jobDigest);
     }
 
     public String lastBadBuildUrlFor(String jobId) {
@@ -33,14 +29,6 @@ public final class ViewAnalyser {
             return analyserMap.get(jobId).lastBadBuildUrl();
         }
         return "";
-    }
-    
-    private Function<Job, Target> toTargets() {
-        return new Function<Job, Target>() {
-            @Override public Target apply(Job jobDigest) {
-                return analyserMap.get(jobDigest.url).analyse(jobDigest);
-            }
-        };
     }
     
     private Function<String, JobAnalyser> toAnalysers() {
