@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.response.CiEyeResponder;
@@ -28,7 +28,7 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
 
     @Override
     public void writeTo(Response response) throws IOException {
-        TargetGroup result = new TargetGroup();
+        LandscapeObservation result = new LandscapeObservation();
         long timeToLive = Long.MAX_VALUE;
         for (Feature feature : landscape.features()) {
             final CiSpy spy = spyAllocator.spyFor(feature);

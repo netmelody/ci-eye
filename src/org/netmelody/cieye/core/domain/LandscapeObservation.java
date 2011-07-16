@@ -6,29 +6,29 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class TargetGroup {
+public final class LandscapeObservation {
 
     private final List<Target> targets = new ArrayList<Target>();
     private final Set<Sponsor> dohGroup;
     
-    public TargetGroup() {
+    public LandscapeObservation() {
         this(new ArrayList<Target>());
     }
     
-    public TargetGroup(Collection<Target> targets) {
+    public LandscapeObservation(Collection<Target> targets) {
         this(targets, null);
     }
     
-    private TargetGroup(Collection<Target> targets, Set<Sponsor> dohGroup) {
+    private LandscapeObservation(Collection<Target> targets, Set<Sponsor> dohGroup) {
         this.targets.addAll(targets);
         this.dohGroup = (null == dohGroup) ? null : new HashSet<Sponsor>(dohGroup);
     }
 
-    public TargetGroup add(TargetGroup group) {
+    public LandscapeObservation add(LandscapeObservation group) {
         if (null == group) {
             return this;
         }
-        final TargetGroup result = new TargetGroup(targets);
+        final LandscapeObservation result = new LandscapeObservation(targets);
         result.targets.addAll(group.targets);
         return result;
     }
@@ -50,7 +50,7 @@ public final class TargetGroup {
         return null;
     }
 
-    public TargetGroup withDoh(Set<Sponsor> dohGroup) {
-        return new TargetGroup(this.targets, dohGroup);
+    public LandscapeObservation withDoh(Set<Sponsor> dohGroup) {
+        return new LandscapeObservation(this.targets, dohGroup);
     }
 }

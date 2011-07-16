@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.observation.CiSpy;
 
 import com.google.common.collect.MapMaker;
@@ -32,11 +32,11 @@ public final class PollingSpy implements CiSpy {
     }
     
     @Override
-    public TargetGroup statusOf(Feature feature) {
+    public LandscapeObservation statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
         StatusResult result = statuses.get(feature);
-        return (null == result) ? new TargetGroup() : result.status;
+        return (null == result) ? new LandscapeObservation() : result.status;
     }
 
     @Override
@@ -62,9 +62,9 @@ public final class PollingSpy implements CiSpy {
     }
     
     private static final class StatusResult {
-        public final TargetGroup status;
+        public final LandscapeObservation status;
         public final long timestamp;
-        public StatusResult(TargetGroup status, long timestamp) {
+        public StatusResult(LandscapeObservation status, long timestamp) {
             this.status = status;
             this.timestamp = timestamp;
         }

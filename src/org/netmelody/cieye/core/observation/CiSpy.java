@@ -1,11 +1,11 @@
 package org.netmelody.cieye.core.observation;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 
 public interface CiSpy {
 
-    TargetGroup statusOf(Feature feature);
+    LandscapeObservation statusOf(Feature feature);
 
     long millisecondsUntilNextUpdate(Feature feature);
 

@@ -6,7 +6,7 @@ import static com.google.common.collect.Iterables.find;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -29,9 +29,9 @@ public final class TeamCitySpy implements CiSpy {
     }
 
     @Override
-    public TargetGroup statusOf(final Feature feature) {
+    public LandscapeObservation statusOf(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
-            return new TargetGroup();
+            return new LandscapeObservation();
         }
         
         communicator.loginAsGuest();
@@ -39,10 +39,10 @@ public final class TeamCitySpy implements CiSpy {
         final Project project = find(communicator.projects(), withName(feature.name()), null);
         
         if (null == project) {
-            return new TargetGroup();
+            return new LandscapeObservation();
         }
         
-        return new TargetGroup(transform(communicator.buildTypesFor(project), toTargets()));
+        return new LandscapeObservation(transform(communicator.buildTypesFor(project), toTargets()));
     }
 
     @Override

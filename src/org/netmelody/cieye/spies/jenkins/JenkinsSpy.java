@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -29,18 +29,18 @@ public final class JenkinsSpy implements CiSpy {
     }
 
     @Override
-    public TargetGroup statusOf(final Feature feature) {
+    public LandscapeObservation statusOf(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
-            return new TargetGroup();
+            return new LandscapeObservation();
         }
         
         final View viewDigest = find(communicator.views(), withName(feature.name()), null);
         if (null == viewDigest) {
             LOG.error("No view named <" + feature.name() + "> found");
-            return new TargetGroup();
+            return new LandscapeObservation();
         }
         
-        return new TargetGroup(viewAnalsyer.analyse(viewDigest));
+        return new LandscapeObservation(viewAnalsyer.analyse(viewDigest));
     }
 
     @Override
