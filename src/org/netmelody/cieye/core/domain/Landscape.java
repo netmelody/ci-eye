@@ -9,7 +9,7 @@ import java.util.List;
 public final class Landscape {
 
     private final String name;
-    private final List<Feature> features = new ArrayList<Feature>();
+    private transient final List<Feature> features = new ArrayList<Feature>();
     
     public Landscape(String name, Feature... features) {
         this.name = name;
