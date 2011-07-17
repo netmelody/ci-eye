@@ -5,10 +5,11 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.unmodifiableIterable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.google.common.base.Function;
 
-public final class TargetGroup {
+public final class TargetGroup implements Iterable<Target>{
 
     private final Iterable<Target> targets;
     
@@ -41,5 +42,10 @@ public final class TargetGroup {
                 return new Target(digest.id(), digest.webUrl(), digest.name(), digest.status());
             }
         };
+    }
+
+    @Override
+    public Iterator<Target> iterator() {
+        return targets().iterator();
     }
 }

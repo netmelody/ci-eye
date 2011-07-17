@@ -3,7 +3,6 @@ package org.netmelody.cieye.server.observation;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.lang.System.currentTimeMillis;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,8 +38,15 @@ public final class PollingSpy implements CiSpyHandler {
     public TargetGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
-        StatusResult result = statuses.get(feature);
-        return (null == result) ? new TargetGroup(delegate.targetsConstituting(feature)) : result.status;
+        final StatusResult result = statuses.get(feature);
+        if (null != result) {
+            return result.status;
+        }
+        
+        final TargetGroup digest = new TargetGroup(delegate.targetsConstituting(feature));
+        statuses.putIfAbsent(feature, new StatusResult(digest, currentTimeMillis));
+        
+        return digest;
     }
 
     @Override
@@ -66,7 +72,7 @@ public final class PollingSpy implements CiSpyHandler {
     private static final class StatusResult {
         public final TargetGroup status;
         public final long timestamp;
-        public StatusResult(List<Target> targets, long timestamp) {
+        public StatusResult(Iterable<Target> targets, long timestamp) {
             this.status = new TargetGroup(targets);
             this.timestamp = timestamp;
         }
