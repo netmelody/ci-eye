@@ -3,8 +3,11 @@ package org.netmelody.cieye.spies.jenkins;
 import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,9 +15,10 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
+import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -30,7 +34,9 @@ public final class JenkinsSpy implements CiSpy {
     
     private final JenkinsCommunicator communicator;
     private final JobLaboratory laboratory;
-
+    
+    private final Map<TargetId, Job> recognisedJobs = newHashMap();
+    
     public JenkinsSpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
         this.communicator = new JenkinsCommunicator(endpoint, network, "ci", "");
         this.laboratory = new JobLaboratory(communicator, detective);
@@ -38,12 +44,30 @@ public final class JenkinsSpy implements CiSpy {
 
     @Override
     public TargetDigestGroup targetsConstituting(Feature feature) {
-        return new TargetDigestGroup(transform(jobsFor(feature), toTargetDigests()));
+        final Collection<Job> jobs = jobsFor(feature);
+        final List<TargetDigest> digests = newArrayList();
+        
+        for (Job job : jobs) {
+            final TargetDigest targetDigest = new TargetDigest(job.url, job.url, job.name, job.status());
+            digests.add(targetDigest);
+            recognisedJobs.put(targetDigest.id(), job);
+        }
+        
+        return new TargetDigestGroup(digests);
     }
 
     @Override
     public TargetDetailGroup statusOf(final Feature feature) {
         return new TargetDetailGroup(transform(jobsFor(feature), toTargets()));
+    }
+    
+    @Override
+    public TargetDetail statusOf(final TargetId target) {
+        Job job = recognisedJobs.get(target);
+        if (null == job) {
+            return null;
+        }
+        return laboratory.analyseJob(job);
     }
 
     @Override
@@ -78,14 +102,6 @@ public final class JenkinsSpy implements CiSpy {
         return new Predicate<View>() {
             @Override public boolean apply(View viewDigest) {
                 return viewDigest.name.trim().equals(featureName.trim());
-            }
-        };
-    }
-
-    private Function<Job, TargetDigest> toTargetDigests() {
-        return new Function<Job, TargetDigest>() {
-            @Override public TargetDigest apply(Job jobDigest) {
-                return new TargetDigest(jobDigest.url, jobDigest.url, jobDigest.name, jobDigest.status());
             }
         };
     }
