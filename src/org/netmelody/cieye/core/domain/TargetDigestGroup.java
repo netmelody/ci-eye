@@ -2,9 +2,10 @@ package org.netmelody.cieye.core.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
-public final class TargetDigestGroup {
+public final class TargetDigestGroup implements Iterable<TargetDigest> {
 
     private final List<TargetDigest> targets = new ArrayList<TargetDigest>();
     
@@ -27,5 +28,10 @@ public final class TargetDigestGroup {
 
     public List<TargetDigest> targets() {
         return new ArrayList<TargetDigest>(targets);
+    }
+
+    @Override
+    public Iterator<TargetDigest> iterator() {
+        return targets.iterator();
     }
 }

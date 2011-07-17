@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDetailGroup;
+import org.netmelody.cieye.core.domain.TargetDigest;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
 
@@ -73,10 +75,11 @@ public final class PollingSpy implements CiSpyHandler {
                 intermediateStatus = new StatusResult();
             }
             
-            final TargetDetailGroup snapshot = delegate.statusOf(feature);
             final List<TargetDetail> newStatus = newArrayList();
-            
-            for (TargetDetail target : snapshot) {
+
+            final TargetDigestGroup targets = delegate.targetsConstituting(feature);
+            for (TargetDigest digest : targets) {
+                final TargetDetail target = delegate.statusOf(digest.id());
                 newStatus.add(target);
                 intermediateStatus = intermediateStatus.updatedWith(target);
                 statuses.put(feature, intermediateStatus);
