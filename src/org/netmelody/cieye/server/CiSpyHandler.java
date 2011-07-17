@@ -1,11 +1,11 @@
 package org.netmelody.cieye.server;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 
 public interface CiSpyHandler {
 
-    TargetGroup statusOf(Feature feature);
+    TargetDetailGroup statusOf(Feature feature);
 
     long millisecondsUntilNextUpdate(Feature feature);
 

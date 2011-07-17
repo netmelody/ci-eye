@@ -11,10 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -42,8 +42,8 @@ public final class JenkinsSpy implements CiSpy {
     }
 
     @Override
-    public TargetGroup statusOf(final Feature feature) {
-        return new TargetGroup(transform(jobsFor(feature), toTargets()));
+    public TargetDetailGroup statusOf(final Feature feature) {
+        return new TargetDetailGroup(transform(jobsFor(feature), toTargets()));
     }
 
     @Override
@@ -90,9 +90,9 @@ public final class JenkinsSpy implements CiSpy {
         };
     }
     
-    private Function<Job, Target> toTargets() {
-        return new Function<Job, Target>() {
-            @Override public Target apply(Job jobDigest) {
+    private Function<Job, TargetDetail> toTargets() {
+        return new Function<Job, TargetDetail>() {
+            @Override public TargetDetail apply(Job jobDigest) {
                 return laboratory.analyseJob(jobDigest);
             }
         };

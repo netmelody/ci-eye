@@ -12,7 +12,7 @@ import java.util.Set;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public final class Target {
+public final class TargetDetail {
 
     private final String id;
     private final String webUrl;
@@ -22,11 +22,11 @@ public final class Target {
     private final Set<Sponsor> sponsors = new HashSet<Sponsor>();
     private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
     
-    public Target(String id, String webUrl, String name, Status status) {
+    public TargetDetail(String id, String webUrl, String name, Status status) {
         this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new HashSet<Sponsor>());
     }
     
-    public Target(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {
+    public TargetDetail(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {
         this.id = id;
         this.webUrl = webUrl;
         this.name = name;
@@ -77,11 +77,11 @@ public final class Target {
         return new ArrayList<RunningBuild>(builds);
     }
 
-    public Target withBuilds(List<RunningBuild> builds) {
-        return new Target(id, webUrl, name, status, lastStartTime, builds, sponsors);
+    public TargetDetail withBuilds(List<RunningBuild> builds) {
+        return new TargetDetail(id, webUrl, name, status, lastStartTime, builds, sponsors);
     }
 
-    public Target withStatus(Status newStatus) {
-        return new Target(id, webUrl, name, newStatus, lastStartTime, builds, sponsors);
+    public TargetDetail withStatus(Status newStatus) {
+        return new TargetDetail(id, webUrl, name, newStatus, lastStartTime, builds, sponsors);
     }
 }

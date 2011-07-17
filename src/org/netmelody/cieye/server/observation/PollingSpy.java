@@ -12,8 +12,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
 
@@ -38,7 +38,7 @@ public final class PollingSpy implements CiSpyHandler {
     }
     
     @Override
-    public TargetGroup statusOf(Feature feature) {
+    public TargetDetailGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         trackedFeatures.put(feature, currentTimeMillis);
         final StatusResult result = statuses.get(feature);
@@ -46,7 +46,7 @@ public final class PollingSpy implements CiSpyHandler {
             return result.status();
         }
         
-        final TargetGroup digest = new TargetGroup(delegate.targetsConstituting(feature));
+        final TargetDetailGroup digest = new TargetDetailGroup(delegate.targetsConstituting(feature));
         statuses.putIfAbsent(feature, new StatusResult(digest, currentTimeMillis));
         
         return digest;
@@ -73,10 +73,10 @@ public final class PollingSpy implements CiSpyHandler {
                 intermediateStatus = new StatusResult();
             }
             
-            final TargetGroup snapshot = delegate.statusOf(feature);
-            final List<Target> newStatus = newArrayList();
+            final TargetDetailGroup snapshot = delegate.statusOf(feature);
+            final List<TargetDetail> newStatus = newArrayList();
             
-            for (Target target : snapshot) {
+            for (TargetDetail target : snapshot) {
                 newStatus.add(target);
                 intermediateStatus = intermediateStatus.updatedWith(target);
                 statuses.put(feature, intermediateStatus);
@@ -87,22 +87,22 @@ public final class PollingSpy implements CiSpyHandler {
     }
     
     private static final class StatusResult {
-        private final Iterable<Target> targets;
+        private final Iterable<TargetDetail> targets;
         public final long timestamp;
 
         public StatusResult() {
-            this(new ArrayList<Target>(), currentTimeMillis());
+            this(new ArrayList<TargetDetail>(), currentTimeMillis());
         }
-        public StatusResult(Iterable<Target> targets, long timestamp) {
+        public StatusResult(Iterable<TargetDetail> targets, long timestamp) {
             this.targets = targets;
             this.timestamp = timestamp;
         }
-        public TargetGroup status() {
-            return new TargetGroup(targets);
+        public TargetDetailGroup status() {
+            return new TargetDetailGroup(targets);
         }
-        public StatusResult updatedWith(Target target) {
-            final List<Target> newStatus = newArrayList(targets);
-            Iterator<Target> iterator = newStatus.iterator();
+        public StatusResult updatedWith(TargetDetail target) {
+            final List<TargetDetail> newStatus = newArrayList(targets);
+            Iterator<TargetDetail> iterator = newStatus.iterator();
             while (iterator.hasNext()) {
                 if(iterator.next().id().equals(target.id())) {
                     iterator.remove();

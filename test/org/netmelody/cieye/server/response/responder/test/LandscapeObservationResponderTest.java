@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.response.Prison;
@@ -38,7 +38,7 @@ public final class LandscapeObservationResponderTest {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final PrintStream printStream = new PrintStream(output);
         final CiSpyHandler spy = context.mock(CiSpyHandler.class);
-        final TargetGroup targets = new TargetGroup();
+        final TargetDetailGroup targets = new TargetDetailGroup();
         
         context.checking(new Expectations() {{
             allowing(response).getPrintStream(); will(returnValue(printStream));

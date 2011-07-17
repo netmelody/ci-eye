@@ -2,7 +2,7 @@ package org.netmelody.cieye.spies.jenkins;
 
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 
@@ -20,7 +20,7 @@ public final class JobLaboratory {
         this.detective = detective;
     }
        
-    public Target analyseJob(Job jobDigest) {
+    public TargetDetail analyseJob(Job jobDigest) {
         return analyserMap.get(jobDigest.url).analyse(jobDigest);
     }
 

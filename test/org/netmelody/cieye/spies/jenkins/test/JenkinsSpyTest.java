@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -48,10 +48,10 @@ public final class JenkinsSpyTest {
     canPullFromTheJenkinsLiveInstance() {
         final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new SettingsFile(new File(""))));
         
-        TargetGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
+        TargetDetailGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         
-        assertThat(group, is(notNullValue(TargetGroup.class)));
+        assertThat(group, is(notNullValue(TargetDetailGroup.class)));
     }
     
     @Test public void
@@ -69,7 +69,7 @@ public final class JenkinsSpyTest {
             ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
-        final TargetGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("JENKINS")));
+        final TargetDetailGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("JENKINS")));
         context.assertIsSatisfied();
         
         context.checking(new Expectations() {{

@@ -10,9 +10,9 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.BuildData;
@@ -43,9 +43,9 @@ public final class DemoModeSpy implements CiSpy {
     }
     
     @Override
-    public TargetGroup statusOf(Feature feature) {
+    public TargetDetailGroup statusOf(Feature feature) {
         final DemoModeFakeCiServer ciServer = demoCiServers.get(feature.name());
-        TargetGroup result = new TargetGroup();
+        TargetDetailGroup result = new TargetDetailGroup();
         
         final List<String> targetNames = ciServer.getTargetNames();
         for (String targetName : targetNames) {
@@ -60,8 +60,8 @@ public final class DemoModeSpy implements CiSpy {
             }
             
             Status status = data.green ? Status.GREEN : (data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION);
-            Target target = new Target(targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
-            result = result.add(new TargetGroup(newArrayList(target)));
+            TargetDetail target = new TargetDetail(targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
+            result = result.add(new TargetDetailGroup(newArrayList(target)));
         }
         return result;
     }

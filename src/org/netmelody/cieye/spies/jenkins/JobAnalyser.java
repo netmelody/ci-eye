@@ -16,7 +16,7 @@ import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Build;
 import org.netmelody.cieye.spies.jenkins.jsondomain.BuildDetail;
@@ -44,20 +44,20 @@ public final class JobAnalyser {
         this.buildStartTimeFetcher = new BuildStartTimeFetcher(this.buildDetailFetcher);
     }
     
-    public Target analyse(Job jobDigest) {
+    public TargetDetail analyse(Job jobDigest) {
         if (!jobDigest.url.equals(jobEndpoint)) {
             throw new IllegalArgumentException("Incorrect job digest");
         }
         if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
             sponsorCache.clear();
-            return new Target(jobDigest.url, jobDigest.url, jobDigest.name, jobDigest.status());
+            return new TargetDetail(jobDigest.url, jobDigest.url, jobDigest.name, jobDigest.status());
         }
         return analyse();
     }
 
-    public Target analyse() {
+    public TargetDetail analyse() {
         final JobDetail job = communicator.jobDetailFor(jobEndpoint);
-        return new Target(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
+        return new TargetDetail(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
     public String lastBadBuildUrl() {

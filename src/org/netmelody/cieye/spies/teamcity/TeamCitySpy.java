@@ -9,10 +9,10 @@ import java.util.Collection;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -40,8 +40,8 @@ public final class TeamCitySpy implements CiSpy {
     }
     
     @Override
-    public TargetGroup statusOf(final Feature feature) {
-        return new TargetGroup(transform(buildTypesFor(feature), toTargets()));
+    public TargetDetailGroup statusOf(final Feature feature) {
+        return new TargetDetailGroup(transform(buildTypesFor(feature), toTargets()));
     }
 
     @Override
@@ -74,9 +74,9 @@ public final class TeamCitySpy implements CiSpy {
         return communicator.buildTypesFor(project);
     }
 
-    private Function<BuildType, Target> toTargets() {
-        return new Function<BuildType, Target>() {
-            @Override public Target apply(BuildType buildType) {
+    private Function<BuildType, TargetDetail> toTargets() {
+        return new Function<BuildType, TargetDetail>() {
+            @Override public TargetDetail apply(BuildType buildType) {
                 return buildTypeAnalyser.targetFrom(buildType);
             }
         };

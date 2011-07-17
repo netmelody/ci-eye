@@ -10,7 +10,7 @@ import java.util.Set;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.Target;
+import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
@@ -29,11 +29,11 @@ public final class BuildTypeAnalyser {
         this.detective = detective;
     }
     
-    public Target targetFrom(BuildType buildType) {
+    public TargetDetail targetFrom(BuildType buildType) {
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(buildType);
         
         if (buildTypeDetail.paused) {
-            return new Target(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, Status.DISABLED);
+            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, Status.DISABLED);
         }
         
         final Set<Sponsor> sponsors = new HashSet<Sponsor>();
@@ -59,7 +59,7 @@ public final class BuildTypeAnalyser {
             }
         }
         
-        return new Target(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, runningBuilds, sponsors);
+        return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, runningBuilds, sponsors);
     }
 
     private Set<Sponsor> sponsorsOf(BuildDetail build) {

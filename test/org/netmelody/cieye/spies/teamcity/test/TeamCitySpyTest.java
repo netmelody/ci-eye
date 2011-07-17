@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -48,9 +48,9 @@ public final class TeamCitySpyTest {
     givesEmptyStatusForAnUnknownEndpoint() {
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
-        final TargetGroup result = spy.statusOf(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
+        final TargetDetailGroup result = spy.statusOf(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
         
-        assertThat(result.targets(), is(Matchers.<Target>emptyIterable()));
+        assertThat(result.targets(), is(Matchers.<TargetDetail>emptyIterable()));
     }
     
     @Test public void
@@ -84,7 +84,7 @@ public final class TeamCitySpyTest {
             ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
-        final TargetGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));
+        final TargetDetailGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));
         context.assertIsSatisfied();
         
         context.checking(new Expectations() {{

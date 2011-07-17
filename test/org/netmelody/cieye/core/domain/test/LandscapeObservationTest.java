@@ -11,8 +11,8 @@ import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.Target;
-import org.netmelody.cieye.core.domain.TargetGroup;
+import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.server.response.JsonTranslator;
 
 public class LandscapeObservationTest {
@@ -26,8 +26,8 @@ public class LandscapeObservationTest {
     
     @Test public void
     translatesToAppropriateJsonRepresentationWithSimpleTargets() {
-        final LandscapeObservation observation = new LandscapeObservation(new TargetGroup(newArrayList(new Target("T1ID", "T1URL", "T1", Status.GREEN),
-                                                                                                       new Target("T2ID", "T2URL", "T2", Status.BROKEN))));
+        final LandscapeObservation observation = new LandscapeObservation(new TargetDetailGroup(newArrayList(new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN),
+                                                                                                       new TargetDetail("T2ID", "T2URL", "T2", Status.BROKEN))));
         
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
                                                                     "{\"id\":\"T1ID\"," +
@@ -49,8 +49,8 @@ public class LandscapeObservationTest {
     
     @Test public void
     translatesToAppropriateJsonRepresentationWithComplexTarget() {
-        final LandscapeObservation observation = new LandscapeObservation(new TargetGroup(newArrayList(
-                new Target("T1ID", "T1URL", "T1", Status.GREEN, 123,
+        final LandscapeObservation observation = new LandscapeObservation(new TargetDetailGroup(newArrayList(
+                new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN, 123,
                            newArrayList(new RunningBuild(percentageOf(1), Status.GREEN),
                                         new RunningBuild(percentageOf(60), Status.BROKEN)),
                            newHashSet(new Sponsor("S1", "P1"))))));

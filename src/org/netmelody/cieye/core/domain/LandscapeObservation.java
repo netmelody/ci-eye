@@ -10,23 +10,23 @@ import java.util.Set;
 
 public final class LandscapeObservation {
 
-    private final List<Target> targets = new ArrayList<Target>();
+    private final List<TargetDetail> targets = new ArrayList<TargetDetail>();
     private final Set<Sponsor> dohGroup;
     
     public LandscapeObservation() {
-        this(new TargetGroup());
+        this(new TargetDetailGroup());
     }
     
-    public LandscapeObservation(TargetGroup targets) {
+    public LandscapeObservation(TargetDetailGroup targets) {
         this(newArrayList(targets.targets()), null);
     }
     
-    private LandscapeObservation(Collection<Target> targets, Set<Sponsor> dohGroup) {
+    private LandscapeObservation(Collection<TargetDetail> targets, Set<Sponsor> dohGroup) {
         this.targets.addAll(targets);
         this.dohGroup = (null == dohGroup) ? null : new HashSet<Sponsor>(dohGroup);
     }
 
-    public LandscapeObservation add(TargetGroup group) {
+    public LandscapeObservation add(TargetDetailGroup group) {
         if (null == group) {
             return this;
         }
@@ -35,8 +35,8 @@ public final class LandscapeObservation {
         return result;
     }
 
-    public List<Target> targets() {
-        return new ArrayList<Target>(targets);
+    public List<TargetDetail> targets() {
+        return new ArrayList<TargetDetail>(targets);
     }
     
     public Set<Sponsor> dohGroup() {
