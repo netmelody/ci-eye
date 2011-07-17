@@ -13,7 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
+import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -48,10 +49,9 @@ public final class JenkinsSpyTest {
     canPullFromTheJenkinsLiveInstance() {
         final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new SettingsFile(new File(""))));
         
-        TargetDetailGroup group = witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
-        witness.statusOf(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
+        final TargetDigestGroup digests = witness.targetsConstituting(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         
-        assertThat(group, is(notNullValue(TargetDetailGroup.class)));
+        assertThat(witness.statusOf(digests.iterator().next().id()), is(notNullValue(TargetDetail.class)));
     }
     
     @Test public void
@@ -69,14 +69,15 @@ public final class JenkinsSpyTest {
             ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
-        final TargetDetailGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("JENKINS")));
+        final Feature feature = new Feature("myFeatureName", "myEndpoint", new CiServerType("JENKINS"));
+        final TargetDigestGroup targets = spy.targetsConstituting(feature);
         context.assertIsSatisfied();
         
         context.checking(new Expectations() {{
             oneOf(contact).makeJsonRestCall(with(any(String.class)), with(JobDetail.class));
                 will(returnValue(new JobDetail()));
         }});
-        status.targets().iterator().next();
+        spy.statusOf(targets.iterator().next().id());
         context.assertIsSatisfied();
     }
     

@@ -1,6 +1,5 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -15,7 +14,6 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
@@ -25,7 +23,6 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public final class JenkinsSpy implements CiSpy {
@@ -56,11 +53,6 @@ public final class JenkinsSpy implements CiSpy {
         return new TargetDigestGroup(digests);
     }
 
-    @Override
-    public TargetDetailGroup statusOf(final Feature feature) {
-        return new TargetDetailGroup(transform(jobsFor(feature), toTargets()));
-    }
-    
     @Override
     public TargetDetail statusOf(final TargetId target) {
         Job job = recognisedJobs.get(target);
@@ -102,14 +94,6 @@ public final class JenkinsSpy implements CiSpy {
         return new Predicate<View>() {
             @Override public boolean apply(View viewDigest) {
                 return viewDigest.name.trim().equals(featureName.trim());
-            }
-        };
-    }
-    
-    private Function<Job, TargetDetail> toTargets() {
-        return new Function<Job, TargetDetail>() {
-            @Override public TargetDetail apply(Job jobDigest) {
-                return laboratory.analyseJob(jobDigest);
             }
         };
     }

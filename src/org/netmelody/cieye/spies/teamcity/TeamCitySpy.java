@@ -1,6 +1,5 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -13,7 +12,6 @@ import java.util.Map;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
@@ -25,7 +23,6 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public final class TeamCitySpy implements CiSpy {
@@ -52,11 +49,6 @@ public final class TeamCitySpy implements CiSpy {
         }
         
         return new TargetDigestGroup(digests);
-    }
-    
-    @Override
-    public TargetDetailGroup statusOf(final Feature feature) {
-        return new TargetDetailGroup(transform(buildTypesFor(feature), toTargets()));
     }
 
     @Override
@@ -96,14 +88,6 @@ public final class TeamCitySpy implements CiSpy {
         }
         
         return communicator.buildTypesFor(project);
-    }
-
-    private Function<BuildType, TargetDetail> toTargets() {
-        return new Function<BuildType, TargetDetail>() {
-            @Override public TargetDetail apply(BuildType buildType) {
-                return buildTypeAnalyser.targetFrom(buildType);
-            }
-        };
     }
     
     private Predicate<Project> withName(final String featureName) {

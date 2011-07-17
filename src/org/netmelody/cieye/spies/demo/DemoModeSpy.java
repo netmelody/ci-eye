@@ -13,7 +13,6 @@ import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
@@ -73,19 +72,6 @@ public final class DemoModeSpy implements CiSpy {
             return null;
         }
         return datailsOf(demoCiServers.get(targetInfo.featureName), targetInfo.targetName);
-    }
-    
-    @Override
-    public TargetDetailGroup statusOf(Feature feature) {
-        final DemoModeFakeCiServer ciServer = demoCiServers.get(feature.name());
-        TargetDetailGroup result = new TargetDetailGroup();
-        
-        final List<String> targetNames = ciServer.getTargetNames();
-        for (String targetName : targetNames) {
-            TargetDetail target = datailsOf(ciServer, targetName);
-            result = result.add(new TargetDetailGroup(newArrayList(target)));
-        }
-        return result;
     }
 
     private TargetDetail datailsOf(DemoModeFakeCiServer ciServer, String targetName) {

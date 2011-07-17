@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDetailGroup;
+import org.netmelody.cieye.core.domain.TargetDigest;
+import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -27,7 +27,6 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildsHref;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
-
 
 public final class TeamCitySpyTest {
 
@@ -48,9 +47,9 @@ public final class TeamCitySpyTest {
     givesEmptyStatusForAnUnknownEndpoint() {
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
-        final TargetDetailGroup result = spy.statusOf(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
+        final TargetDigestGroup result = spy.targetsConstituting(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
         
-        assertThat(result.targets(), is(Matchers.<TargetDetail>emptyIterable()));
+        assertThat(result, is(Matchers.<TargetDigest>emptyIterable()));
     }
     
     @Test public void
@@ -64,7 +63,7 @@ public final class TeamCitySpyTest {
             oneOf(contact).performBasicLogin("myEndpoint/guestAuth/");
         }});
         
-        spy.statusOf(new Feature("", "myEndpoint", new CiServerType("TEAMCITY")));
+        spy.targetsConstituting(new Feature("", "myEndpoint", new CiServerType("TEAMCITY")));
         
         context.assertIsSatisfied();
     }
@@ -84,7 +83,7 @@ public final class TeamCitySpyTest {
             ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
-        final TargetDetailGroup status = spy.statusOf(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));
+        final TargetDigestGroup digest = spy.targetsConstituting(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));
         context.assertIsSatisfied();
         
         context.checking(new Expectations() {{
@@ -93,7 +92,8 @@ public final class TeamCitySpyTest {
             allowing(contact).makeJsonRestCall(with(any(String.class)), with(Builds.class));
                 will(returnValue(new Builds()));
         }});
-        status.targets().iterator().next();
+        
+        spy.statusOf(digest.iterator().next().id());
         context.assertIsSatisfied();
     }
 
