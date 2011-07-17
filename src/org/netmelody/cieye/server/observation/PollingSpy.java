@@ -1,13 +1,16 @@
 package org.netmelody.cieye.server.observation;
 
+import static com.google.common.collect.ImmutableList.copyOf;
 import static java.lang.System.currentTimeMillis;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Target;
 import org.netmelody.cieye.core.domain.TargetGroup;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
@@ -56,15 +59,15 @@ public final class PollingSpy implements CiSpyHandler {
     
     private void update() {
         for (Feature feature : trackedFeatures.keySet()) {
-            statuses.put(feature, new StatusResult(delegate.statusOf(feature), currentTimeMillis()));
+            statuses.put(feature, new StatusResult(copyOf(delegate.statusOf(feature).targets()), currentTimeMillis()));
         }
     }
     
     private static final class StatusResult {
         public final TargetGroup status;
         public final long timestamp;
-        public StatusResult(TargetGroup status, long timestamp) {
-            this.status = status;
+        public StatusResult(List<Target> targets, long timestamp) {
+            this.status = new TargetGroup(targets);
             this.timestamp = timestamp;
         }
     }

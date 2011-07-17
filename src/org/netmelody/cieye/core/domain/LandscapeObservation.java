@@ -1,5 +1,7 @@
 package org.netmelody.cieye.core.domain;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,7 +18,7 @@ public final class LandscapeObservation {
     }
     
     public LandscapeObservation(TargetGroup targets) {
-        this(targets.targets(), null);
+        this(newArrayList(targets.targets()), null);
     }
     
     private LandscapeObservation(Collection<Target> targets, Set<Sponsor> dohGroup) {
@@ -29,7 +31,7 @@ public final class LandscapeObservation {
             return this;
         }
         final LandscapeObservation result = new LandscapeObservation(targets, dohGroup);
-        result.targets.addAll(group.targets());
+        result.targets.addAll(newArrayList(group.targets()));
         return result;
     }
 

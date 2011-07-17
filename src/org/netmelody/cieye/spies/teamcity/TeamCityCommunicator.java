@@ -64,7 +64,7 @@ public final class TeamCityCommunicator {
     
     public Build lastCompletedBuildFor(BuildTypeDetail buildTypeDetail) {
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
-        if (completedBuilds.build().isEmpty()) {
+        if (null == completedBuilds.build() || completedBuilds.build().isEmpty()) {
             return null;
         }
         return find(completedBuilds.build(), alwaysTrue());
