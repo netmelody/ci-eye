@@ -59,10 +59,10 @@ public final class TargetDetail extends Target {
     }
 
     public TargetDetail withBuilds(List<RunningBuild> builds) {
-        return new TargetDetail(id(), webUrl(), name(), status(), lastStartTime, builds, sponsors);
+        return new TargetDetail(id().id(), webUrl(), name(), status(), lastStartTime, builds, sponsors);
     }
 
     public TargetDetail withStatus(Status newStatus) {
-        return new TargetDetail(id(), webUrl(), name(), newStatus, lastStartTime, builds, sponsors);
+        return new TargetDetail(id().id(), webUrl(), name(), newStatus, lastStartTime, builds, sponsors);
     }
 }

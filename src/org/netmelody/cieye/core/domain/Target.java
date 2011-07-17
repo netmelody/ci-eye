@@ -8,14 +8,18 @@ public abstract class Target {
     private final Status status;
 
     public Target(String id, String webUrl, String name, Status status) {
-        this.id = new TargetId(id);
+        this(new TargetId(id), webUrl, name, status);
+    }
+    
+    public Target(TargetId id, String webUrl, String name, Status status) {
+        this.id = id;
         this.webUrl = webUrl;
         this.name = name;
         this.status = status;
     }
 
-    public String id() {
-        return id.id();
+    public TargetId id() {
+        return id;
     }
 
     public String name() {

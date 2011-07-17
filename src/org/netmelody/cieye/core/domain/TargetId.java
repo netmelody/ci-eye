@@ -16,4 +16,14 @@ public final class TargetId {
     public String id() {
         return id;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof TargetId) && id.equals(((TargetId)obj).id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
