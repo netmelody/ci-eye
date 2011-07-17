@@ -30,20 +30,20 @@ public class LandscapeObservationTest {
                                                                                                        new TargetDetail("T2ID", "T2URL", "T2", Status.BROKEN))));
         
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
-                                                                    "{\"id\":\"T1ID\"," +
+                                                                    "{\"lastStartTime\":0," +
+                                                                     "\"sponsors\":[]," +
+                                                                     "\"builds\":[]," +
+                                                                     "\"id\":\"T1ID\"," +
                                                                      "\"webUrl\":\"T1URL\"," +
                                                                      "\"name\":\"T1\"," + 
-                                                                     "\"status\":\"GREEN\"," +
-                                                                     "\"lastStartTime\":0," +
+                                                                     "\"status\":\"GREEN\"}," +
+                                                                    "{\"lastStartTime\":0," +
                                                                      "\"sponsors\":[]," +
-                                                                     "\"builds\":[]}," +
-                                                                    "{\"id\":\"T2ID\"," +
+                                                                     "\"builds\":[]," +
+                                                                     "\"id\":\"T2ID\"," +
                                                                      "\"webUrl\":\"T2URL\"," +
                                                                      "\"name\":\"T2\"," +
-                                                                     "\"status\":\"BROKEN\"," +
-                                                                     "\"lastStartTime\":0," +
-                                                                     "\"sponsors\":[]," +
-                                                                     "\"builds\":[]}" +
+                                                                     "\"status\":\"BROKEN\"}" +
                                                                 "]}"));
     }
     
@@ -56,16 +56,17 @@ public class LandscapeObservationTest {
                            newHashSet(new Sponsor("S1", "P1"))))));
         
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
-                                                                    "{\"id\":\"T1ID\"," +
-                                                                     "\"webUrl\":\"T1URL\"," +
-                                                                     "\"name\":\"T1\"," + 
-                                                                     "\"status\":\"BROKEN\"," +
-                                                                     "\"lastStartTime\":123," +
+                                                                    "{\"lastStartTime\":123," +
                                                                      "\"sponsors\":[{\"name\":\"S1\",\"picture\":\"P1\"}]," +
                                                                      "\"builds\":[" +
                                                                          "{\"progress\":1,\"status\":\"GREEN\"}," +
                                                                          "{\"progress\":60,\"status\":\"BROKEN\"}" +
-                                                                     "]}" +
+                                                                     "]," +
+                                                                     "\"id\":\"T1ID\"," +
+                                                                     "\"webUrl\":\"T1URL\"," +
+                                                                     "\"name\":\"T1\"," + 
+                                                                     "\"status\":\"BROKEN\"" +
+                                                                    "}" +
                                                                 "]}"));
     }
     

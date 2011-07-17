@@ -12,12 +12,8 @@ import java.util.Set;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public final class TargetDetail {
+public final class TargetDetail extends Target {
 
-    private final String id;
-    private final String webUrl;
-    private final String name;
-    private final Status status;
     private final long lastStartTime;
     private final Set<Sponsor> sponsors = new HashSet<Sponsor>();
     private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
@@ -27,16 +23,13 @@ public final class TargetDetail {
     }
     
     public TargetDetail(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {
-        this.id = id;
-        this.webUrl = webUrl;
-        this.name = name;
+        super(id, webUrl, name, find(transform(builds, toStatus()), isBroken(), status));
         this.lastStartTime = lastStartTime;
         this.sponsors.addAll(sponsors);
         this.builds.addAll(builds);
-        this.status = find(transform(builds, toStatus()), isBroken(), status);
     }
 
-    private Predicate<Status> isBroken() {
+    private static Predicate<Status> isBroken() {
         return new Predicate<Status>() {
             @Override public boolean apply(Status status) {
                 return Status.BROKEN.equals(status);
@@ -44,7 +37,7 @@ public final class TargetDetail {
         };
     }
 
-    private Function<RunningBuild, Status> toStatus() {
+    private static Function<RunningBuild, Status> toStatus() {
         return new Function<RunningBuild, Status>() {
             @Override
             public Status apply(RunningBuild build) {
@@ -53,18 +46,6 @@ public final class TargetDetail {
         };
     }
 
-    public String id() {
-        return id;
-    }
-    
-    public String name() {
-        return name;
-    }
-    
-    public Status status() {
-        return status;
-    }
-    
     public long lastStartTime() {
         return lastStartTime;
     }
@@ -78,10 +59,10 @@ public final class TargetDetail {
     }
 
     public TargetDetail withBuilds(List<RunningBuild> builds) {
-        return new TargetDetail(id, webUrl, name, status, lastStartTime, builds, sponsors);
+        return new TargetDetail(id(), webUrl(), name(), status(), lastStartTime, builds, sponsors);
     }
 
     public TargetDetail withStatus(Status newStatus) {
-        return new TargetDetail(id, webUrl, name, newStatus, lastStartTime, builds, sponsors);
+        return new TargetDetail(id(), webUrl(), name(), newStatus, lastStartTime, builds, sponsors);
     }
 }
