@@ -63,11 +63,16 @@ public final class JenkinsSpy implements CiSpy {
     }
 
     @Override
-    public boolean takeNoteOf(String targetId, String note) {
-        final String buildUrl = this.laboratory.lastBadBuildUrlFor(targetId);
+    public boolean takeNoteOf(TargetId target, String note) {
+        if (!recognisedJobs.containsKey(target)) {
+            return false;
+        }
+        
+        final Job job = this.recognisedJobs.get(target);
+        final String buildUrl = this.laboratory.lastBadBuildUrlFor(job);
         
         if (buildUrl.isEmpty()) {
-            return false;
+            return true;
         }
         
         communicator.doJenkinsPost(buildUrl +

@@ -16,6 +16,7 @@ import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
+import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
 
@@ -65,7 +66,7 @@ public final class PollingSpy implements CiSpyHandler {
 
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        return delegate.takeNoteOf(targetId, note);
+        return delegate.takeNoteOf(new TargetId(targetId), note);
     }
     
     private void update() {

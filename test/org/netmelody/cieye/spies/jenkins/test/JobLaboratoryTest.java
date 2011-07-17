@@ -21,6 +21,6 @@ public final class JobLaboratoryTest {
         job.url = "http://ci.jenkins-ci.org/view/Jenkins%20core/job/jenkins_pom/";
         
         lab.analyseJob(job);
-        lab.lastBadBuildUrlFor(job.url);
+        lab.lastBadBuildUrlFor(job);
     }
 }

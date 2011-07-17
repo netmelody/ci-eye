@@ -90,10 +90,13 @@ public final class DemoModeSpy implements CiSpy {
     }
 
     @Override
-    public boolean takeNoteOf(String targetId, String note) {
-        for (DemoModeFakeCiServer server : demoCiServers.values()) {
-            server.addNote(targetId, note);
+    public boolean takeNoteOf(TargetId target, String note) {
+        if (!recognisedTargets.containsKey(target)) {
+            return false;
         }
+        
+        final TargetInfo targetInfo = recognisedTargets.get(target);
+        demoCiServers.get(targetInfo.featureName).addNote(targetInfo.targetName, note);
         return true;
     }
 }

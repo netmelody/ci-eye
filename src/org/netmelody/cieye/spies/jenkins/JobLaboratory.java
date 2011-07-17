@@ -24,9 +24,9 @@ public final class JobLaboratory {
         return analyserMap.get(jobDigest.url).analyse(jobDigest);
     }
 
-    public String lastBadBuildUrlFor(String jobId) {
-        if (analyserMap.containsKey(jobId)) {
-            return analyserMap.get(jobId).lastBadBuildUrl();
+    public String lastBadBuildUrlFor(Job jobDigest) {
+        if (analyserMap.containsKey(jobDigest.url)) {
+            return analyserMap.get(jobDigest.url).lastBadBuildUrl();
         }
         return "";
     }

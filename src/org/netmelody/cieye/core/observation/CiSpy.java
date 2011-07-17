@@ -11,5 +11,5 @@ public interface CiSpy {
     
     TargetDetail statusOf(TargetId target);
 
-    boolean takeNoteOf(String targetId, String note);
+    boolean takeNoteOf(TargetId target, String note);
 }

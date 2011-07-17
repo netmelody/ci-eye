@@ -55,11 +55,7 @@ public final class TeamCityCommunicator {
     }
     
     public BuildTypeDetail detailsFor(BuildType buildType) {
-        return detailsFor(endpoint + buildType.href);
-    }
-    
-    public BuildTypeDetail detailsFor(String href) {
-        return makeTeamCityRestCall(href, BuildTypeDetail.class);
+        return makeTeamCityRestCall(endpoint + buildType.href, BuildTypeDetail.class);
     }
     
     public Build lastCompletedBuildFor(BuildTypeDetail buildTypeDetail) {

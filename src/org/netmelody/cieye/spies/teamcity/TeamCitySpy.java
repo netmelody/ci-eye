@@ -61,12 +61,12 @@ public final class TeamCitySpy implements CiSpy {
     }
     
     @Override
-    public boolean takeNoteOf(String targetId, String note) {
-        if (!targetId.startsWith(communicator.endpoint())) {
+    public boolean takeNoteOf(TargetId target, String note) {
+        if (!recognisedBuildTypes.containsKey(target)) {
             return false;
         }
         
-        final BuildTypeDetail buildTypeDetail = communicator.detailsFor(targetId);
+        final BuildTypeDetail buildTypeDetail = communicator.detailsFor(recognisedBuildTypes.get(target));
         final Build lastCompletedBuild = communicator.lastCompletedBuildFor(buildTypeDetail);
         if (null != lastCompletedBuild && Status.BROKEN.equals(lastCompletedBuild.status())) {
             communicator.commentOn(lastCompletedBuild, note);
