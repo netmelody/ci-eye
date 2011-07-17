@@ -1,8 +1,11 @@
 package org.netmelody.cieye.server.observation;
 
-import static com.google.common.collect.ImmutableList.copyOf;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,7 +43,7 @@ public final class PollingSpy implements CiSpyHandler {
         trackedFeatures.put(feature, currentTimeMillis);
         final StatusResult result = statuses.get(feature);
         if (null != result) {
-            return result.status;
+            return result.status();
         }
         
         final TargetGroup digest = new TargetGroup(delegate.targetsConstituting(feature));
@@ -65,16 +68,49 @@ public final class PollingSpy implements CiSpyHandler {
     
     private void update() {
         for (Feature feature : trackedFeatures.keySet()) {
-            statuses.put(feature, new StatusResult(copyOf(delegate.statusOf(feature).targets()), currentTimeMillis()));
+            StatusResult intermediateStatus = statuses.putIfAbsent(feature, new StatusResult());
+            if (null == intermediateStatus) {
+                intermediateStatus = new StatusResult();
+            }
+            
+            final TargetGroup snapshot = delegate.statusOf(feature);
+            final List<Target> newStatus = newArrayList();
+            
+            for (Target target : snapshot) {
+                newStatus.add(target);
+                intermediateStatus = intermediateStatus.updatedWith(target);
+                statuses.put(feature, intermediateStatus);
+            }
+            
+            statuses.put(feature, new StatusResult(newStatus, currentTimeMillis()));
         }
     }
     
     private static final class StatusResult {
-        public final TargetGroup status;
+        private final Iterable<Target> targets;
         public final long timestamp;
+
+        public StatusResult() {
+            this(new ArrayList<Target>(), currentTimeMillis());
+        }
         public StatusResult(Iterable<Target> targets, long timestamp) {
-            this.status = new TargetGroup(targets);
+            this.targets = targets;
             this.timestamp = timestamp;
+        }
+        public TargetGroup status() {
+            return new TargetGroup(targets);
+        }
+        public StatusResult updatedWith(Target target) {
+            final List<Target> newStatus = newArrayList(targets);
+            Iterator<Target> iterator = newStatus.iterator();
+            while (iterator.hasNext()) {
+                if(iterator.next().id().equals(target.id())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+            newStatus.add(target);
+            return new StatusResult(newStatus, timestamp);
         }
     }
     
