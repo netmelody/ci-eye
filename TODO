@@ -6,5 +6,4 @@ bug getting last failed build from hudson
 indicate when targets are pending a build, but are in the queue
 have another think on logging, and perhaps expose the log as a page.
 thing about adding a link to ci-eye's bugtracker/project home somewhere
-respond to the first request with a digest, or at least a progress bar!
 ensure identities have no 'business' meaning
