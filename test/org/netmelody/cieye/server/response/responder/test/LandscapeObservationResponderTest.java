@@ -1,8 +1,5 @@
 package org.netmelody.cieye.server.response.responder.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -19,6 +16,9 @@ import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.response.Prison;
 import org.netmelody.cieye.server.response.responder.LandscapeObservationResponder;
 import org.simpleframework.http.Response;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 
 public final class LandscapeObservationResponderTest {
 
@@ -51,7 +51,7 @@ public final class LandscapeObservationResponderTest {
         
         responder.writeTo(response);
         
-        assertThat(output.toString(), is("{\"targets\":[]}\r\n"));
+        assertThat(output.toString(), startsWith("{\"targets\":[]}"));
     }
 
 }
