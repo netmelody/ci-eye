@@ -4,5 +4,5 @@ Auto-update? http://github.com/api/v2/json/repos/show/schacon/ruby-git/tags http
 give immediate feedback when marking a build
 indicate when targets are pending a build, but are in the queue
 have another think on logging, and perhaps expose the log as a page.
-thing about adding a link to ci-eye's bugtracker/project home somewhere
+think about adding a link to ci-eye's bugtracker/project home somewhere
 ensure identities have no 'business' meaning
