@@ -2,7 +2,7 @@ push user/pass for ci into settings -- or at least standardise on cieye/cieye (a
 support for Cruise/Go, Bamboo, AnthillPro, CI Joe, Buildomatic, cruisecontrol?
 Auto-update? http://github.com/api/v2/json/repos/show/schacon/ruby-git/tags http://github.com/downloads/netmelody/ci-eye/ci-eye-201104161819.jar
 give immediate feedback when marking a build
-bug getting last failed build from hudson
+bug getting last failed build from hudson -- JobDetail.lexographicallyLastFrom is naive
 indicate when targets are pending a build, but are in the queue
 have another think on logging, and perhaps expose the log as a page.
 thing about adding a link to ci-eye's bugtracker/project home somewhere
