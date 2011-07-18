@@ -1,6 +1,5 @@
 package org.netmelody.cieye.spies.jenkins.jsondomain.test;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Build;
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
@@ -20,7 +19,6 @@ public final class JobDetailTest {
         assertThat(jobDetail.lastBadBuildUrl(), is("http://blah/456"));
     }
     
-    @Ignore("excites bug that needs fixing asap")
     @Test public void
     correctlyDeterminesTheLastFailedBuildUrlWithNonLexographicUrls() {
         final JobDetail jobDetail = new JobDetail();

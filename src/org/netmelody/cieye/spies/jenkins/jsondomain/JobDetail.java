@@ -1,17 +1,16 @@
 package org.netmelody.cieye.spies.jenkins.jsondomain;
 
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Collections2.transform;
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Ordering;
+import com.google.common.primitives.Longs;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
 
 public final class JobDetail extends Job {
     public String displayName;
@@ -38,43 +37,32 @@ public final class JobDetail extends Job {
     //queueItem
     
     public String lastBadBuildUrl() {
-        final List<Build> lastBadBuilds = newArrayList(lastUnstableBuild, lastUnsuccessfulBuild, lastFailedBuild);
-        final Collection<String> candidates = filter(filter(transform(filter(lastBadBuilds, notNull()), toUrl()), notNull()), notEmpty());
+        final Collection<Build> candidates = filter(newArrayList(lastUnstableBuild, lastUnsuccessfulBuild, lastFailedBuild), valid());
         
         if (candidates.isEmpty()) {
             return "";
         }
         
-        return lexographicallyLastFrom(candidates);
+        return lastFrom(candidates).url;
     }
     
+    private Predicate<Build> valid() {
+        return new Predicate<Build>() {
+            @Override public boolean apply(Build build) {
+                return (build != null) && (!Strings.isNullOrEmpty(build.url)) && build.number >= 0; 
+            }
+        };
+    }
+
     public List<Build> builds() {
         return (builds == null) ? new ArrayList<Build>() : builds;
     }
     
-    private String lexographicallyLastFrom(final Collection<String> candidates) {
-        return new Ordering<String>() {
-            @Override public int compare(String left, String right) {
-                return left.compareTo(right);
+    private Build lastFrom(final Collection<Build> candidates) {
+        return new Ordering<Build>() {
+            @Override public int compare(Build left, Build right) {
+                return Longs.compare(left.number, right.number);
             }
         }.max(candidates);
-    }
-    
-    private Predicate<String> notEmpty() {
-        return new Predicate<String>() {
-            @Override
-            public boolean apply(String input) {
-                return input.length() > 0;
-            }
-        };
-    }
-    
-    private Function<Build, String> toUrl() {
-        return new Function<Build, String>() {
-            @Override
-            public String apply(Build input) {
-                return input.url;
-            }
-        };
     }
 }
