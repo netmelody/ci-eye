@@ -102,7 +102,7 @@ public final class PollingSpy implements CiSpyHandler {
             this.timestamp = timestamp;
         }
         public TargetDetailGroup status() {
-            return new TargetDetailGroup(targets);
+            return TargetDetailGroup.of(targets);
         }
         public StatusResult updatedWith(TargetDetail target) {
             final List<TargetDetail> newStatus = newArrayList(targets);
