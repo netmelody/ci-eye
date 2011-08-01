@@ -46,6 +46,7 @@ public final class RecordedObservationTargetsTest {
         final Collection<Feature> features = targets.landscapes().landscapeNamed("Public Live").features();
         assertThat(features, contains(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")),
                                       new Feature("Main (trunk, branches, and alternative builds)", "http://hudson.magnolia-cms.com", new CiServerType("HUDSON")),
-                                      new Feature("Gradle", "http://teamcity.jetbrains.com", new CiServerType("TEAMCITY"))));
+                                      new Feature("Gradle", "http://teamcity.jetbrains.com", new CiServerType("TEAMCITY")),
+                                      new Feature("Ci-Eye", "http://teamcity.codebetter.com", new CiServerType("TEAMCITY"))));
     }
 }
