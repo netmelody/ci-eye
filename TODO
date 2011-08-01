@@ -6,4 +6,3 @@ indicate when targets are pending a build, but are in the queue
 have another think on logging, and perhaps expose the log as a page.
 think about adding a link to ci-eye's bugtracker/project home somewhere
 ensure identities have no 'business' meaning
-add http://teamcity.codebetter.com/ to the default live instances.
