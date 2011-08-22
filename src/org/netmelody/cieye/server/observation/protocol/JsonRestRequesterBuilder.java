@@ -11,6 +11,17 @@ public final class JsonRestRequesterBuilder implements CommunicationNetwork {
 
     @Override
     public Contact makeContact(SimpleDateFormat dateFormat) {
-        return new JsonRestRequester(new GsonBuilder().setDateFormat(dateFormat.toPattern()).create());
+        return makeContact(dateFormat, null, null);
+    }
+    
+    @Override
+    public Contact makeContact(SimpleDateFormat dateFormat, Class<?> type, Object typeAdapter) {
+        final GsonBuilder builder = new GsonBuilder().setDateFormat(dateFormat.toPattern());
+        
+        if (null != typeAdapter) {
+            builder.registerTypeAdapter(type, typeAdapter);
+        }
+        
+        return new JsonRestRequester(builder.create());
     }
 }
