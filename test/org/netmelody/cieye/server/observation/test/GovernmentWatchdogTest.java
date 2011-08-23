@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog;
+import org.netmelody.cieye.server.observation.GovernmentWatchdog.Tag;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog.Tags;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog.TagsAdapter;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog.TagsHolder;
@@ -46,7 +47,7 @@ public class GovernmentWatchdogTest {
                 will(returnValue(contact));
                 
             oneOf(contact).makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
-                will(returnValue(new TagsHolder(newArrayList("0.0.1", "0.0.2", "0.0.3", "0.0.4"))));
+                will(returnValue(new TagsHolder(newArrayList(new Tag("0.0.1"), new Tag("0.0.2"), new Tag("0.0.3"), new Tag("0.0.4")))));
         }});
         
         final GovernmentWatchdog watchdog = new GovernmentWatchdog(network);
@@ -56,4 +57,23 @@ public class GovernmentWatchdogTest {
         assertThat(latestVersion, equalTo("0.0.4"));
     }
 
+    @Test public void
+    ranksTagsNumerically() {
+        final String json = "{\"tags\":{\"0.0.2\":\"\",\"0.0.11\":\"\"}}";
+        
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Tags.class, new TagsAdapter()).create();
+        final TagsHolder holder = gson.fromJson(json, TagsHolder.class);
+        
+        assertThat(holder.latest(), is("0.0.11"));
+    }
+    
+    @Test public void
+    ranksBetaTagsLower() {
+        final String json = "{\"tags\":{\"0.0.1beta1\":\"\",\"0.0.1\":\"\"}}";
+        
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Tags.class, new TagsAdapter()).create();
+        final TagsHolder holder = gson.fromJson(json, TagsHolder.class);
+        
+        assertThat(holder.latest(), is("0.0.1"));
+    }
 }
