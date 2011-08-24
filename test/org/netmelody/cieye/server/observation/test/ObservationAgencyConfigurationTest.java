@@ -4,11 +4,12 @@ import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.server.observation.ObservationAgencyConfiguration;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public final class ObservationAgencyConfigurationTest {
 
