@@ -7,7 +7,7 @@ describe("VersionChecker", function() {
 
     beforeEach(function() {
         reloaded = false;
-        $.getJSON = function(a, f) { f(responseJson) };
+        $.getJSON = function(a, f) { f(responseJson); };
         scheduler = { "reload": function() { reloaded = true; },
                       "repeat": function() { } };
         
