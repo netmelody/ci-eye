@@ -1,6 +1,7 @@
 package org.netmelody.cieye.server.response;
 
 
+import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.LandscapeFetcher;
@@ -25,18 +26,21 @@ public final class CiEyeResourceEngine implements ResourceEngine {
     private final LandscapeFetcher landscapeFetcher;
     private final PictureFetcher pictureFetcher;
     private final CiEyeServerInformationFetcher configurationFetcher;
+    private final CiEyeNewVersionChecker updateChecker;
     private final RequestOriginTracker tracker;
     private final Prison prison = new Prison();
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
                                CiEyeServerInformationFetcher configurationFetcher,
-                               RequestOriginTracker tracker, CiSpyAllocator allocator) {
+                               RequestOriginTracker tracker, CiSpyAllocator allocator,
+                               CiEyeNewVersionChecker updateChecker) {
         
         this.landscapeFetcher = landscapeFetcher;
         this.pictureFetcher = pictureFetcher;
         this.configurationFetcher = configurationFetcher;
         this.tracker = tracker;
         this.allocator = allocator;
+        this.updateChecker = updateChecker;
     }
     
     @Override
@@ -55,7 +59,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
                 return new CiEyeResource(new SettingsLocationResponder(configurationFetcher));
             }
             if ("version.json".equals(path[0])) {
-                return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher));
+                return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher, updateChecker));
             }
             return new CiEyeResource(new FileResponder(path[0]));
         }

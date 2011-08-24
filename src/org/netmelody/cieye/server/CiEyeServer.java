@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.server.configuration.ServerConfiguration;
+import org.netmelody.cieye.server.observation.GovernmentWatchdog;
 import org.netmelody.cieye.server.observation.IntelligenceAgency;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
 import org.netmelody.cieye.server.response.CachedRequestOriginTracker;
@@ -17,13 +19,14 @@ import org.simpleframework.transport.connect.SocketConnection;
 public final class CiEyeServer {
 
     private final ServerConfiguration agency = new ServerConfiguration();
+    private final CommunicationNetwork network = new JsonRestRequesterBuilder();
     private final Container container =
         new ResourceContainer(new CiEyeResourceEngine(agency.observationTargetDirectory(),
                                                       agency.album(),
                                                       agency.information(),
                                                       new CachedRequestOriginTracker(agency.detective()),
-                                                      new IntelligenceAgency(new JsonRestRequesterBuilder(),
-                                                                             agency.detective())));
+                                                      new IntelligenceAgency(network, agency.detective()),
+                                                      new GovernmentWatchdog(network)));
     private final Connection connection;
     private final InetSocketAddress address;
     
