@@ -12,7 +12,7 @@ import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.simpleframework.http.Response;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 public class CiEyeVersionResponderTest {
 
@@ -37,7 +37,6 @@ public class CiEyeVersionResponderTest {
         
         ciEyeVersionResponder.writeTo(response);
         
-        assertThat(output.toString(), is("{\"currentServerVersion\":\"myVersion\"}\n"));
+        assertThat(output.toString(), startsWith("{\"currentServerVersion\":\"myVersion\"}"));
     }
-
 }
