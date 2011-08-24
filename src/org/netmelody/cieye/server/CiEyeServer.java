@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.server.configuration.ServerConfiguration;
+import org.netmelody.cieye.server.observation.GovernmentReport;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog;
 import org.netmelody.cieye.server.observation.IntelligenceAgency;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
@@ -26,7 +27,7 @@ public final class CiEyeServer {
                                                       agency.information(),
                                                       new CachedRequestOriginTracker(agency.detective()),
                                                       new IntelligenceAgency(network, agency.detective()),
-                                                      new GovernmentWatchdog(network)));
+                                                      new GovernmentReport(new GovernmentWatchdog(network))));
     private final Connection connection;
     private final InetSocketAddress address;
     
