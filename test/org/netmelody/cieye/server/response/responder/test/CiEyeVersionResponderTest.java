@@ -37,7 +37,7 @@ public class CiEyeVersionResponderTest {
         
         ciEyeVersionResponder.writeTo(response);
         
-        assertThat(output.toString(), is("\"myVersion\"\n"));
+        assertThat(output.toString(), is("{\"currentServerVersion\":\"myVersion\"}\n"));
     }
 
 }

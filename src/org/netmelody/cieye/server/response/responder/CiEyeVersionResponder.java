@@ -8,6 +8,13 @@ import org.netmelody.cieye.server.response.JsonTranslator;
 import org.simpleframework.http.Response;
 
 public final class CiEyeVersionResponder implements CiEyeResponder {
+    
+    public static final class VersionInformation {
+        @SuppressWarnings("unused") private final String currentServerVersion;
+        private VersionInformation(String currentServerVersion) {
+            this.currentServerVersion = currentServerVersion;
+        }
+    }
 
     private final CiEyeServerInformationFetcher configurationFetcher;
 
@@ -19,7 +26,9 @@ public final class CiEyeVersionResponder implements CiEyeResponder {
     public void writeTo(Response response) throws IOException {
         response.set("Content-Type", "application/json");
         response.setDate("Expires", System.currentTimeMillis() + 10000L);
-        response.getPrintStream().println(new JsonTranslator().toJson(configurationFetcher.getVersion()));
+        
+        final VersionInformation versionInformation = new VersionInformation(configurationFetcher.getVersion());
+        response.getPrintStream().println(new JsonTranslator().toJson(versionInformation));
     }
     
 }

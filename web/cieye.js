@@ -370,7 +370,7 @@ ORG.NETMELODY.CIEYE.newVersionChecker = function(scheduler) {
     
     function checkForNewVersion() {
         $.getJSON("/version.json", function(versionJson) {
-            assessVersion(versionJson);
+            assessVersion(versionJson.currentServerVersion);
         });
     }
     
