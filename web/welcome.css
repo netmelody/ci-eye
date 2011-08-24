@@ -48,11 +48,24 @@ body {
     width: 100%;
 }
 #banner {
-    margin: 0 auto 20px;
+    margin: 0 auto 10px;
     width: 940px;
     height: 600px;
     background: url("/welcome.jpg") repeat scroll 0 0 transparent;
     -moz-border-radius: 10px 10px 10px 10px;
+}
+#footer {
+    margin: 0 auto 20px;
+    width: 940px;
+    font-size: 10px;
+    color: #777777;
+    line-height: 6px;
+}
+#footer a {
+    color: #777777;
+}
+#links {
+    float: right;
 }
 #landscapelist {
     padding: 20px 0 0 0;

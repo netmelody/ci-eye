@@ -3,7 +3,7 @@ var ORG = window.ORG ? window.ORG : {};
 ORG.NETMELODY = ORG.NETMELODY ? ORG.NETMELODY : {};
 ORG.NETMELODY.CIEYE = {};
 
-ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
+ORG.NETMELODY.CIEYE.newLandscapeListWidget = function() {
     var landscapeList = $("<ul></ul>");
     
     function displayListItem(landscapeListItemJson) {
@@ -36,7 +36,7 @@ ORG.NETMELODY.CIEYE.newLandscapeListWidget = function(landscapeListDiv) {
     };
 };
 
-ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function(landscapeListDiv) {
+ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function() {
     var settingsLocationSpan = $("<span></span>");
     
     function displayLocation(location) {
@@ -52,6 +52,29 @@ ORG.NETMELODY.CIEYE.newSettingsLocationWidget = function(landscapeListDiv) {
     refresh();
     return {
         "getContent": function() { return settingsLocationSpan; }
+    };
+};
+
+ORG.NETMELODY.CIEYE.newVersionInformationWidget = function() {
+    var versionSpan = $("<span></span>");
+    
+    function displayVersion(versionJson) {
+        var versionText = "Version " + versionJson.currentServerVersion;
+        if (versionJson.currentServerVersion !== versionJson.latestServerVersion) {
+            versionText = versionText + " -- NEW VERSION AVAILABLE (" + versionJson.latestServerVersion + ")";
+        }
+        versionSpan.text(versionText);
+    }
+    
+    function refresh() {
+        $.getJSON("version.json", function(versionJson) {
+            displayVersion(versionJson);
+        });
+    }
+    
+    refresh();
+    return {
+        "getContent": function() { return versionSpan; }
     };
 };
 
@@ -84,9 +107,11 @@ ORG.NETMELODY.CIEYE.newPopup = function(trigger, content) {
 
 $(document).ready(function() {
     var landscapeListWidget = ORG.NETMELODY.CIEYE.newLandscapeListWidget(),
-        settingsLocationWidget = ORG.NETMELODY.CIEYE.newSettingsLocationWidget();
+        settingsLocationWidget = ORG.NETMELODY.CIEYE.newSettingsLocationWidget(),
+        versionInformationWidget = ORG.NETMELODY.CIEYE.newVersionInformationWidget();
     
     $("#landscapelist").append(landscapeListWidget.getContent());
     $("#settingsDir").append(settingsLocationWidget.getContent());
+    $("#versionInformation").append(versionInformationWidget.getContent());
     ORG.NETMELODY.CIEYE.newPopup($("#help"), $("#helptext"));
 });
