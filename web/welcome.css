@@ -15,6 +15,14 @@ body {
     font-size: 30px;
     color: #777777;
 }
+#attribution {
+    font-weight: normal;
+    font-size: 10px;
+}
+#attribution a {
+    color: #777777;
+    text-decoration: none;
+}
 #help {
     float: right;
     font-size: 10px;
