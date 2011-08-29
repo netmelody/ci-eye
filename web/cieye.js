@@ -196,8 +196,8 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
 
     function targetComparator(a, b) {
-        function compare(a, b) {
-            return (a < b) ? -1 : ((a === b) ? 0 : 1);
+        function compare(obj1, obj2) {
+            return (obj1 < obj2) ? -1 : ((obj1 === obj2) ? 0 : 1);
         }
         
         if (a.status !== b.status) {
