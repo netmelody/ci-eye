@@ -1,5 +1,4 @@
-[![][logo]][website]
-
+[![][logo]][website] *because it's not easy being green*
 CI-Eye
 ======
 Copyright &copy; 2011-, [Tom Denley]. Licensed under [Apache 2 License].
