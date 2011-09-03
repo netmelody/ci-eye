@@ -391,7 +391,13 @@ $(document).ready(function() {
     
     var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
-        updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler);
+        updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
+        path = $(location).attr("pathname");
+    
+    if (path.match(/\/$/)) {
+        path = path.slice(0, -1);
+    }
+    document.title = decodeURIComponent(path.substr((path.lastIndexOf("/") + 1))) + " - " + document.title;
     
     $(window).bind("resize", function() {
         radiator.refresh();
