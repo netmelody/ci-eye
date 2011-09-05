@@ -57,7 +57,7 @@ public final class DemoModeSpy implements CiSpy {
         final List<TargetDigest> digests = newArrayList();
         
         for (String targetName : demoCiServers.get(featureName).getTargetNames()) {
-            TargetDigest digest = new TargetDigest(featureName+targetName, featureName+targetName, targetName, UNKNOWN);
+            TargetDigest digest = new TargetDigest(featureName+targetName, "http://www.example.com/", targetName, UNKNOWN);
             digests.add(digest);
             recognisedTargets.put(digest.id(), new TargetInfo(featureName, targetName));
         }
@@ -71,10 +71,11 @@ public final class DemoModeSpy implements CiSpy {
         if (null == targetInfo) {
             return null;
         }
-        return datailsOf(demoCiServers.get(targetInfo.featureName), targetInfo.targetName);
+        return detailsOf(targetInfo.featureName, targetInfo.targetName);
     }
 
-    private TargetDetail datailsOf(DemoModeFakeCiServer ciServer, String targetName) {
+    private TargetDetail detailsOf(String featureName, String targetName) {
+        final DemoModeFakeCiServer ciServer = demoCiServers.get(featureName);
         final TargetData data = ciServer.getDataFor(targetName);
         final List<RunningBuild> builds = new ArrayList<RunningBuild>();
         
@@ -86,7 +87,7 @@ public final class DemoModeSpy implements CiSpy {
         }
         
         Status status = data.green ? Status.GREEN : (data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION);
-        return new TargetDetail(targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
+        return new TargetDetail(featureName+targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
     }
 
     @Override
