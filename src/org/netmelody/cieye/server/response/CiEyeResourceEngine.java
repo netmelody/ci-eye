@@ -9,6 +9,7 @@ import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.resource.CiEyeResource;
 import org.netmelody.cieye.server.response.resource.DohHandler;
 import org.netmelody.cieye.server.response.resource.NotFoundResource;
+import org.netmelody.cieye.server.response.resource.RedirectResource;
 import org.netmelody.cieye.server.response.resource.TargetNotationHandler;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.FileResponder;
@@ -70,6 +71,9 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
             
             if ("landscapes".equals(path[0])) {
+                if (!target.getPath().getPath().endsWith("/")) {
+                    return new RedirectResource(target.getPath().getPath() + "/");
+                }
                 return new CiEyeResource(new FileResponder("cieye.html"));
             }
         }
