@@ -1,7 +1,5 @@
 package org.netmelody.cieye.server.response.resource.test;
 
-import java.io.IOException;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
