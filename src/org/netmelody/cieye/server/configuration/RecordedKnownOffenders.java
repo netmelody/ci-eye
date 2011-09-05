@@ -11,7 +11,6 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.skip;
@@ -57,7 +56,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     private Function<Biometric, Sponsor> toSponsor() {
         return new Function<Biometric, Sponsor>() {
             @Override public Sponsor apply(Biometric bio) {
-                return bio.sponsor;
+                return bio.sponsor();
             }
         };
     }
@@ -65,7 +64,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     private Predicate<Biometric> foundAt(final String crimescene) {
         return new Predicate<Biometric>() {
             @Override public boolean apply(Biometric bio) {
-                return bio.matches(crimescene);
+                return bio.foundAt(crimescene);
             }
         };
     }
@@ -100,35 +99,5 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
                 return line.trim().length() > 0;
             }
         };
-    }
-    
-    private static final class Biometric {
-        private final Sponsor sponsor;
-        private final Iterable<Pattern> fingerprints;
-        
-        public Biometric(Sponsor sponsor, Iterable<String> fingerprints) {
-            this.sponsor = sponsor;
-            this.fingerprints = transform(fingerprints, toPattern());
-        }
-        
-        public boolean matches(final String crimescene) {
-            return any(fingerprints, foundAt(crimescene));
-        }
-        
-        private static Predicate<Pattern> foundAt(final String crimescene) {
-            return new Predicate<Pattern>() {
-                @Override public boolean apply(Pattern fingerprint) {
-                    return fingerprint.matcher(crimescene).find();
-                }
-            };
-        }
-        
-        private static Function<String, Pattern> toPattern() {
-            return new Function<String, Pattern>() {
-                @Override public Pattern apply(String keyword) {
-                    return Pattern.compile("\\b" + Pattern.quote(keyword.trim()) + "\\b", Pattern.CASE_INSENSITIVE);
-                }
-            };
-        }
     }
 }

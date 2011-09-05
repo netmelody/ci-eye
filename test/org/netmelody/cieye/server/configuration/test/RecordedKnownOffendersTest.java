@@ -58,6 +58,11 @@ public final class RecordedKnownOffendersTest {
     }
     
     @Test public void
+    looksUpOffendersWhoseFingerprintsAreWrappedInHyphens() {
+        assertThat(offenders.search("doh"), contains(new Sponsor("", "/pictures/doh.png")));
+    }
+    
+    @Test public void
     looksUpMultipleOffenders() {
         assertThat(offenders.search("vlad/stupid:"), contains(new Sponsor("", "/pictures/vlad.png"),
                                                               new Sponsor("", "/pictures/stupid.png")));
