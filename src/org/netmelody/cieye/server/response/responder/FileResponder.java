@@ -40,5 +40,9 @@ public final class FileResponder implements CiEyeResponder {
             IOUtils.closeQuietly(body);
         }
     }
+
+    public boolean exists() {
+        return null != getClass().getResource("/" + name);
+    }
 }
 

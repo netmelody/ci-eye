@@ -62,7 +62,11 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             if ("version.json".equals(path[0])) {
                 return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher, updateChecker));
             }
-            return new CiEyeResource(new FileResponder(path[0]));
+            
+            final FileResponder staticFile = new FileResponder(path[0]);
+            if (staticFile.exists()) {
+                return new CiEyeResource(staticFile);
+            }
         }
         
         if (path.length == 2) {
