@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 
-public final class ServerInformation implements  CiEyeServerInformationFetcher {
+public final class ServerInformation implements CiEyeServerInformationFetcher {
 
     private static final Log LOG = LogFactory.getLog(ServerInformation.class);
     private final String settingsLocation;
