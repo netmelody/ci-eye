@@ -79,15 +79,15 @@ public final class DemoModeSpy implements CiSpy {
         final TargetData data = ciServer.getDataFor(targetName);
         final List<RunningBuild> builds = new ArrayList<RunningBuild>();
         
-        String commentry = "";
+        final StringBuilder commentry = new StringBuilder();
         for (BuildData buildData : data.builds) {
             builds.add(new RunningBuild(Percentage.percentageOf(buildData.progress),
                                  buildData.green ? Status.GREEN : data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION));
-            commentry += buildData.checkinComments;
+            commentry.append(buildData.checkinComments);
         }
         
         Status status = data.green ? Status.GREEN : (data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION);
-        return new TargetDetail(featureName+targetName, data.url, targetName, status, 0L, builds, detective.search(commentry));
+        return new TargetDetail(featureName+targetName, data.url, targetName, status, 0L, builds, detective.search(commentry.toString()));
     }
 
     @Override
