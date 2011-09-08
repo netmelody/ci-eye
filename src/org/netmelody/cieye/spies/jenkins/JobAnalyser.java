@@ -169,23 +169,34 @@ public final class JobAnalyser {
             builds.add(job.lastBuild);
         }
         
-        final long duration = this.buildDurationFetcher.lastGoodDurationOf(job);        
-        return newArrayList(transform(builds, toRunningBuild(duration)));
+        final long duration = this.buildDurationFetcher.lastGoodDurationOf(job);
+        return newArrayList(transform(filter(transform(builds, toBuildDetail()), building()), toRunningBuild(duration)));
     }
-
+    
     private Predicate<Build> after(final long lastCompletedJobNumber) {
         return new Predicate<Build>() {
             @Override public boolean apply(Build build) { return build.number > lastCompletedJobNumber; }
         };
     }
     
-    private Function<Build, RunningBuild> toRunningBuild(final long duration) {
-        return new Function<Build, RunningBuild>() {
-            @Override
-            public RunningBuild apply(Build build) {
-                final BuildDetail buildDetail = buildDetailFetcher.detailsOf(build.url);
-                final Percentage progress = percentageOf(new Date().getTime() - buildDetail.timestamp, duration);
-                return buildAt(progress);
+    private Function<Build, BuildDetail> toBuildDetail() {
+        return new Function<Build, BuildDetail>() {
+            @Override public BuildDetail apply(Build build) {
+                return buildDetailFetcher.detailsOf(build.url);
+            }
+        };
+    }
+
+    private Predicate<BuildDetail> building() {
+        return new Predicate<BuildDetail>() {
+            @Override public boolean apply(BuildDetail build) { return build.building; }
+        };
+    }
+    
+    private Function<BuildDetail, RunningBuild> toRunningBuild(final long duration) {
+        return new Function<BuildDetail, RunningBuild>() {
+            @Override public RunningBuild apply(BuildDetail buildDetail) {
+                return buildAt(percentageOf(new Date().getTime() - buildDetail.timestamp, duration));
             }
         };
     }
