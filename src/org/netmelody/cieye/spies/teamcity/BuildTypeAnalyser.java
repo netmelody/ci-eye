@@ -33,7 +33,7 @@ public final class BuildTypeAnalyser {
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(buildType);
         
         if (buildTypeDetail.paused) {
-            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, Status.DISABLED);
+            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, Status.DISABLED);
         }
         
         final Set<Sponsor> sponsors = new HashSet<Sponsor>();
@@ -59,7 +59,7 @@ public final class BuildTypeAnalyser {
             }
         }
         
-        return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, currentStatus, startTime, runningBuilds, sponsors);
+        return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, currentStatus, startTime, runningBuilds, sponsors);
     }
 
     private Set<Sponsor> sponsorsOf(BuildDetail build) {

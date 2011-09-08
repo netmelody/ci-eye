@@ -43,7 +43,7 @@ public final class TeamCitySpy implements CiSpy {
         final List<TargetDigest> digests = newArrayList();
         
         for (BuildType buildType : buildTypes) {
-            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl, buildType.name, UNKNOWN);
+            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, UNKNOWN);
             digests.add(targetDigest);
             recognisedBuildTypes.put(targetDigest.id(), buildType);
         }

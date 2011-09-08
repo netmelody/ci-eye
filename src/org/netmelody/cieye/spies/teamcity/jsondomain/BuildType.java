@@ -7,4 +7,8 @@ public class BuildType {
     public String projectName;
     public String projectId;
     public String webUrl;
+    
+    public String webUrl() {
+        return webUrl + "&guest=1";
+    }
 }
