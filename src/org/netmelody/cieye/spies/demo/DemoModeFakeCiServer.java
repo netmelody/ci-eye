@@ -74,7 +74,7 @@ public final class DemoModeFakeCiServer {
     private static final class BuildTarget {
         private final Random random = new Random();
         private final String targetName;
-        private final String url = "http://www.example.com/";
+        private final String url;
         
         private boolean green;
         private String note = "";
@@ -83,6 +83,7 @@ public final class DemoModeFakeCiServer {
 
         public BuildTarget(String targetName) {
             this.targetName = targetName;
+            this.url = "http://www.example.com/" + targetName;
             green = random.nextInt(5) != 0;
             
             if (random.nextInt(5) == 0) {
@@ -112,7 +113,7 @@ public final class DemoModeFakeCiServer {
             while (buildIterator.hasNext()) {
                 ActiveBuild build = buildIterator.next();
                 build.advanceBy(percent);
-                if (build.progress == 100) {
+                if (build.complete()) {
                     buildIterator.remove();
                     green = build.green;
                     note = "";
@@ -136,23 +137,28 @@ public final class DemoModeFakeCiServer {
             progress = random.nextInt(101);
         }
 
+        public synchronized boolean complete() {
+            return progress >= 100;
+        }
+
         public ActiveBuild(int initialProgress) {
             progress = initialProgress;
         }
 
         public void advanceBy(int percent) {
-            final int oldProgress;
+            int prob = 0;
             
-            synchronized(this) {
-                oldProgress = progress;
+            synchronized (this) {
+                final int oldProgress = progress;
                 progress = Math.min(100, progress + percent);
+                
+                if (oldProgress > 90 || progress < 60) {
+                    return;
+                }
+                
+                prob = Math.max(Math.min(progress, 90) - 60, 0) - Math.min(oldProgress - 60, 0);
             }
             
-            if (oldProgress > 90 || progress < 60) {
-                return;
-            }
-            
-            int prob = Math.max(Math.min(progress, 90) - 60, 0) - Math.min(oldProgress - 60, 0);
             if (random.nextInt(100) < prob) {
                 green = false;
             }
