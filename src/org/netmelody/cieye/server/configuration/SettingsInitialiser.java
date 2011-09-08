@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public final class SettingsInitialiser {
+    
+    private static final Log LOG = LogFactory.getLog(SettingsInitialiser.class);
     
     private final File homeDir;
     private final File viewsFile;
@@ -34,10 +38,19 @@ public final class SettingsInitialiser {
     private void startLogger() throws IOException {
         final File loggingPropertiesFile = new File(homeDir, "logging.properties");
         if (!loggingPropertiesFile.exists()) {
-            FileUtils.copyInputStreamToFile(resource("logging.properties.template"), loggingPropertiesFile);
-            new File(homeDir, "logs").mkdir();
+            initialiseLogging(loggingPropertiesFile);
         }
         System.setProperty("java.util.logging.config.file", loggingPropertiesFile.getCanonicalPath());
+    }
+
+    public void initialiseLogging(final File loggingPropertiesFile) throws IOException {
+        FileUtils.copyInputStreamToFile(resource("logging.properties.template"), loggingPropertiesFile);
+        
+        final String logsDirName = "logs";
+        final boolean createdLogsDir = new File(homeDir, logsDirName).mkdir();
+        if (!createdLogsDir) {
+            LOG.warn("Failed to create logs directory at" + homeDir.getPath() + File.pathSeparator + logsDirName);
+        }
     }
 
     private void terraform() throws IOException {
