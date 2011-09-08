@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
