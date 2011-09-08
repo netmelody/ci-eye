@@ -23,6 +23,7 @@ public final class JobDetail extends Job {
     public List<Action> actions;
     public Build firstBuild;
     public Build lastBuild;
+    public Build lastCompletedBuild;
     public Build lastFailedBuild;
     public Build lastStableBuild;
     public Build lastSuccessfulBuild;

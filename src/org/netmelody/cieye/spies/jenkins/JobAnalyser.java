@@ -1,10 +1,13 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.unmodifiableSet;
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +27,9 @@ import org.netmelody.cieye.spies.jenkins.jsondomain.ChangeSetItem;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 import org.netmelody.cieye.spies.jenkins.jsondomain.User;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 
 public final class JobAnalyser {
     
@@ -153,17 +159,34 @@ public final class JobAnalyser {
     }
     
     private List<RunningBuild> buildsFor(final JobDetail job) {
-        final List<RunningBuild> result = new ArrayList<RunningBuild>();
-        
         if (!job.building() || job.lastBuild == null) {
-            return result;
+            return newArrayList();
         }
         
-        final BuildDetail currentBuild = this.buildDetailFetcher.detailsOf(job.lastBuild.url);
-        final Percentage progress = percentageOf(new Date().getTime() - currentBuild.timestamp,
-                                                 this.buildDurationFetcher.lastGoodDurationOf(job));
-        result.add(buildAt(progress));
+        final long lastCompletedJobNumber = (job.lastCompletedBuild == null) ? 0L : job.lastCompletedBuild.number;
+        final Collection<Build> builds = newArrayList(filter(job.builds(), after(lastCompletedJobNumber)));
+        if (builds.isEmpty()) {
+            builds.add(job.lastBuild);
+        }
         
-        return result;
+        final long duration = this.buildDurationFetcher.lastGoodDurationOf(job);        
+        return newArrayList(transform(builds, toRunningBuild(duration)));
+    }
+
+    private Predicate<Build> after(final long lastCompletedJobNumber) {
+        return new Predicate<Build>() {
+            @Override public boolean apply(Build build) { return build.number > lastCompletedJobNumber; }
+        };
+    }
+    
+    private Function<Build, RunningBuild> toRunningBuild(final long duration) {
+        return new Function<Build, RunningBuild>() {
+            @Override
+            public RunningBuild apply(Build build) {
+                final BuildDetail buildDetail = buildDetailFetcher.detailsOf(build.url);
+                final Percentage progress = percentageOf(new Date().getTime() - buildDetail.timestamp, duration);
+                return buildAt(progress);
+            }
+        };
     }
 }
