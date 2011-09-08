@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +42,7 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
         private final ArrayList<Tag> names;
         public Tags(Iterable<Tag> tagNames) {
             this.names = Lists.newArrayList(tagNames);
-            Collections.sort(names);
+            Collections.sort(names, Tag.COMPARATOR);
         }
         public String latest() {
             if (names.isEmpty()) {
@@ -51,9 +52,21 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
         }
     }
     
-    public static final class Tag implements Comparable<Tag> {
+    public static final class Tag {
         private static final Pattern REGEX = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)([0-9A-Za-z-]*)");
 
+        private static final Comparator<Tag> COMPARATOR = new Comparator<Tag>() {
+            @Override
+            public int compare(Tag o1, Tag o2) {
+                for (int i = 0; i < 3; i++) {
+                    if (o1.version[i] != o2.version[i]) {
+                        return o1.version[i] > o2.version[i] ? 1 : -1;
+                    }
+                }
+                return o1.specialSuffix.compareTo(o2.specialSuffix);
+            }
+        };
+        
         private final String name;
         private final int[] version;
         private final String specialSuffix;
@@ -64,16 +77,6 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
             matcher.matches();
             version = new int[] {parseInt(matcher.group(1)), parseInt(matcher.group(2)), parseInt(matcher.group(3))};
             specialSuffix = "".equals(matcher.group(4)) ? "~" : matcher.group(4);
-        }
-
-        @Override
-        public int compareTo(Tag o) {
-            for (int i = 0; i < 3; i++) {
-                if (version[i] != o.version[i]) {
-                    return version[i] > o.version[i] ? 1 : -1;
-                }
-            }
-            return specialSuffix.compareTo(o.specialSuffix);
         }
     }
     
