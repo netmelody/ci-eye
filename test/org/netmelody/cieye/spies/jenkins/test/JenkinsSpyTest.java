@@ -5,22 +5,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
-import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
 import org.netmelody.cieye.spies.jenkins.JenkinsSpy;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
@@ -29,25 +26,20 @@ import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 import org.netmelody.cieye.spies.jenkins.jsondomain.ViewDetail;
 
 import com.google.common.collect.Lists;
+import com.google.gson.GsonBuilder;
 
 public final class JenkinsSpyTest {
 
     private final Mockery context = new Mockery();
     
-    private final CommunicationNetwork network = context.mock(CommunicationNetwork.class);
     private final KnownOffendersDirectory detective = context.mock(KnownOffendersDirectory.class);
     private final Contact contact = context.mock(Contact.class);
     
-    @Before
-    public void setup() {
-        context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(SimpleDateFormat.class))); will(returnValue(contact));
-        }});
-    }
-    
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), new RecordedKnownOffenders(new SettingsFile(new File(""))));
+        final GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        final Contact realContact = new JsonRestRequester(builder.create());
+        final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new RecordedKnownOffenders(new SettingsFile(new File(""))), realContact);
         
         final TargetDigestGroup digests = witness.targetsConstituting(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
         
@@ -56,7 +48,7 @@ public final class JenkinsSpyTest {
     
     @Test public void
     lazilyRetrievesJobDetails() {
-        final JenkinsSpy spy = new JenkinsSpy("myEndpoint", network, detective);
+        final JenkinsSpy spy = new JenkinsSpy("myEndpoint", detective, contact);
         
         context.checking(new Expectations() {{
             allowing(contact).makeJsonRestCall(with(any(String.class)), with(Server.class));

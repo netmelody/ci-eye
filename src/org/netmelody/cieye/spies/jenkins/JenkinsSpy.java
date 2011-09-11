@@ -4,7 +4,6 @@ import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
+import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.View;
@@ -35,8 +34,8 @@ public final class JenkinsSpy implements CiSpy {
     
     private final Map<TargetId, Job> recognisedJobs = newHashMap();
     
-    public JenkinsSpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
-        this.communicator = new JenkinsCommunicator(endpoint, "ci", "", network.makeContact(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
+    public JenkinsSpy(String endpoint, KnownOffendersDirectory detective, Contact contact) {
+        this.communicator = new JenkinsCommunicator(endpoint, "ci", "", contact);
         this.laboratory = new JobLaboratory(communicator, detective);
     }
 
