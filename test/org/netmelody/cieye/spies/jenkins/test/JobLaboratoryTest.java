@@ -1,8 +1,10 @@
 package org.netmelody.cieye.spies.jenkins.test;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import org.junit.Test;
+import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequesterBuilder;
@@ -14,7 +16,8 @@ public final class JobLaboratoryTest {
 
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
-        final JenkinsCommunicator communicator = new JenkinsCommunicator("http://ci.jenkins-ci.org", new JsonRestRequesterBuilder(), "", "");
+        final Contact contact = new JsonRestRequesterBuilder().makeContact(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+        final JenkinsCommunicator communicator = new JenkinsCommunicator("http://ci.jenkins-ci.org", "", "", contact);
         final JobLaboratory lab = new JobLaboratory(communicator, new RecordedKnownOffenders(new SettingsFile(new File(""))));
 
         final Job job = new Job();

@@ -4,6 +4,7 @@ import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public final class JenkinsSpy implements CiSpy {
     private final Map<TargetId, Job> recognisedJobs = newHashMap();
     
     public JenkinsSpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
-        this.communicator = new JenkinsCommunicator(endpoint, network, "ci", "");
+        this.communicator = new JenkinsCommunicator(endpoint, "ci", "", network.makeContact(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
         this.laboratory = new JobLaboratory(communicator, detective);
     }
 

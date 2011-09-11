@@ -1,10 +1,8 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.spies.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
@@ -20,9 +18,9 @@ public final class JenkinsCommunicator {
     private final String username;
     private final String password;
 
-    public JenkinsCommunicator(String endpoint, CommunicationNetwork network, String username, String password) {
+    public JenkinsCommunicator(String endpoint, String username, String password, Contact contact) {
         this.endpoint = endpoint;
-        this.contact = network.makeContact(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+        this.contact = contact;
         this.username = username;
         this.password = password;
     }
