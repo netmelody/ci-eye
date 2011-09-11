@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 
 import org.hamcrest.Matchers;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.Status;
@@ -17,6 +18,7 @@ import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
 import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.spies.jenkins.JobLaboratory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
+import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 
 import com.google.gson.GsonBuilder;
 
@@ -28,6 +30,7 @@ public final class JobLaboratoryTest {
     private final KnownOffendersDirectory directory = context.mock(KnownOffendersDirectory.class);
     
     private final JobLaboratory jobLab = new JobLaboratory(new JenkinsCommunicator("ep", "user", "pass", contact), directory);
+    private final Job job = defaultJob();
     
     @Test public void
     canPullFromTheJenkinsLiveInstance() {
@@ -35,7 +38,6 @@ public final class JobLaboratoryTest {
         final JenkinsCommunicator communicator = new JenkinsCommunicator("http://ci.jenkins-ci.org", "", "", contact);
         final JobLaboratory lab = new JobLaboratory(communicator, new RecordedKnownOffenders(new SettingsFile(new File(""))));
 
-        final Job job = new Job();
         job.url = "http://ci.jenkins-ci.org/view/Jenkins%20core/job/jenkins_pom/";
         
         lab.analyseJob(job);
@@ -44,13 +46,32 @@ public final class JobLaboratoryTest {
     
     @Test public void
     returnsInstantlyForAGreenJobThatIsNotBuilding() {
-        final Job job = new Job();
-        job.name = "jobName";
-        job.url = "jobUrl";
-        job.color = "blue";
         
         TargetDetail target = jobLab.analyseJob(job);
         
         assertThat(target.status(), Matchers.is(Status.GREEN));
+    }
+
+    @Test public void
+    alwaysAnalysesARedBuild() {
+        job.color = "red";
+        final JobDetail jobDetail = new JobDetail();
+        jobDetail.color = "red";
+        
+        context.checking(new Expectations() {{
+            allowing(contact).makeJsonRestCall("jobUrl/api/json", JobDetail.class); will(returnValue(jobDetail));
+        }});
+        
+        TargetDetail target = jobLab.analyseJob(job);
+        
+        assertThat(target.status(), Matchers.is(Status.BROKEN));
+    }
+    
+    private Job defaultJob() {
+        final Job job = new Job();
+        job.name = "jobName";
+        job.url = "jobUrl";
+        job.color = "blue";
+        return job;
     }
 }
