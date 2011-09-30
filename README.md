@@ -15,7 +15,7 @@ CI-Eye requires no installation and almost no setup.
 
 Downloads
 ---------
-The Ci-Eye executable JAR file can be downloaded from GitHub [downloads].
+The CI-Eye executable JAR file can be downloaded from GitHub [downloads].
 
 Source
 ------

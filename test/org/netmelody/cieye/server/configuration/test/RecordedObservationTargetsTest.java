@@ -37,7 +37,7 @@ public final class RecordedObservationTargetsTest {
     
     @Test public void
     readsLandscapesFromFile() {
-        assertThat(targets.landscapes().landscapeNamed("Ci-eye Demo"), is(not(nullValue())));
+        assertThat(targets.landscapes().landscapeNamed("CI-eye Demo"), is(not(nullValue())));
         assertThat(targets.landscapes().landscapeNamed("Public Live"), is(not(nullValue())));
     }
     
@@ -47,6 +47,6 @@ public final class RecordedObservationTargetsTest {
         assertThat(features, contains(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")),
                                       new Feature("Main (trunk, branches, and alternative builds)", "http://hudson.magnolia-cms.com", new CiServerType("HUDSON")),
                                       new Feature("Gradle", "http://teamcity.jetbrains.com", new CiServerType("TEAMCITY")),
-                                      new Feature("Ci-Eye", "http://teamcity.codebetter.com", new CiServerType("TEAMCITY"))));
+                                      new Feature("CI-Eye", "http://teamcity.codebetter.com", new CiServerType("TEAMCITY"))));
     }
 }
