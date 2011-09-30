@@ -1,9 +1,5 @@
 package org.netmelody.cieye.spies.demo;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +18,23 @@ import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.BuildData;
 import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.TargetData;
 
 import com.google.common.base.Function;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import static com.google.common.cache.CacheLoader.from;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
 
 public final class DemoModeSpy implements CiSpy {
 
-    private final Map<String, DemoModeFakeCiServer> demoCiServers =
-        new MapMaker().makeComputingMap(new Function<String, DemoModeFakeCiServer>() {
+    private final Cache<String, DemoModeFakeCiServer> demoCiServers =
+        CacheBuilder.newBuilder().build(from(new Function<String, DemoModeFakeCiServer>() {
             @Override
             public DemoModeFakeCiServer apply(String featureName) {
                 return new DemoModeFakeCiServer(featureName);
             }
-        });
+        }));
     
     private final KnownOffendersDirectory detective;
 
@@ -56,7 +58,7 @@ public final class DemoModeSpy implements CiSpy {
         final String featureName = feature.name();
         final List<TargetDigest> digests = newArrayList();
         
-        for (String targetName : demoCiServers.get(featureName).getTargetNames()) {
+        for (String targetName : demoCiServers.getUnchecked(featureName).getTargetNames()) {
             TargetDigest digest = new TargetDigest(featureName+targetName, "http://www.example.com/", targetName, UNKNOWN);
             digests.add(digest);
             recognisedTargets.put(digest.id(), new TargetInfo(featureName, targetName));
@@ -75,7 +77,7 @@ public final class DemoModeSpy implements CiSpy {
     }
 
     private TargetDetail detailsOf(String featureName, String targetName) {
-        final DemoModeFakeCiServer ciServer = demoCiServers.get(featureName);
+        final DemoModeFakeCiServer ciServer = demoCiServers.getUnchecked(featureName);
         final TargetData data = ciServer.getDataFor(targetName);
         final List<RunningBuild> builds = new ArrayList<RunningBuild>();
         
@@ -97,7 +99,7 @@ public final class DemoModeSpy implements CiSpy {
         }
         
         final TargetInfo targetInfo = recognisedTargets.get(target);
-        demoCiServers.get(targetInfo.featureName).addNote(targetInfo.targetName, note);
+        demoCiServers.getUnchecked(targetInfo.featureName).addNote(targetInfo.targetName, note);
         return true;
     }
 }

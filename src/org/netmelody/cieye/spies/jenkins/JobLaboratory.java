@@ -1,19 +1,20 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import java.util.Map;
-
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 
 import com.google.common.base.Function;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import static com.google.common.cache.CacheLoader.from;
 
 public final class JobLaboratory {
 
     private final JenkinsCommunicator communicator;
     private final KnownOffendersDirectory detective;
-    private final Map<String, JobAnalyser> analyserMap = new MapMaker().makeComputingMap(toAnalysers());
+    private final Cache<String, JobAnalyser> analyserMap = CacheBuilder.newBuilder().build(from(toAnalysers()));
     
     public JobLaboratory(JenkinsCommunicator communicator, KnownOffendersDirectory detective) {
         this.communicator = communicator;
@@ -21,12 +22,12 @@ public final class JobLaboratory {
     }
        
     public TargetDetail analyseJob(Job jobDigest) {
-        return analyserMap.get(jobDigest.url).analyse(jobDigest);
+        return analyserMap.getUnchecked(jobDigest.url).analyse(jobDigest);
     }
 
     public String lastBadBuildUrlFor(Job jobDigest) {
-        if (analyserMap.containsKey(jobDigest.url)) {
-            return analyserMap.get(jobDigest.url).lastBadBuildUrl();
+        if (analyserMap.asMap().containsKey(jobDigest.url)) {
+            return analyserMap.getUnchecked(jobDigest.url).lastBadBuildUrl();
         }
         return "";
     }
