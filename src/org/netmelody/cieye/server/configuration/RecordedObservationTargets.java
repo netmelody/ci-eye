@@ -44,7 +44,7 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
         final List<Landscape> landscapes = extractLandscapesFrom(viewsFile.readContent());
         
         if (landscapes.isEmpty()) {
-            this.landscapeGroup = new LandscapeGroup(newArrayList(new Landscape("Ci-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
+            this.landscapeGroup = new LandscapeGroup(newArrayList(new Landscape("CI-eye Demo", new Feature("My Product", "", new CiServerType("DEMO")))));
             return;
         }
         

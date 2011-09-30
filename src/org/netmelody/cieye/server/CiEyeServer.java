@@ -40,10 +40,10 @@ public final class CiEyeServer {
         final SocketAddress socketAddress = connection.connect(address);
         
         if (socketAddress instanceof InetSocketAddress) {
-            System.out.println("Starting Ci-Eye server on port: " + ((InetSocketAddress)socketAddress).getPort());
+            System.out.println("Starting CI-Eye server on port: " + ((InetSocketAddress)socketAddress).getPort());
             return;
         }
         
-        System.out.println("Starting Ci-Eye server on: " + socketAddress.toString());
+        System.out.println("Starting CI-Eye server on: " + socketAddress.toString());
     }
 }
