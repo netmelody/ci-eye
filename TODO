@@ -5,3 +5,4 @@ indicate when targets are pending a build, but are in the queue
 have another think on logging, and perhaps expose the log as a page.
 ensure identities have no 'business' meaning
 when all-green and nothing building, desktop-mode should indicate this.
+bug with multi-build in Jenkins
