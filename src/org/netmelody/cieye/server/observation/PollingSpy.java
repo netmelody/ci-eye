@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDetailGroup;
@@ -31,6 +33,8 @@ import com.google.common.collect.Maps;
 
 public final class PollingSpy implements CiSpyHandler {
 
+    private static final Log LOG = LogFactory.getLog(PollingSpy.class);
+    
     private static final long POLLING_PERIOD_SECONDS = 5L;
     private static final long CUTOFF_PERIOD_MINUTES = 15L;
     
@@ -144,6 +148,13 @@ public final class PollingSpy implements CiSpyHandler {
     }
     
     private final class StatusUpdater implements Runnable {
-        @Override public void run() { update(); }
+        @Override public void run() {
+            try {
+                update();
+            }
+            catch (Exception e) {
+                LOG.fatal("Status update failed.", e);
+            }
+        }
     }
 }
