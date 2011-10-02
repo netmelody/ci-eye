@@ -1,10 +1,11 @@
 package org.netmelody.cieye.server.observation;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,7 @@ import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Maps;
@@ -30,31 +32,31 @@ import com.google.common.collect.Maps;
 public final class PollingSpy implements CiSpyHandler {
 
     private static final long POLLING_PERIOD_SECONDS = 5L;
-    private static final long CLEANUP_PERIOD_MINUTES = 15L;
+    private static final long CUTOFF_PERIOD_MINUTES = 15L;
     
     private final CiSpy delegate;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-    private final ConcurrentMap<Feature, Long> trackedFeatures = new MapMaker().makeMap();
+    private final ConcurrentMap<Feature, Long> requests = new MapMaker().makeMap();
     private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
     
     public PollingSpy(CiSpy delegate) {
         this.delegate = delegate;
         executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
-        executor.scheduleWithFixedDelay(new StaleEntryCleaner(), 15L, CLEANUP_PERIOD_MINUTES, TimeUnit.MINUTES);
     }
     
     @Override
     public TargetDetailGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
-        trackedFeatures.put(feature, currentTimeMillis);
+        requests.put(feature, currentTimeMillis);
+        
         final StatusResult result = statuses.get(feature);
         if (null != result) {
             return result.status();
         }
         
         final TargetDetailGroup digest = new TargetDetailGroup(delegate.targetsConstituting(feature));
-        statuses.putIfAbsent(feature, new StatusResult(digest, currentTimeMillis));
+        statuses.putIfAbsent(feature, new StatusResult(digest));
         
         return digest;
     }
@@ -74,7 +76,10 @@ public final class PollingSpy implements CiSpyHandler {
     }
     
     private void update() {
-        for (Feature feature : trackedFeatures.keySet()) {
+        final long cutoffTime = currentTimeMillis() - TimeUnit.MINUTES.toMillis(CUTOFF_PERIOD_MINUTES);
+        final Iterable<Feature> features = transform(filter(requests.entrySet(), requestedAfter(cutoffTime)), toFeature());
+        
+        for (Feature feature : features) {
             StatusResult intermediateStatus = statuses.putIfAbsent(feature, new StatusResult());
             if (null == intermediateStatus) {
                 intermediateStatus = new StatusResult();
@@ -90,19 +95,20 @@ public final class PollingSpy implements CiSpyHandler {
                 statuses.put(feature, intermediateStatus);
             }
             
-            statuses.put(feature, new StatusResult(newStatus, currentTimeMillis()));
+            statuses.put(feature, new StatusResult(newStatus));
         }
     }
     
-    private void removeStaleEntries() {
-        final long currentTime = currentTimeMillis();
-        final Iterator<Entry<Feature, Long>> entries = trackedFeatures.entrySet().iterator();
-        while (entries.hasNext()) {
-            final Entry<Feature, Long> entry = entries.next();
-            if (currentTime - entry.getValue() > TimeUnit.MINUTES.toMillis(CLEANUP_PERIOD_MINUTES)) {
-                entries.remove();
-            }
-        }
+    private static Function<Entry<Feature, Long>, Feature> toFeature() {
+        return new Function<Entry<Feature,Long>, Feature>() {
+            @Override public Feature apply(Entry<Feature, Long> input) { return input.getKey(); }
+        };
+    }
+
+    private static Predicate<Entry<?, Long>> requestedAfter(final long cutoffTimeMillis) {
+        return new Predicate<Entry<?, Long>>() {
+            @Override public boolean apply(Entry<?, Long> input) { return input.getValue() > cutoffTimeMillis; }
+        };
     }
     
     private static final class StatusResult {
@@ -110,10 +116,10 @@ public final class PollingSpy implements CiSpyHandler {
         private final long timestamp;
 
         public StatusResult() {
-            this(new ArrayList<TargetDetail>(), currentTimeMillis());
+            this(new ArrayList<TargetDetail>());
         }
-        public StatusResult(Iterable<TargetDetail> status, long timestamp) {
-            this(Maps.uniqueIndex(status, toId()), timestamp);
+        public StatusResult(Iterable<TargetDetail> status) {
+            this(Maps.uniqueIndex(status, toId()), System.currentTimeMillis());
         }
         private StatusResult(ImmutableMap<TargetId, TargetDetail> status, long timestamp) {
             this.status = status;
@@ -139,9 +145,5 @@ public final class PollingSpy implements CiSpyHandler {
     
     private final class StatusUpdater implements Runnable {
         @Override public void run() { update(); }
-    }
-    
-    private final class StaleEntryCleaner implements Runnable {
-        @Override public void run() { removeStaleEntries(); }
     }
 }
