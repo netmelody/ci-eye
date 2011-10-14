@@ -2,13 +2,13 @@ package org.netmelody.cieye.server.response.resource;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.CiSpyAllocator;
-import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.CiSpyHandler;
+import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
@@ -16,7 +16,7 @@ import org.simpleframework.http.resource.Resource;
 
 public final class TargetNotationHandler implements Resource {
 
-    private static final Log LOG = LogFactory.getLog(TargetNotationHandler.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(TargetNotationHandler.class);
     
     private final RequestOriginTracker tracker;
     private final LandscapeFetcher landscapeFetcher;

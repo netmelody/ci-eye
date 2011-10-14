@@ -1,10 +1,5 @@
 package org.netmelody.cieye.server.observation;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.System.currentTimeMillis;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +9,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDetailGroup;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.server.CiSpyHandler;
 
@@ -31,9 +26,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Maps;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.System.currentTimeMillis;
+
 public final class PollingSpy implements CiSpyHandler {
 
-    private static final Log LOG = LogFactory.getLog(PollingSpy.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(PollingSpy.class);
     
     private static final long POLLING_PERIOD_SECONDS = 5L;
     private static final long CUTOFF_PERIOD_MINUTES = 15L;

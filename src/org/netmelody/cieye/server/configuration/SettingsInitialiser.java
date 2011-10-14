@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 
 public final class SettingsInitialiser {
     
-    private static final Log LOG = LogFactory.getLog(SettingsInitialiser.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(SettingsInitialiser.class);
     
     private final File homeDir;
     private final File viewsFile;

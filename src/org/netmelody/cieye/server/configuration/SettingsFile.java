@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 
 public final class SettingsFile {
 
-    private static final Log LOG = LogFactory.getLog(SettingsFile.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(SettingsFile.class);
     
     private final File file;
     

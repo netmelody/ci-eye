@@ -1,15 +1,9 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
@@ -17,6 +11,8 @@ import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -25,9 +21,13 @@ import org.netmelody.cieye.spies.jenkins.jsondomain.View;
 
 import com.google.common.base.Predicate;
 
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+
 public final class JenkinsSpy implements CiSpy {
     
-    private static final Log LOG = LogFactory.getLog(JenkinsSpy.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(JenkinsSpy.class);
     
     private final JenkinsCommunicator communicator;
     private final JobLaboratory laboratory;

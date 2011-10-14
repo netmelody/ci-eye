@@ -2,9 +2,9 @@ package org.netmelody.cieye.server.response.resource;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.response.Prison;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
@@ -13,7 +13,7 @@ import org.simpleframework.http.resource.Resource;
 
 public final class DohHandler implements Resource {
 
-    private static final Log LOG = LogFactory.getLog(DohHandler.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(DohHandler.class);
     
     private final Landscape landscape;
     private final RequestOriginTracker tracker;

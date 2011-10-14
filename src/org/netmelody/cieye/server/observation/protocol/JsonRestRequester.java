@@ -1,7 +1,7 @@
 package org.netmelody.cieye.server.observation.protocol;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.common.base.Function;
@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 
 public final class JsonRestRequester implements Contact {
 
-    private static final Log LOG = LogFactory.getLog(JsonRestRequester.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(JsonRestRequester.class);
     
     private final Gson json;
     private final RestRequester restRequester;

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.jar.Manifest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 
 public final class ServerInformation implements CiEyeServerInformationFetcher {
 
-    private static final Log LOG = LogFactory.getLog(ServerInformation.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(ServerInformation.class);
     private final String settingsLocation;
     
     public ServerInformation(String settingsLocation) {

@@ -2,8 +2,6 @@ package org.netmelody.cieye.server.observation.protocol;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -30,10 +28,12 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 
 public final class RestRequester {
 
-    private static final Log LOG = LogFactory.getLog(RestRequester.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(RestRequester.class);
     
     private final DefaultHttpClient client;
 

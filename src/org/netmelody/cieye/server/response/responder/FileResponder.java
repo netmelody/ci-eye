@@ -6,14 +6,14 @@ import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.netmelody.cieye.core.logging.LogKeeper;
+import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.response.CiEyeResponder;
 import org.simpleframework.http.Response;
 
 public final class FileResponder implements CiEyeResponder {
 
-    private static final Log LOG = LogFactory.getLog(FileResponder.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(FileResponder.class);
     private static final ResourceBundle MIME_TYPES = ResourceBundle.getBundle(FileResponder.class.getName());
     
     private final String name;
