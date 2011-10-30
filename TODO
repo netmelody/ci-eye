@@ -8,3 +8,4 @@ when all-green and nothing building, desktop-mode should indicate this.
 bug with multi-build in Jenkins
 Consider sticky marking
 Consider rewarding build fixers
+lastStartTime is always 0 for Jenkins... fix
