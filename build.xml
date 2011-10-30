@@ -42,7 +42,10 @@
             <fileset dir="src" excludes="**/*.java"/>
         </copy>
         <copy todir="build/main">
-            <fileset dir="web" excludes="**/*.java"/>
+            <fileset dir="web"/>
+        </copy>
+        <copy todir="build/main">
+            <fileset dir="vendor/jslib"/>
         </copy>
     </target>
 
