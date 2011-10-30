@@ -26,7 +26,7 @@
     <target name="compile-src" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
-        <javac srcdir="src"
+        <javac srcdir="src/main/java"
                includes="**"
                includeantruntime="false"
                encoding="utf-8"
@@ -39,10 +39,10 @@
         </javac>
         
         <copy todir="build/main">
-            <fileset dir="src" excludes="**/*.java"/>
+            <fileset dir="src/main/java" excludes="**/*.java"/>
         </copy>
         <copy todir="build/main">
-            <fileset dir="web"/>
+            <fileset dir="src/main/webapp"/>
         </copy>
         <copy todir="build/main">
             <fileset dir="vendor/jslib"/>
@@ -52,7 +52,7 @@
     <target name="compile-test" description="Compile java test source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/test"/>
-        <javac srcdir="test"
+        <javac srcdir="src/test/java"
                includes="**"
                includeantruntime="false"
                encoding="utf-8"
@@ -69,10 +69,10 @@
         </javac>
         
         <copy todir="build/test">
-            <fileset dir="test" excludes="**/*.java"/>
+            <fileset dir="src/test/java" excludes="**/*.java"/>
         </copy>
         <copy todir="build/test">
-            <fileset dir="jstest" excludes="**/*.java"/>
+            <fileset dir="src/test/webapp"/>
         </copy>
         <copy todir="build/test">
             <fileset dir="build/main"/>
@@ -91,7 +91,7 @@
           
             <formatter type="plain"/>
             <batchtest fork="yes" todir="build/doc">
-                <fileset dir="test">
+                <fileset dir="src/test/java">
                     <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
