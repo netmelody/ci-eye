@@ -26,7 +26,7 @@ public final class CiEye {
             port = Integer.parseInt(args[0]);
         }
         catch (Exception e) {
-            System.out.println("Usage: CiEye port");
+            System.out.println("Usage: java -jar ci-eye-x.y.z.jar [port]");
         }
         if (port > 65535 || port < 0) {
             port = 0;
