@@ -53,6 +53,9 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         }
         
         if (path.length == 1) {
+            if ("mugshotconfig.html".equals(path[0])) {
+                return new CiEyeResource(new FileResponder("mugshotconfig.html"));
+            }
             if ("landscapelist.json".equals(path[0])) {
                 return new CiEyeResource(new LandscapeListResponder(landscapeFetcher));
             }

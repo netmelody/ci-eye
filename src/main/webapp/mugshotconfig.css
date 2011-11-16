@@ -1,0 +1,62 @@
+body {
+    background: none repeat scroll 0 0 #333333;
+    font-family: verdana,sans-serif;
+    line-height: 24px;
+    margin: 0;
+}
+#header {
+    margin: 0 auto;
+    width: 940px;
+}
+#title {
+    float: left;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 30px;
+    color: #777777;
+}
+#attribution {
+    font-weight: normal;
+    font-size: 10px;
+}
+#attribution a {
+    color: #777777;
+    text-decoration: none;
+}
+#content {
+    float: left;
+    width: 100%;
+}
+#banner {
+    margin: 0 auto 10px;
+    width: 940px;
+    height: 600px;
+    background: url("/welcome.jpg") repeat scroll 0 0 transparent;
+    -moz-border-radius: 10px 10px 10px 10px;
+}
+#mugshotlist {
+    padding: 20px 0 0 0;
+    display: table;
+    margin: 0 auto;
+    width: 40%;
+}
+#mugshotlist ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#mugshotlist li {
+    margin: 0 0 3px 0;
+}
+#mugshotlist a {
+    font-size: 14px;
+    padding: 0px 0px 0px 15px;
+    display: block;
+    color: #ffffff;
+    background-color: #000306;
+    opacity: 0.2;
+    text-decoration: none;
+}
+#mugshotlist a:hover {
+    background: none;
+}
