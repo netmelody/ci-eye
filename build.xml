@@ -15,18 +15,23 @@
 
     <target name="version" depends="version-for-snapshot,version-for-release"/>
 
-    <path id="project.compile-main.req">
+    <path id="compile-main.req">
         <fileset dir="vendor/lib" includes="**/*.jar"/>
     </path>
 
-    <path id="project.compile-test.req">
-        <path refid="project.compile-main.req"/>
+    <path id="run-main.req">
+        <path refid="compile-main.req"/>
         <pathelement location="build/main"/>
+    </path>
+
+    <path id="compile-test.req">
+        <path refid="run-main.req"/>
         <fileset dir="vendor/buildlib" includes="**/*.jar"/>
     </path>
 
-    <path id="project.build.class.path">
-        <fileset dir="vendor/buildlib" includes="**/*.jar"/>
+    <path id="run-test.req">
+        <path refid="compile-test.req"/>
+        <pathelement location="build/test"/>
     </path>
 
     <target name="compile-src" description="Compile java source to bytecode">
@@ -41,7 +46,7 @@
                target="1.5"
                debug="true"
                debuglevel="lines,source">
-            <classpath refid="project.compile-main.req"/>
+            <classpath refid="compile-main.req"/>
         </javac>
         
         <copy todir="build/main">
@@ -67,11 +72,7 @@
                target="1.5"
                debug="true"
                debuglevel="lines,source">
-            <classpath refid="project.compile-main.req"/>
-            <classpath refid="project.build.class.path"/>
-            <classpath>
-                <pathelement location="build/main"/>
-            </classpath>
+            <classpath refid="compile-test.req"/>
         </javac>
         
         <copy todir="build/test">
@@ -89,12 +90,7 @@
         <mkdir dir="build/doc"/>
         
         <junit printsummary="yes" haltonfailure="yes">
-            <classpath refid="project.compile-main.req"/>
-            <classpath refid="project.build.class.path"/>
-            <classpath>
-                <pathelement location="build/test"/>
-            </classpath>
-          
+            <classpath refid="run-test.req"/>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="build/doc">
                 <fileset dir="src/test/java">
