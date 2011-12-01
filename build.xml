@@ -34,20 +34,30 @@
         <pathelement location="build/test"/>
     </path>
 
+    <macrodef name="compile-java">
+        <attribute name="srcdir"/>
+        <attribute name="destdir"/>
+        <attribute name="classpathref"/>
+
+        <sequential>
+            <javac srcdir="@{srcdir}"
+                   includes="**"
+                   includeantruntime="false"
+                   encoding="utf-8"
+                   destdir="@{destdir}"
+                   source="1.5"
+                   target="1.5"
+                   debug="true"
+                   debuglevel="lines,source">
+                <classpath refid="@{classpathref}"/>
+            </javac>
+        </sequential>
+    </macrodef>
+
     <target name="compile-src" description="Compile java source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/main"/>
-        <javac srcdir="src/main/java"
-               includes="**"
-               includeantruntime="false"
-               encoding="utf-8"
-               destdir="build/main"
-               source="1.5"
-               target="1.5"
-               debug="true"
-               debuglevel="lines,source">
-            <classpath refid="compile-main.req"/>
-        </javac>
+        <compile-java srcdir="src/main/java" destdir="build/main" classpathref="compile-main.req"/>
         
         <copy todir="build/main">
             <fileset dir="src/main/java" excludes="**/*.java"/>
@@ -63,18 +73,8 @@
     <target name="compile-test" description="Compile java test source to bytecode">
         <mkdir dir="build"/>
         <mkdir dir="build/test"/>
-        <javac srcdir="src/test/java"
-               includes="**"
-               includeantruntime="false"
-               encoding="utf-8"
-               destdir="build/test"
-               source="1.5"
-               target="1.5"
-               debug="true"
-               debuglevel="lines,source">
-            <classpath refid="compile-test.req"/>
-        </javac>
-        
+        <compile-java srcdir="src/test/java" destdir="build/test" classpathref="compile-test.req"/>
+
         <copy todir="build/test">
             <fileset dir="src/test/java" excludes="**/*.java"/>
         </copy>
