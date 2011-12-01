@@ -75,10 +75,6 @@
         <mkdir dir="build"/>
         <mkdir dir="build/test"/>
         <compile-module srcdir="src/test" destdir="build/test" classpathref="compile-test.req"/>
-
-        <copy todir="build/test">
-            <fileset dir="build/main"/>
-        </copy>
     </target>
 
     <target name="test" depends="compile-src,compile-test" description="Tests this project">
