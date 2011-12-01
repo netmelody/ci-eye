@@ -15,8 +15,14 @@
 
     <target name="version" depends="version-for-snapshot,version-for-release"/>
 
-    <path id="project.compile.class.path">
+    <path id="project.compile-main.req">
         <fileset dir="vendor/lib" includes="**/*.jar"/>
+    </path>
+
+    <path id="project.compile-test.req">
+        <path refid="project.compile-main.req"/>
+        <pathelement location="build/main"/>
+        <fileset dir="vendor/buildlib" includes="**/*.jar"/>
     </path>
 
     <path id="project.build.class.path">
@@ -35,7 +41,7 @@
                target="1.5"
                debug="true"
                debuglevel="lines,source">
-            <classpath refid="project.compile.class.path"/>
+            <classpath refid="project.compile-main.req"/>
         </javac>
         
         <copy todir="build/main">
@@ -61,7 +67,7 @@
                target="1.5"
                debug="true"
                debuglevel="lines,source">
-            <classpath refid="project.compile.class.path"/>
+            <classpath refid="project.compile-main.req"/>
             <classpath refid="project.build.class.path"/>
             <classpath>
                 <pathelement location="build/main"/>
@@ -83,7 +89,7 @@
         <mkdir dir="build/doc"/>
         
         <junit printsummary="yes" haltonfailure="yes">
-            <classpath refid="project.compile.class.path"/>
+            <classpath refid="project.compile-main.req"/>
             <classpath refid="project.build.class.path"/>
             <classpath>
                 <pathelement location="build/test"/>
