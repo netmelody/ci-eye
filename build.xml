@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="CI-Eye" default="jar" basedir=".">
 
+    <property name="build.dir" value="build"/>
     <property name="target.version" value="0.1.4"/>
     <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
     <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
@@ -21,7 +22,7 @@
 
     <path id="run-main.req">
         <path refid="compile-main.req"/>
-        <pathelement location="build/main"/>
+        <pathelement location="${build.dir}/main"/>
     </path>
 
     <path id="compile-test.req">
@@ -31,7 +32,7 @@
 
     <path id="run-test.req">
         <path refid="compile-test.req"/>
-        <pathelement location="build/test"/>
+        <pathelement location="${build.dir}/test"/>
     </path>
 
     <macrodef name="compile-module">
@@ -55,7 +56,7 @@
             <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/java" excludes="**/*.java"/>
             </copy>
-            <copy todir="build/main">
+            <copy todir="${build.dir}/main">
                 <fileset dir="@{srcdir}/webapp"/>
             </copy>
         </sequential>
@@ -63,27 +64,27 @@
 
     <target name="compile-src" description="Compile java source to bytecode">
         <mkdir dir="build"/>
-        <mkdir dir="build/main"/>
-        <compile-module srcdir="src/main" destdir="build/main" classpathref="compile-main.req"/>
+        <mkdir dir="${build.dir}/main"/>
+        <compile-module srcdir="src/main" destdir="${build.dir}/main" classpathref="compile-main.req"/>
         
-        <copy todir="build/main">
+        <copy todir="${build.dir}/main">
             <fileset dir="vendor/jslib"/>
         </copy>
     </target>
 
     <target name="compile-test" description="Compile java test source to bytecode">
         <mkdir dir="build"/>
-        <mkdir dir="build/test"/>
-        <compile-module srcdir="src/test" destdir="build/test" classpathref="compile-test.req"/>
+        <mkdir dir="${build.dir}/test"/>
+        <compile-module srcdir="src/test" destdir="${build.dir}/test" classpathref="compile-test.req"/>
     </target>
 
     <target name="test" depends="compile-src,compile-test" description="Tests this project">
-        <mkdir dir="build/doc"/>
+        <mkdir dir="${build.dir}/doc"/>
         
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="run-test.req"/>
             <formatter type="plain"/>
-            <batchtest fork="yes" todir="build/doc">
+            <batchtest fork="yes" todir="${build.dir}/doc">
                 <fileset dir="src/test/java">
                     <include name="**/*Test.java"/>
                 </fileset>
@@ -98,21 +99,21 @@
     </target>
 
     <target name="dependencycheck" depends="clean,build">
-        <mkdir dir="build/docs"/>
+        <mkdir dir="${build.dir}/docs"/>
         <taskdef name="classycleDependencyCheck"
                  classname="classycle.ant.DependencyCheckingTask"
                  classpath="vendor/buildlib/classycle-1.4.jar"/>
         
         <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
-            <fileset dir="build/main">
+            <fileset dir="${build.dir}/main">
                 <include name="**/*.class"/>
             </fileset>
         </classycleDependencyCheck>
     </target>
 
     <target name="jar" depends="clean,build,test,dependencycheck,version" description="Create a jar file">
-        <jar destfile="build/ci-eye-${version.label}.jar">
-            <fileset dir="build/main"/>
+        <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
+            <fileset dir="${build.dir}/main"/>
             <fileset dir="." includes="LICENSE NOTICE README"/>
             
             <zipfileset src="vendor/lib/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
