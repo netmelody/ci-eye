@@ -10,3 +10,4 @@ Consider sticky marking
 Consider rewarding build fixers
 lastStartTime is always 0 for Jenkins... fix
 better organise the resources within the production jar, pushing them into one or more sub-folders
+dependency-check of the tests
