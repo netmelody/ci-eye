@@ -52,8 +52,6 @@
 
             <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/java" excludes="**/*.java"/>
-            </copy>
-            <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/webapp"/>
             </copy>
         </sequential>
@@ -104,9 +102,7 @@
             <classpath refid="run-test.req"/>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="${test-report.dir}">
-                <fileset dir="${built-test.dir}">
-                    <include name="**/*Test.class"/>
-                </fileset>
+                <fileset dir="${built-test.dir}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
     </target>
@@ -119,16 +115,14 @@
                  classpath="${buildlib.dir}/classycle-1.4.jar"/>
         
         <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
-            <fileset dir="${built-main.dir}">
-                <include name="**/*.class"/>
-            </fileset>
+            <fileset dir="${built-main.dir}" includes="**/*.class"/>
         </classycleDependencyCheck>
     </target>
 
     <target name="jar" depends="clean,build,test,dependencycheck,version" description="Create a jar file">
         <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
             <fileset dir="${built-main.dir}"/>
-            <fileset dir="." includes="LICENSE NOTICE README"/>
+            <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
             
             <zipfileset src="${lib.dir}/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
