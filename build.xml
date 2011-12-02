@@ -59,15 +59,17 @@
         </sequential>
     </macrodef>
 
-    <target name="version-for-snapshot" unless="release.build">
+    <target name="version-for-snapshot" unless="version.label">
         <property name="version.label" value="${target.version}-SNAPSHOT-${build.number}"/>
     </target>
 
-    <target name="version-for-release" if="release.build">
+    <target name="version-for-release" unless="version.label">
         <property name="version.label" value="${target.version}"/>
     </target>
 
-    <target name="version" depends="version-for-snapshot,version-for-release"/>
+    <target name="version" depends="version-for-snapshot,version-for-release">
+        <echo message="Building version ${version.label}"/>
+    </target>
 
     <target name="clean" description="Cleans this project">
         <delete dir="${build.dir}" failonerror="false"/>
@@ -151,8 +153,5 @@
         </jar>
     </target>
 
-    <target name="release" description="Create a release jar file">
-        <property name="release.build" value="true"/>
-        <antcall target="jar"/>
-    </target>
+    <target name="release" description="Create a release jar file" depends="version-for-release,jar"/>
 </project>
