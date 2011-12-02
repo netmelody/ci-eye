@@ -79,7 +79,7 @@
         <mkdir dir="${build.dir}"/>
     </target>
 
-    <target name="compile-src" description="Compile java source to bytecode" depends="prepare">
+    <target name="compile-main" description="Compile java source to bytecode" depends="prepare">
         <mkdir dir="${built-main.dir}"/>
         <compile-module srcdir="src/main" destdir="${built-main.dir}" classpathref="compile-main.req"/>
         <copy todir="${built-main.dir}">
@@ -87,7 +87,7 @@
         </copy>
     </target>
 
-    <target name="compile-test" description="Compile java test source to bytecode" depends="prepare,compile-src">
+    <target name="compile-test" description="Compile java test source to bytecode" depends="prepare,compile-main">
         <mkdir dir="${built-test.dir}"/>
         <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
     </target>
@@ -111,7 +111,7 @@
         </junit>
     </target>
 
-    <target name="build" depends="compile-src,compile-test" description="Build this project"/>
+    <target name="build" depends="compile-main,compile-test" description="Build this project"/>
 
     <target name="dependencycheck" depends="clean,build">
         <taskdef name="classycleDependencyCheck"
