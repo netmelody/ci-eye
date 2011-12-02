@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="CI-Eye" default="jar" basedir=".">
 
-    <property name="build.dir" value="build"/>
     <property name="target.version" value="0.1.4"/>
+
+    <property name="build.dir"      value="build"/>
+    <property name="lib.dir"        value="vendor/lib"/>
+    <property name="jslib.dir"      value="vendor/jslib"/>
+    <property name="buildlib.dir"   value="vendor/buildlib"/>
+    <property name="built-main.dir" value="${build.dir}/main"/>
+    <property name="built-test.dir" value="${build.dir}/test"/>
+
     <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
     <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
 
-    <target name="version-for-snapshot" unless="release.build">
-        <property name="version.label" value="${target.version}-SNAPSHOT-${build.number}"/>
-    </target>
-
-    <target name="version-for-release" if="release.build">
-        <property name="version.label" value="${target.version}"/>
-    </target>
-
-    <target name="version" depends="version-for-snapshot,version-for-release"/>
-
     <path id="compile-main.req">
-        <fileset dir="vendor/lib" includes="**/*.jar"/>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
 
     <path id="run-main.req">
         <path refid="compile-main.req"/>
-        <pathelement location="${build.dir}/main"/>
+        <pathelement location="${built-main.dir}"/>
     </path>
 
     <path id="compile-test.req">
         <path refid="run-main.req"/>
-        <fileset dir="vendor/buildlib" includes="**/*.jar"/>
+        <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
     </path>
 
     <path id="run-test.req">
         <path refid="compile-test.req"/>
-        <pathelement location="${build.dir}/test"/>
+        <pathelement location="${built-test.dir}"/>
     </path>
 
     <macrodef name="compile-module">
@@ -56,56 +53,70 @@
             <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/java" excludes="**/*.java"/>
             </copy>
-            <copy todir="${build.dir}/main">
+            <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/webapp"/>
             </copy>
         </sequential>
     </macrodef>
 
-    <target name="compile-src" description="Compile java source to bytecode">
-        <mkdir dir="build"/>
-        <mkdir dir="${build.dir}/main"/>
-        <compile-module srcdir="src/main" destdir="${build.dir}/main" classpathref="compile-main.req"/>
-        
-        <copy todir="${build.dir}/main">
-            <fileset dir="vendor/jslib"/>
+    <target name="version-for-snapshot" unless="release.build">
+        <property name="version.label" value="${target.version}-SNAPSHOT-${build.number}"/>
+    </target>
+
+    <target name="version-for-release" if="release.build">
+        <property name="version.label" value="${target.version}"/>
+    </target>
+
+    <target name="version" depends="version-for-snapshot,version-for-release"/>
+
+    <target name="clean" description="Cleans this project">
+        <delete dir="${build.dir}" failonerror="false"/>
+    </target>
+
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="compile-src" description="Compile java source to bytecode" depends="prepare">
+        <mkdir dir="${built-main.dir}"/>
+        <compile-module srcdir="src/main" destdir="${built-main.dir}" classpathref="compile-main.req"/>
+        <copy todir="${built-main.dir}">
+            <fileset dir="${jslib.dir}"/>
         </copy>
     </target>
 
-    <target name="compile-test" description="Compile java test source to bytecode">
-        <mkdir dir="build"/>
-        <mkdir dir="${build.dir}/test"/>
-        <compile-module srcdir="src/test" destdir="${build.dir}/test" classpathref="compile-test.req"/>
+    <target name="compile-test" description="Compile java test source to bytecode" depends="prepare,compile-src">
+        <mkdir dir="${built-test.dir}"/>
+        <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
+        <copy todir="${built-test.dir}">
+            <fileset dir="${built-main.dir}"/>
+        </copy>
     </target>
 
-    <target name="test" depends="compile-src,compile-test" description="Tests this project">
-        <mkdir dir="${build.dir}/doc"/>
+    <target name="test" description="Test this project" depends="prepare,compile-test">
+        <property name="test-report.dir" value="${build.dir}/testreport"/>
+        <mkdir dir="${test-report.dir}"/>
         
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="run-test.req"/>
             <formatter type="plain"/>
-            <batchtest fork="yes" todir="${build.dir}/doc">
-                <fileset dir="src/test/java">
-                    <include name="**/*Test.java"/>
+            <batchtest fork="yes" todir="${test-report.dir}">
+                <fileset dir="${built-test.dir}">
+                    <include name="**/*Test.class"/>
                 </fileset>
             </batchtest>
         </junit>
     </target>
 
-    <target name="build" depends="compile-src" description="Build this project" />
-
-    <target name="clean" description="Cleans this project">
-        <delete dir="build" failonerror="false" />
-    </target>
+    <target name="build" depends="compile-src,compile-test" description="Build this project"/>
 
     <target name="dependencycheck" depends="clean,build">
-        <mkdir dir="${build.dir}/docs"/>
         <taskdef name="classycleDependencyCheck"
                  classname="classycle.ant.DependencyCheckingTask"
-                 classpath="vendor/buildlib/classycle-1.4.jar"/>
+                 classpath="${buildlib.dir}/classycle-1.4.jar"/>
         
         <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
-            <fileset dir="${build.dir}/main">
+            <fileset dir="${built-main.dir}">
                 <include name="**/*.class"/>
             </fileset>
         </classycleDependencyCheck>
@@ -113,26 +124,26 @@
 
     <target name="jar" depends="clean,build,test,dependencycheck,version" description="Create a jar file">
         <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
-            <fileset dir="${build.dir}/main"/>
+            <fileset dir="${built-main.dir}"/>
             <fileset dir="." includes="LICENSE NOTICE README"/>
             
-            <zipfileset src="vendor/lib/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/commons-logging-1.1.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/gson-1.7.2.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/guava-10.0.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/httpclient-4.1.2.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/httpclient-cache-4.1.2.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/httpcore-4.1.3.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/httpcore-nio-4.1.3.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/httpmime-4.1.2.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="vendor/lib/simple-4.1.21.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/commons-io-2.0.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/commons-logging-1.1.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/gson-1.7.2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/guava-10.0.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/httpclient-4.1.2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/httpclient-cache-4.1.2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/httpcore-4.1.3.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/httpcore-nio-4.1.3.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/httpmime-4.1.2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/simple-4.1.21.jar" excludes="**/META-INF/**"/>
             
             <manifest>
                 <attribute name="Main-Class" value="org.netmelody.cieye.CiEye"/>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Implementation-Vendor" value="netmelody.org"/>
-                <attribute name="Implementation-Title" value="CI-Eye"/>
+                <attribute name="Implementation-Title" value="${ant.project.name}"/>
                 <attribute name="Implementation-Version" value="${version.label}"/>
                 <attribute name="Built-Date" value="${build.timestamp}"/>
             </manifest>
