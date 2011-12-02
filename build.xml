@@ -88,14 +88,15 @@
     <target name="compile-test" description="Compile java test source to bytecode" depends="prepare,compile-src">
         <mkdir dir="${built-test.dir}"/>
         <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
-        <copy todir="${built-test.dir}">
-            <fileset dir="${built-main.dir}"/>
-        </copy>
     </target>
 
     <target name="test" description="Test this project" depends="prepare,compile-test">
         <property name="test-report.dir" value="${build.dir}/testreport"/>
         <mkdir dir="${test-report.dir}"/>
+
+        <copy todir="${built-test.dir}">
+            <fileset dir="${built-main.dir}" includes="**/*.js"/>
+        </copy>
         
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="run-test.req"/>
