@@ -80,7 +80,7 @@
     <target name="compile-main" depends="prepare">
         <mkdir dir="${built-main.dir}"/>
         <compile-module srcdir="src/main" destdir="${built-main.dir}" classpathref="compile-main.req"/>
-        <copy todir="${built-main.dir}">
+        <copy todir="${built-main.dir}/resources">
             <fileset dir="${jslib.dir}"/>
         </copy>
     </target>
