@@ -30,7 +30,7 @@ public final class FileResponder implements CiEyeResponder {
         InputStream input = null;
         OutputStream body = null;
         try {
-            input = getClass().getResourceAsStream("/" + name);
+            input = getClass().getResourceAsStream(name);
             body = response.getOutputStream();
             response.set("Content-Type", MIME_TYPES.getString(extension));
             IOUtils.copy(input, body);
@@ -42,7 +42,7 @@ public final class FileResponder implements CiEyeResponder {
     }
 
     public boolean exists() {
-        return null != getClass().getResource("/" + name);
+        return null != getClass().getResource(name);
     }
 }
 

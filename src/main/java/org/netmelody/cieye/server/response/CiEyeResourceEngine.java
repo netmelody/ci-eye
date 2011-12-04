@@ -49,12 +49,12 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         final String[] path = target.getPath().getSegments();
         
         if (path.length == 0) {
-            return new CiEyeResource(new FileResponder("welcome.html"));
+            return new CiEyeResource(new FileResponder("/welcome.html"));
         }
         
         if (path.length == 1) {
             if ("mugshotconfig.html".equals(path[0])) {
-                return new CiEyeResource(new FileResponder("mugshotconfig.html"));
+                return new CiEyeResource(new FileResponder("/mugshotconfig.html"));
             }
             if ("landscapelist.json".equals(path[0])) {
                 return new CiEyeResource(new LandscapeListResponder(landscapeFetcher));
@@ -66,7 +66,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
                 return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher, updateChecker));
             }
             
-            final FileResponder staticFile = new FileResponder(path[0]);
+            final FileResponder staticFile = new FileResponder("/" + path[0]);
             if (staticFile.exists()) {
                 return new CiEyeResource(staticFile);
             }

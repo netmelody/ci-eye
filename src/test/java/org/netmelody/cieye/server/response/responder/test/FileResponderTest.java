@@ -21,7 +21,7 @@ public final class FileResponderTest {
     
     @Test public void
     suppliesTheCorrectMimeType() throws IOException {
-        final FileResponder responder = new FileResponder("org/netmelody/cieye/server/response/responder/test/bob.js");
+        final FileResponder responder = new FileResponder("/org/netmelody/cieye/server/response/responder/test/bob.js");
         
         final Response response = context.mock(Response.class);
         context.checking(new Expectations() {{
@@ -36,7 +36,7 @@ public final class FileResponderTest {
     
     @Test public void
     writesTheCorrectContent() throws IOException {
-        final FileResponder responder = new FileResponder("org/netmelody/cieye/server/response/responder/test/bob.js");
+        final FileResponder responder = new FileResponder("/org/netmelody/cieye/server/response/responder/test/bob.js");
         final OutputStream outputStream = new ByteArrayOutputStream();
         final Response response = context.mock(Response.class);
         context.checking(new Expectations() {{
