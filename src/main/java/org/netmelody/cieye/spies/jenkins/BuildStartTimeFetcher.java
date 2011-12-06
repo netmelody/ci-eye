@@ -1,5 +1,7 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import java.util.concurrent.ExecutionException;
+
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 
 import com.google.common.base.Function;
@@ -23,9 +25,14 @@ public final class BuildStartTimeFetcher {
     }
     
     public long lastStartTimeOf(final JobDetail job) {
-        if (!(job.lastBuild == null)) {
-            return timestamps.getUnchecked(job.lastBuild.url);
+        if (job.lastBuild == null) {
+            return 0L;
         }
-        return 0L;
+        
+        try {
+            return timestamps.get(job.lastBuild.url);
+        } catch (ExecutionException e) {
+            return 0L;
+        }
     }
 }
