@@ -43,7 +43,7 @@ public final class TargetDetailGroup implements Iterable<TargetDetail>{
     private static Function<TargetDigest, TargetDetail> toTargets() {
         return new Function<TargetDigest, TargetDetail>() {
             @Override public TargetDetail apply(TargetDigest digest) {
-                return new TargetDetail(digest.id().id(), digest.webUrl(), digest.name(), digest.status());
+                return new TargetDetail(digest.id().id(), digest.webUrl(), digest.name(), digest.status(), 0L);
             }
         };
     }

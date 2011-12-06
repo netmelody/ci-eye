@@ -33,7 +33,7 @@ public final class BuildTypeAnalyser {
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(buildType);
         
         if (buildTypeDetail.paused) {
-            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, Status.DISABLED);
+            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, Status.DISABLED, 0L);
         }
         
         final Set<Sponsor> sponsors = new HashSet<Sponsor>();

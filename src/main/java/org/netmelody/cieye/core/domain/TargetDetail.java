@@ -18,8 +18,8 @@ public final class TargetDetail extends Target {
     private final Set<Sponsor> sponsors = new HashSet<Sponsor>();
     private final List<RunningBuild> builds = new ArrayList<RunningBuild>();
     
-    public TargetDetail(String id, String webUrl, String name, Status status) {
-        this(id, webUrl, name, status, 0L, new ArrayList<RunningBuild>(), new HashSet<Sponsor>());
+    public TargetDetail(String id, String webUrl, String name, Status status, long lastStartTime) {
+        this(id, webUrl, name, status, lastStartTime, new ArrayList<RunningBuild>(), new HashSet<Sponsor>());
     }
     
     public TargetDetail(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {

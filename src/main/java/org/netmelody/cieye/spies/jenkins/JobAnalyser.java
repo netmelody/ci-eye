@@ -53,15 +53,13 @@ public final class JobAnalyser {
         if (!jobDigest.url.equals(jobEndpoint)) {
             throw new IllegalArgumentException("Incorrect job digest");
         }
-        if (!jobDigest.building() && Status.BROKEN != jobDigest.status()) {
-            sponsorCache.clear();
-            return new TargetDetail(jobDigest.url, jobDigest.url, jobDigest.name, jobDigest.status());
-        }
-        return analyse();
-    }
-
-    public TargetDetail analyse() {
+        
         final JobDetail job = communicator.jobDetailFor(jobEndpoint);
+        if (!job.building() && Status.BROKEN != job.status()) {
+            sponsorCache.clear();
+            return new TargetDetail(job.url, job.url, job.name, job.status(), startTimeOf(job));
+        }
+        
         return new TargetDetail(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 

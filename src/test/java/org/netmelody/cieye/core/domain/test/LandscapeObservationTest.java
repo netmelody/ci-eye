@@ -26,8 +26,8 @@ public class LandscapeObservationTest {
     
     @Test public void
     translatesToAppropriateJsonRepresentationWithSimpleTargets() {
-        final LandscapeObservation observation = new LandscapeObservation(TargetDetailGroup.of(newArrayList(new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN),
-                                                                                                            new TargetDetail("T2ID", "T2URL", "T2", Status.BROKEN))));
+        final LandscapeObservation observation = new LandscapeObservation(TargetDetailGroup.of(newArrayList(new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN, 0L),
+                                                                                                            new TargetDetail("T2ID", "T2URL", "T2", Status.BROKEN, 0L))));
         
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
                                                                     "{\"lastStartTime\":0," +

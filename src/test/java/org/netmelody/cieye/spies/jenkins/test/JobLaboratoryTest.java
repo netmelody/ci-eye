@@ -1,7 +1,5 @@
 package org.netmelody.cieye.spies.jenkins.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import java.io.File;
 
 import org.hamcrest.Matchers;
@@ -17,10 +15,15 @@ import org.netmelody.cieye.server.configuration.SettingsFile;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
 import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.spies.jenkins.JobLaboratory;
+import org.netmelody.cieye.spies.jenkins.jsondomain.Build;
+import org.netmelody.cieye.spies.jenkins.jsondomain.BuildDetail;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 
 import com.google.gson.GsonBuilder;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public final class JobLaboratoryTest {
 
@@ -46,12 +49,33 @@ public final class JobLaboratoryTest {
     
     @Test public void
     returnsInstantlyForAGreenJobThatIsNotBuilding() {
+        context.checking(new Expectations() {{
+            allowing(contact).makeJsonRestCall("jobUrl/api/json", JobDetail.class); will(returnValue(new JobDetail()));
+        }});
         
         TargetDetail target = jobLab.analyseJob(job);
         
         assertThat(target.status(), Matchers.is(Status.GREEN));
     }
 
+    @Test public void
+    includesLastStartTimeForGreenBuild() {
+        final JobDetail jobDetail = new JobDetail();
+        jobDetail.lastBuild = new Build();
+        jobDetail.lastBuild.url = "buildUrl";
+        final BuildDetail buildDetail = new BuildDetail();
+        buildDetail.timestamp = 100L;
+        
+        context.checking(new Expectations() {{
+            allowing(contact).makeJsonRestCall("jobUrl/api/json", JobDetail.class); will(returnValue(jobDetail));
+            allowing(contact).makeJsonRestCall("buildUrl/api/json", BuildDetail.class); will(returnValue(buildDetail));
+        }});
+        
+        TargetDetail target = jobLab.analyseJob(job);
+        
+        assertThat(target.lastStartTime(), is(100L));
+    }
+    
     @Test public void
     alwaysAnalysesARedBuild() {
         job.color = "red";
