@@ -236,6 +236,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                     dohDiv.show();
                     dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
                 });
+                dohDiv.append($("<audio autoplay='autoplay'><source src='/doh.ogg' type='audio/ogg'/></audio>"));
             }
         }
         else {
