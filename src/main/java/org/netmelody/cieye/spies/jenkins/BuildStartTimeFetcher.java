@@ -1,18 +1,18 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import java.util.concurrent.ExecutionException;
 
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
+import com.google.common.cache.LoadingCache;
 
 public final class BuildStartTimeFetcher {
 
-    private final Cache<String, Long> timestamps;
+    private final LoadingCache<String, Long> timestamps;
     
     public BuildStartTimeFetcher(final BuildDetailFetcher detailFetcher) {
         timestamps = CacheBuilder.newBuilder()

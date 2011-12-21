@@ -1,5 +1,10 @@
 package org.netmelody.cieye.spies.demo;
 
+import static com.google.common.cache.CacheLoader.from;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,17 +23,12 @@ import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.BuildData;
 import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.TargetData;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
+import com.google.common.cache.LoadingCache;
 
 public final class DemoModeSpy implements CiSpy {
 
-    private final Cache<String, DemoModeFakeCiServer> demoCiServers =
+    private final LoadingCache<String, DemoModeFakeCiServer> demoCiServers =
         CacheBuilder.newBuilder().build(from(new Function<String, DemoModeFakeCiServer>() {
             @Override
             public DemoModeFakeCiServer apply(String featureName) {

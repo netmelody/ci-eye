@@ -1,18 +1,18 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.spies.jenkins.jsondomain.BuildDetail;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
+import com.google.common.cache.LoadingCache;
 
 public final class BuildDetailFetcher {
 
-    private final Cache<String, BuildDetail> buildDetails;
+    private final LoadingCache<String, BuildDetail> buildDetails;
     
     public BuildDetailFetcher(final JenkinsCommunicator communicator) {
         buildDetails =

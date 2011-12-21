@@ -1,20 +1,20 @@
 package org.netmelody.cieye.spies.jenkins;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
+import com.google.common.cache.LoadingCache;
 
 public final class JobLaboratory {
 
     private final JenkinsCommunicator communicator;
     private final KnownOffendersDirectory detective;
-    private final Cache<String, JobAnalyser> analyserMap = CacheBuilder.newBuilder().build(from(toAnalysers()));
+    private final LoadingCache<String, JobAnalyser> analyserMap = CacheBuilder.newBuilder().build(from(toAnalysers()));
     
     public JobLaboratory(JenkinsCommunicator communicator, KnownOffendersDirectory detective) {
         this.communicator = communicator;

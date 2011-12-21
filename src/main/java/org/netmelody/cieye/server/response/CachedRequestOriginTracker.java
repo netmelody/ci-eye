@@ -1,5 +1,7 @@
 package org.netmelody.cieye.server.response;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Set;
@@ -9,16 +11,14 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.simpleframework.http.Request;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
+import com.google.common.cache.LoadingCache;
 
 public final class CachedRequestOriginTracker implements RequestOriginTracker {
     
     private final KnownOffendersDirectory detective;
     
-    private final Cache<String, String> reverseLookup =
+    private final LoadingCache<String, String> reverseLookup =
             CacheBuilder.newBuilder().build(from(new Function<String, String>() {
                 @Override
                 public String apply(String ipAddress) {

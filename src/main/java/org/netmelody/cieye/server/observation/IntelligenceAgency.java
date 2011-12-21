@@ -1,5 +1,7 @@
 package org.netmelody.cieye.server.observation;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
@@ -8,15 +10,13 @@ import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiSpyHandler;
 
 import com.google.common.base.Function;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import static com.google.common.cache.CacheLoader.from;
+import com.google.common.cache.LoadingCache;
 
 public final class IntelligenceAgency implements CiSpyAllocator {
 
     private final ObservationAgencyConfiguration agencyConfiguration = new ObservationAgencyConfiguration();
-    private final Cache<Feature, CiSpyHandler> handlers =
+    private final LoadingCache<Feature, CiSpyHandler> handlers =
             CacheBuilder.newBuilder().build(from(new Function<Feature, CiSpyHandler>() {
                 @Override
                 public CiSpyHandler apply(Feature feature) {
