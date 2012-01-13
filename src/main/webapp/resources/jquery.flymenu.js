@@ -5,10 +5,10 @@
                 "position": "absolute",
                 "backgroundColor": "#ffffff",
                 "opacity": "1",
-                "right": "-70px",
-                "top": "0px",
-                "width": "100px",
+                "top": "-50px",
+                "right": "0px",
                 "zIndex": "500",
+                "cursor": "pointer",
                 "color": "#000000",
                 "padding": "3px",
                 "border": "1px solid #000000",
@@ -16,16 +16,18 @@
                 "font-size": "0.8em"
             }
         },
+        menuAction = function() { },
         menu = $("<div>Enter Desktop Mode</div>")
                    .hide()
                    .css(style.menuStyle)
                    .bind("click", function(event) {
                        event.stopPropagation();
+                       menuAction();
                    }),
         timeoutId = undefined;
     
     function hideMenu() {
-        menu.animate({ "right": "-70px" }, 100, function() { menu.hide(); });
+        menu.animate({ "top": "-50px" }, 100, function() { menu.hide(); });
     }
     
     function applyHoverStyle() {
@@ -43,7 +45,7 @@
         }
         if (!menu.is(":visible")) {
             menu.show();
-            menu.animate({ "right": "0px" }, 200);
+            menu.animate({ "top": "0px" }, 200);
         }
         timeoutId = window.setTimeout(hideMenu, 500);
     }
@@ -52,7 +54,12 @@
         menu.appendTo("body");
     });
     
-    $.fn.flyMenu = function() {
+    $.fn.flyMenu = function(clickHandler) {
+        menuAction = function() {};
+        if (typeof clickHandler === "function") {
+            menuAction = clickHandler;
+        }
+        
         $(this).bind("mousemove", function(event) {
             showMenu();
             return false;
