@@ -41,7 +41,7 @@
             labelEle = $("<label></label>").attr("for", id).text(label);
         
         ele.attr("checked", initialState);
-        ele.bind("change", changeHandler);
+        ele.bind("change", function() { changeHandler(ele.prop("checked")); });
         
         menu.append(ele);
         menu.append(labelEle);

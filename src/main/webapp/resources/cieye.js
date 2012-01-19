@@ -193,6 +193,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         dohDiv = $("<div></div>").addClass("doh").hide(),
         targetWidgets = {},
         dohMugshots = {},
+        noisy = false,
         statusRanks = ["BROKEN", "UNKNOWN", "UNDER_INVESTIGATION", "GREEN", "DISABLED"];
 
     function targetComparator(a, b) {
@@ -236,7 +237,9 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                     dohDiv.show();
                     dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
                 });
-                dohDiv.append($("<audio autoplay='autoplay'><source src='/doh.ogg' type='audio/ogg'/></audio>"));
+                if (noisy) {
+                    dohDiv.append($("<audio autoplay='autoplay'><source src='/doh.ogg' type='audio/ogg'/></audio>"));
+                }
             }
         }
         else {
@@ -269,8 +272,13 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         });
     }
     
+    function silentMode(status) {
+        noisy = status ? false : true;
+    }
+    
     return {
         "refresh": refresh,
+        "silentMode": silentMode,
         "updateFrom": updateFrom,
         "getContent": function() { return radiatorDiv; }
     };
@@ -349,9 +357,14 @@ ORG.NETMELODY.CIEYE.newRadiator = function(radiatorDiv, scheduler) {
         scheduler.repeat(update, 2000);
     }
     
+    function silentMode(status) {
+        radiatorWidget.silentMode(status);
+    }
+    
     return {
         "start": startup,
-        "refresh": refresh
+        "refresh": refresh,
+        "silentMode": silentMode
     };
 };
 
@@ -395,6 +408,16 @@ $(document).ready(function() {
         updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
         path = $(location).attr("pathname");
     
+    function desktopMode(status) {
+        if (status) {
+            $("head").append($("<link rel='stylesheet' href='/desktop.css' type='text/css' media='all' />"));
+        }
+        else {
+            $("head > link[href='/desktop.css']").remove();
+        }
+        radiator.refresh();
+    }
+    
     if (path.match(/\/$/)) {
         path = path.slice(0, -1);
     }
@@ -404,8 +427,9 @@ $(document).ready(function() {
         radiator.refresh();
     });
     
-    $("body").flyMenu([{"label": "Desktop Mode", "initialState": false, "changeHandler": function(){ alert("hai"); }},
-                       {"label": "Silent", "initialState": true, "changeHandler": function(){ alert("haio"); }}]);
+    $("body").flyMenu([{"label": "Desktop Mode", "initialState": false, "changeHandler": desktopMode },
+                       {"label": "Silent", "initialState": false, "changeHandler": radiator.silentMode }]);
+    
     radiator.start();
     updater.start();
 });
