@@ -404,6 +404,8 @@ $(document).ready(function() {
         radiator.refresh();
     });
     
+    $("body").flyMenu([{"label": "Desktop Mode", "initialState": false, "changeHandler": function(){ alert("hai"); }},
+                       {"label": "Silent", "initialState": true, "changeHandler": function(){ alert("haio"); }}]);
     radiator.start();
     updater.start();
 });

@@ -8,7 +8,6 @@
                 "top": "-50px",
                 "right": "0px",
                 "zIndex": "500",
-                "cursor": "pointer",
                 "color": "#000000",
                 "padding": "3px",
                 "border": "1px solid #000000",
@@ -16,26 +15,13 @@
                 "font-size": "0.8em"
             }
         },
-        menuAction = function() { },
-        menu = $("<div>Enter Desktop Mode</div>")
+        menu = $("<div></div>")
                    .hide()
-                   .css(style.menuStyle)
-                   .bind("click", function(event) {
-                       event.stopPropagation();
-                       menuAction();
-                   }),
+                   .css(style.menuStyle),
         timeoutId = undefined;
     
     function hideMenu() {
         menu.animate({ "top": "-50px" }, 100, function() { menu.hide(); });
-    }
-    
-    function applyHoverStyle() {
-        $(this).css(style.itemHoverStyle);
-    }
-    
-    function removeHoverStyle() {
-        $(this).css(style.itemStyle);
     }
     
     function showMenu() {
@@ -50,19 +36,37 @@
         timeoutId = window.setTimeout(hideMenu, 500);
     }
     
+    function elementFor(id, label, initialState, changeHandler) {
+        var ele = $("<input type='checkbox'/>").attr("id", id).attr("name", id),
+            labelEle = $("<label></label>").attr("for", id).text(label);
+        
+        ele.attr("checked", initialState);
+        ele.bind("change", changeHandler);
+        
+        menu.append(ele);
+        menu.append(labelEle);
+        menu.append($("<br/>"));
+    }
+
+    function buildMenuFor(entries) {
+        menu.empty();
+        $.each(entries, function(index, entry) {
+            elementFor("flymenu-" + index, entry.label, entry.initialState, entry.changeHandler);
+        });
+    }
+    
     $(document).ready(function() {
         menu.appendTo("body");
     });
     
-    $.fn.flyMenu = function(clickHandler) {
-        menuAction = function() {};
-        if (typeof clickHandler === "function") {
-            menuAction = clickHandler;
-        }
-        
+    $.fn.flyMenu = function(entries) {
+        buildMenuFor(entries);
         $(this).bind("mousemove", function(event) {
-            showMenu();
-            return false;
+            if (event.pageY < 200 && event.pageX > ($("body").width() - 200)) {
+                showMenu();
+                return false;
+            }
+            return true;
         });
         return this;
     };
