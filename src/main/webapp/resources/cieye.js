@@ -420,12 +420,13 @@ $(document).ready(function() {
     
     function desktopMode(desktopModeOn) {
         if (desktopModeOn) {
-            $("head").append($("<link rel='stylesheet' href='/desktop.css' type='text/css' media='all' />"));
+            $("head").append($("<link rel='stylesheet' href='/desktop.css' type='text/css'/>"));
         }
         else {
             $("head > link[href='/desktop.css']").remove();
         }
         radiator.refresh();
+        window.setTimeout(radiator.refresh, 200);
     }
     
     document.title = landscapeNameFromUri() + " - " + document.title;
