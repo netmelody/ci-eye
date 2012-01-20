@@ -406,10 +406,20 @@ $(document).ready(function() {
     var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
         updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
-        path = $(location).attr("pathname");
+        initialdesktopModeStatus = $(window).width() <= 750;
     
-    function desktopMode(status) {
-        if (status) {
+    function landscapeNameFromUri() {
+        var path = $(location).attr("pathname");
+        
+        if (path.match(/\/$/)) {
+            path = path.slice(0, -1);
+        }
+        
+        return decodeURIComponent(path.substr((path.lastIndexOf("/") + 1)));
+    }
+    
+    function desktopMode(desktopModeOn) {
+        if (desktopModeOn) {
             $("head").append($("<link rel='stylesheet' href='/desktop.css' type='text/css' media='all' />"));
         }
         else {
@@ -418,17 +428,10 @@ $(document).ready(function() {
         radiator.refresh();
     }
     
-    if (path.match(/\/$/)) {
-        path = path.slice(0, -1);
-    }
-    document.title = decodeURIComponent(path.substr((path.lastIndexOf("/") + 1))) + " - " + document.title;
-    
-    $(window).bind("resize", function() {
-        radiator.refresh();
-    });
-    
-    $("body").flyMenu([{"label": "Desktop Mode", "initialState": false, "changeHandler": desktopMode },
-                       {"label": "Silent", "initialState": false, "changeHandler": radiator.silentMode }]);
+    document.title = landscapeNameFromUri() + " - " + document.title;
+    desktopMode(initialdesktopModeStatus);
+    $("body").flyMenu([{"label": "Desktop Mode", "initialState": initialdesktopModeStatus, "changeHandler": desktopMode },
+                       {"label": "Silent", "initialState": initialdesktopModeStatus, "changeHandler": radiator.silentMode }]);
     
     radiator.start();
     updater.start();
