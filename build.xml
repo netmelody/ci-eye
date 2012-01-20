@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="CI-Eye" default="jar" basedir=".">
 
-    <property name="target.version" value="0.1.4"/>
+    <property name="target.version" value="0.2.0"/>
 
     <property name="build.dir"      value="build"/>
     <property name="lib.dir"        value="vendor/lib"/>
