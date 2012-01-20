@@ -15,9 +15,8 @@
                 "font-size": "0.8em"
             }
         },
-        menu = $("<div></div>")
-                   .hide()
-                   .css(style.menuStyle),
+        menuTab = $("<div></div>").hide().css(style.menuStyle),
+        menu = $("<div></div>").hide().css(style.menuStyle),
         mouseover = false,
         timeoutId = undefined;
     
