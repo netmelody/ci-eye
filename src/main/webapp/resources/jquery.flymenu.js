@@ -18,10 +18,13 @@
         menu = $("<div></div>")
                    .hide()
                    .css(style.menuStyle),
+        mouseover = false,
         timeoutId = undefined;
     
     function hideMenu() {
-        menu.animate({ "top": "-50px" }, 100, function() { menu.hide(); });
+        if (!mouseover) {
+            menu.animate({ "top": "-50px" }, 100, function() { menu.hide(); });
+        }
     }
     
     function showMenu() {
@@ -68,6 +71,8 @@
             }
             return true;
         });
+        menu.bind("mouseenter", function(){ mouseover = true; });
+        menu.bind("mouseleave", function(){ mouseover = false; });
         return this;
     };
 })(jQuery);
