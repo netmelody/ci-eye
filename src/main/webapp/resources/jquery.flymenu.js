@@ -95,9 +95,8 @@
         menuTab.appendTo("body");
 
         menuTab.bind("mouseenter", function() { showMenu(); });
-
-        menu.bind("mouseenter", function(){ mouseover = true; });
-        menu.bind("mouseleave", function(){
+        menu.bind("mouseenter", function() { mouseover = true; });
+        menu.bind("mouseleave", function() {
             mouseover = false;
             window.setTimeout(hideMenu, 500);
         });
@@ -108,7 +107,7 @@
 
         $(this).bind("mousemove", function(event) {
             showMenuTab();
-            return false;
+            return true;
         });
 
         return this;
