@@ -12,22 +12,22 @@
   * moved 3rd party javascript into the vendor directory
   * general refactoring and whitespace nuking
 
-[Full changelog](https://github.com/netmelody/ci-eye/compare/v0.1.3...v0.2.0)
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.1.3...0.2.0)
 
 ## Release 0.1.3
 This release upgrades gson to 1.7.2 with a fix for a threading bug (gson Issue 354), upgrades guava to 10.0 (and improves caching as a result), and tidies up some naming to ensure consistency.
 
-[Full changelog](https://github.com/netmelody/ci-eye/compare/v0.1.2...v0.1.3)
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.1.2...0.1.3)
 
 ## Release 0.1.2
 Jenkins concurrent builds are now represented correctly, using multiple progress bars. TeamCity external links now login as guest automatically.
 
-[Full changelog](https://github.com/netmelody/ci-eye/compare/v0.1.1...v0.1.2)
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.1.1...0.1.2)
 
 ## Release 0.1.1
 Displays the current landscape name in the title bar. Correctly responds with 404 to requests for static resources that do not exist. Redirects malformed landscape URLs. Fixes "doh" mode.
 
-[Full changelog](https://github.com/netmelody/ci-eye/compare/v0.1.0...v0.1.1)
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.1.0...0.1.1)
 
 ## Release 0.1.0
 Committer analysis was improved. The program now checks for new versions automatically. The welcome page was improved.
