@@ -191,6 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
+        dancerImg = $("<img src='/squirrel-dance.gif' title='all green!' alt='dancing squirrel'></img>").hide(),
         dohAudio= $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
@@ -216,37 +217,41 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         
         return compare(a.name, b.name);
     }
-    
+
+    function doDoh(dohGroup) {
+        function dohSizeCalculator() {
+            return (radiatorDiv.width() / dohGroup.length) - 50;
+        }
+        
+        if (dohDiv.is(":hidden")) {
+            $.each(dohGroup, function(index, sponsorJson) {
+                dohMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, dohSizeCalculator);
+                dohDiv.append(dohMugshots[sponsorJson.picture].getContent());
+                dohDiv.show();
+                dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
+            });
+            if (noisy) {
+                dohAudio[0].play();
+            }
+        }
+    }
+
+    function unDoh() {
+        $.post("doh", { "active": false });
+    }
+
     function updateFrom(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
-        
-        function dohSizeCalculator() {
-            return (radiatorDiv.width() / targetGroupJson.dohGroup.length) - 50;
-        }
-        
-        function unDoh() {
-            $.post("doh", { "active": false });
-        }
-        
+
         if (targetGroupJson.dohGroup) {
-            if (dohDiv.is(":hidden")) {
-                $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
-                    dohMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, dohSizeCalculator);
-                    dohDiv.append(dohMugshots[sponsorJson.picture].getContent());
-                    dohDiv.show();
-                    dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
-                });
-                if (noisy) {
-                    dohAudio[0].play();
-                }
-            }
+            doDoh(targetGroupJson.dohGroup);
         }
         else {
             dohDiv.hide();
             dohDiv.empty();
         }
-            
+
         $.each(targets, function(index, targetJson) {
             if (targetWidgets[targetJson.id]) {
                 targetWidgets[targetJson.id].updateFrom(targetJson);
@@ -261,6 +266,15 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             deadTargetWidget.getContent().remove();
             delete targetWidgets[index];
         });
+        
+        if (radiatorDiv.children().filter("div:visible").length === 0) {
+            dancerImg.width("100%");
+            dancerImg.height("100%");
+            dancerImg.show();
+        }
+        else {
+            dancerImg.hide();
+        }
     }
     
     function refresh() {
@@ -278,6 +292,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     
     radiatorDiv.append(dohDiv);
     radiatorDiv.append(dohAudio);
+    radiatorDiv.append(dancerImg);
     
     return {
         "refresh": refresh,
