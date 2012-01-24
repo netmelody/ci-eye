@@ -9,5 +9,4 @@ bug with multi-build in Jenkins
 Consider sticky marking
 Consider rewarding build fixers
 dependency-check of the tests
-don't hold the reverse-lookup cache for so long
 adding a comment to a running, failing, build makes it go green!
