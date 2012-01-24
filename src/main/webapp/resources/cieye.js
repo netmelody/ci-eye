@@ -191,6 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
+        dohAudio= $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
         noisy = false,
@@ -233,12 +234,11 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                 $.each(targetGroupJson.dohGroup, function(index, sponsorJson) {
                     dohMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, dohSizeCalculator);
                     dohDiv.append(dohMugshots[sponsorJson.picture].getContent());
-                    radiatorDiv.append(dohDiv);
                     dohDiv.show();
                     dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
                 });
                 if (noisy) {
-                    dohDiv.append($("<audio autoplay='autoplay'><source src='/doh.ogg' type='audio/ogg'/></audio>"));
+                    dohAudio[0].play();
                 }
             }
         }
@@ -275,6 +275,9 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     function silentMode(status) {
         noisy = status ? false : true;
     }
+    
+    radiatorDiv.append(dohDiv);
+    radiatorDiv.append(dohAudio);
     
     return {
         "refresh": refresh,
@@ -431,6 +434,7 @@ $(document).ready(function() {
     
     document.title = landscapeNameFromUri() + " - " + document.title;
     desktopMode(initialdesktopModeStatus);
+    radiator.silentMode(initialdesktopModeStatus);
     $("body").flyMenu([{"label": "Desktop Mode", "initialState": initialdesktopModeStatus, "changeHandler": desktopMode },
                        {"label": "Silent", "initialState": initialdesktopModeStatus, "changeHandler": radiator.silentMode }]);
     
