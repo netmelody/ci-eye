@@ -287,7 +287,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     };
 };
 
-ORG.NETMELODY.CIEYE.scheduler = function(browser) {
+ORG.NETMELODY.CIEYE.newScheduler = function(browser) {
     var protector = undefined,
         alarm = false;
     
@@ -406,7 +406,7 @@ $(document).ready(function() {
         return;
     }
     
-    var scheduler = ORG.NETMELODY.CIEYE.scheduler(window),
+    var scheduler = ORG.NETMELODY.CIEYE.newScheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
         updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
         initialdesktopModeStatus = $(window).width() <= 750;
