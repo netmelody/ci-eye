@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="CI-Eye" default="jar" basedir=".">
+<project name="CI-Eye" default="snapshot" basedir=".">
 
     <property name="target.version" value="0.2.1"/>
 
