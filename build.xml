@@ -27,11 +27,6 @@
         <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
     </path>
 
-    <path id="run-test.req">
-        <path refid="compile-test.req"/>
-        <pathelement location="${built-test.dir}"/>
-    </path>
-
     <macrodef name="compile-module">
         <attribute name="srcdir"/>
         <attribute name="destdir"/>
@@ -90,36 +85,9 @@
         <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
     </target>
 
-    <target name="test" description="Test this project" depends="prepare,compile-test">
-        <property name="test-report.dir" value="${build.dir}/testreport"/>
-        <mkdir dir="${test-report.dir}"/>
+    <target name="compile" depends="compile-main,compile-test" description="Compile all this project's source"/>
 
-        <copy todir="${built-test.dir}">
-            <fileset dir="${built-main.dir}" includes="**/*.js"/>
-        </copy>
-        
-        <junit printsummary="yes" haltonfailure="yes">
-            <classpath refid="run-test.req"/>
-            <formatter type="plain"/>
-            <batchtest fork="yes" todir="${test-report.dir}">
-                <fileset dir="${built-test.dir}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
-    </target>
-
-    <target name="build" depends="compile-main,compile-test" description="Compile all this project's source"/>
-
-    <target name="dependencycheck" depends="clean,build">
-        <taskdef name="classycleDependencyCheck"
-                 classname="classycle.ant.DependencyCheckingTask"
-                 classpath="${buildlib.dir}/classycle-1.4.jar"/>
-        
-        <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
-            <fileset dir="${built-main.dir}" includes="**/*.class"/>
-        </classycleDependencyCheck>
-    </target>
-
-    <target name="jar" depends="clean,build,test,dependencycheck,version" description="Create a jar file">
+    <target name="jar-main" depends="clean,compile,version">
         <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
             <fileset dir="${built-main.dir}"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
@@ -147,5 +115,64 @@
         </jar>
     </target>
 
-    <target name="release" description="Create a release jar file" depends="version-for-release,jar"/>
+    <target name="jar-test" depends="clean,compile,version">
+        <jar destfile="${build.dir}/ci-eye-tests-${version.label}.jar">
+            <fileset dir="${built-test.dir}"/>
+            <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
+
+            <zipfileset src="${buildlib.dir}/hamcrest-all-1.3.0RC2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${buildlib.dir}/jmock-2.5.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${buildlib.dir}/junit-dep-4.10.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${buildlib.dir}/menodora-0.0.4.jar" excludes="**/META-INF/**"/>
+
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Implementation-Vendor" value="netmelody.org"/>
+                <attribute name="Implementation-Title" value="${ant.project.name} Tests"/>
+                <attribute name="Implementation-Version" value="${version.label}"/>
+                <attribute name="Built-Date" value="${build.timestamp}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="jar" description="Create jar files" depends="jar-main,jar-test"/>
+
+    <target name="test" description="Test this project" depends="jar">
+        <property name="test-report.dir" value="${build.dir}/testreport"/>
+        <mkdir dir="${test-report.dir}"/>
+
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath>
+              <pathelement location="${build.dir}/ci-eye-${version.label}.jar"/>
+              <pathelement location="${build.dir}/ci-eye-tests-${version.label}.jar"/>
+            </classpath>
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="${test-report.dir}">
+                <zipfileset src="${build.dir}/ci-eye-tests-${version.label}.jar">
+                    <include name="org/netmelody/cieye/**/*Test.class"/>
+                    
+                    <!-- oh dear... pending menodora upgrade -->
+                    <exclude name="org/netmelody/cieye/jstest/*Test.class"/>
+                </zipfileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="dependency-check" depends="clean,jar" description="Perform dependency checks">
+        <taskdef name="classycleDependencyCheck"
+                 classname="classycle.ant.DependencyCheckingTask"
+                 classpath="${buildlib.dir}/classycle-1.4.jar"/>
+        
+        <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
+            <!-- oh dear... classycle doesn't support zipfileset
+            <zipfileset src="${build.dir}/ci-eye-${version.label}.jar">
+                <include name="org/netmelody/cieye/**/*.class"/>
+            </zipfileset>
+            -->
+            <fileset dir="${built-main.dir}" includes="**/*.class"/>
+        </classycleDependencyCheck>
+    </target>
+
+    <target name="snapshot" description="Create a tested snapshot jar file" depends="test,dependency-check"/>
+    <target name="release" description="Create a tested release jar file" depends="version-for-release,snapshot"/>
 </project>
