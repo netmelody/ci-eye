@@ -118,7 +118,7 @@
     <target name="jar-test" depends="clean,compile,version">
         <jar destfile="${build.dir}/ci-eye-tests-${version.label}.jar">
             <fileset dir="${built-test.dir}"/>
-            <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
+            <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
 
             <zipfileset src="${buildlib.dir}/hamcrest-all-1.3.0RC2.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${buildlib.dir}/jmock-2.5.1.jar" excludes="**/META-INF/**"/>
