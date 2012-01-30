@@ -19,7 +19,7 @@
 	<classpathentry kind="lib" path="vendor/lib/commons-io-2.1.jar" sourcepath="vendor/src/commons-io-2.1-sources.jar"/>
 	<classpathentry kind="lib" path="vendor/buildlib/hamcrest-all-1.3.0RC2.jar" sourcepath="vendor/src/hamcrest-1.3.0RC2-src.zip"/>
 	<classpathentry kind="lib" path="vendor/buildlib/junit-dep-4.10.jar" sourcepath="vendor/src/junit-dep-4.10-sources.jar"/>
-	<classpathentry kind="lib" path="vendor/buildlib/menodora-0.0.4.jar"/>
+	<classpathentry kind="lib" path="vendor/buildlib/menodora-0.0.5.jar"/>
 	<classpathentry kind="lib" path="vendor/buildlib/jmock-2.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
