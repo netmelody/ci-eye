@@ -141,7 +141,7 @@
         <property name="test-report.dir" value="${build.dir}/testreport"/>
         <mkdir dir="${test-report.dir}"/>
 
-        <junit printsummary="yes" haltonfailure="yes">
+        <junit printsummary="yes" haltonfailure="yes" forkmode="once">
             <classpath>
               <pathelement location="${build.dir}/ci-eye-${version.label}.jar"/>
               <pathelement location="${build.dir}/ci-eye-tests-${version.label}.jar"/>
