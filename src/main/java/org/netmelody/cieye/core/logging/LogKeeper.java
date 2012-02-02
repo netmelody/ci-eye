@@ -6,7 +6,7 @@ public final class LogKeeper {
 
     private LogKeeper() { }
     
-    public static final Logbook logbookFor(Class<?> target) {
+    public static Logbook logbookFor(Class<?> target) {
         return new Logbook(LogFactory.getLog(target));
     }
 }
