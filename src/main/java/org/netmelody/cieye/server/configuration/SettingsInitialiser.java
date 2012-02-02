@@ -5,12 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.netmelody.cieye.core.logging.LogKeeper;
-import org.netmelody.cieye.core.logging.Logbook;
 
 public final class SettingsInitialiser {
-    
-    private static final Logbook LOG = LogKeeper.logbookFor(SettingsInitialiser.class);
     
     private final File homeDir;
     private final File viewsFile;
@@ -49,7 +45,7 @@ public final class SettingsInitialiser {
         final String logsDirName = "logs";
         final boolean createdLogsDir = new File(homeDir, logsDirName).mkdir();
         if (!createdLogsDir) {
-            LOG.warn("Failed to create logs directory at" + homeDir.getPath() + File.pathSeparator + logsDirName);
+            System.err.println("Failed to create logs directory at" + homeDir.getPath() + File.pathSeparator + logsDirName);
         }
     }
 
