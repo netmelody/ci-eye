@@ -16,6 +16,8 @@
       <entry name="?*.ftl" />
       <entry name="?*.js" />
       <entry name="?*.css" />
+      <entry name="?*.ico" />
+      <entry name="?*.template" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true" />
   </component>
