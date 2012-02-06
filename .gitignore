@@ -2,5 +2,6 @@ bin
 build
 out
 .idea/workspace.xml
+.idea/tasks.xml
 *.swp
 *.*~
