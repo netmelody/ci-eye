@@ -15,15 +15,16 @@ CI-Eye requires no installation and almost no setup.
 
 Downloads
 ---------
-The CI-Eye executable JAR file can be downloaded from GitHub [downloads].
+The CI-Eye executable JAR file can be downloaded from GitHub [downloads] along with the [release notes].
 
 Source
 ------
 The latest source of CI-Eye can be found on [GitHub].
 
-[logo]: https://raw.github.com/netmelody/ci-eye/master/logo.png
+[logo]: https://raw.github.com/netmelody/ci-eye/master/doc/images/logo.png
 [website]: http://netmelody.org
 [Tom Denley]: https://github.com/scarytom
 [Apache 2 License]: https://raw.github.com/netmelody/ci-eye/master/LICENSE
 [downloads]: https://github.com/netmelody/ci-eye/downloads
+[release notes]: https://raw.github.com/netmelody/ci-eye/master/docs/RELEASENOTES.md
 [GitHub]: https://github.com/netmelody/ci-eye
