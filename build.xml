@@ -48,6 +48,8 @@
 
     <target name="version" depends="version-for-snapshot,version-for-release">
         <echo message="Building version ${version.label}"/>
+        <property name="main.jar" value="${build.dir}/ci-eye-${version.label}.jar"/>
+        <property name="test.jar" value="${build.dir}/ci-eye-tests-${version.label}.jar"/>
     </target>
 
     <target name="clean" description="Clean this project">
@@ -65,7 +67,7 @@
             <fileset dir="${jslib.dir}"/>
         </copy>
 
-        <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
+        <jar destfile="${main.jar}">
             <fileset dir="${built-main.dir}"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
 
@@ -94,13 +96,13 @@
 
     <target name="jar-test" depends="clean,jar-main">
         <path id="compile-test.req">
-            <fileset dir="${basedir}" includes="${build.dir}/ci-eye-${version.label}.jar"/>
+            <fileset dir="${basedir}" includes="${main.jar}"/>
             <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
         </path>
         <property name="built-test.dir" value="${build.dir}/test"/>
         <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
         
-        <jar destfile="${build.dir}/ci-eye-tests-${version.label}.jar">
+        <jar destfile="${test.jar}">
             <fileset dir="${built-test.dir}"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
 
@@ -127,12 +129,12 @@
 
         <junit printsummary="yes" haltonfailure="yes" forkmode="once">
             <classpath>
-              <pathelement location="${build.dir}/ci-eye-${version.label}.jar"/>
-              <pathelement location="${build.dir}/ci-eye-tests-${version.label}.jar"/>
+              <pathelement location="${main.jar}"/>
+              <pathelement location="${test.jar}"/>
             </classpath>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="${test-report.dir}">
-                <zipfileset src="${build.dir}/ci-eye-tests-${version.label}.jar">
+                <zipfileset src="${test.jar}">
                     <include name="org/netmelody/cieye/**/*Test.class"/>
                 </zipfileset>
             </batchtest>
@@ -146,11 +148,11 @@
         
         <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true" includingClasses="org.netmelody.*">
             <!-- oh dear... classycle doesn't support zipfileset
-            <zipfileset src="${build.dir}/ci-eye-${version.label}.jar">
+            <zipfileset src="${main.jar}">
                 <include name="org/netmelody/cieye/**/*.class"/>
             </zipfileset>
             -->
-            <fileset dir="${basedir}" includes="${build.dir}/ci-eye-${version.label}.jar"/>
+            <fileset dir="${basedir}" includes="${main.jar}"/>
         </classycleDependencyCheck>
     </target>
 
