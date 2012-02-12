@@ -3,10 +3,10 @@
 
     <property name="target.version" value="0.2.1"/>
 
-    <property name="build.dir"      value="build"/>
-    <property name="lib.dir"        value="vendor/lib"/>
-    <property name="jslib.dir"      value="vendor/jslib"/>
-    <property name="buildlib.dir"   value="vendor/buildlib"/>
+    <property name="build.dir"      value="${basedir}/build"/>
+    <property name="lib.dir"        value="${basedir}/vendor/lib"/>
+    <property name="jslib.dir"      value="${basedir}/vendor/jslib"/>
+    <property name="buildlib.dir"   value="${basedir}/vendor/buildlib"/>
 
     <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
     <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
@@ -61,14 +61,13 @@
         <path id="compile-main.req">
             <fileset dir="${lib.dir}" includes="**/*.jar"/>
         </path>
-        <property name="built-main.dir" value="${build.dir}/main"/>
-        <compile-module srcdir="src/main" destdir="${built-main.dir}" classpathref="compile-main.req"/>
+        <compile-module srcdir="${basedir}/src/main" destdir="${build.dir}/main" classpathref="compile-main.req"/>
         <copy todir="${built-main.dir}">
             <fileset dir="${jslib.dir}"/>
         </copy>
 
         <jar destfile="${main.jar}">
-            <fileset dir="${built-main.dir}"/>
+            <fileset dir="${build.dir}/main"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
 
             <zipfileset src="${lib.dir}/commons-codec-1.4.jar" excludes="**/META-INF/**"/>
@@ -99,11 +98,10 @@
             <fileset dir="${basedir}" includes="${main.jar}"/>
             <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
         </path>
-        <property name="built-test.dir" value="${build.dir}/test"/>
-        <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
+        <compile-module srcdir="${basedir}/src/test" destdir="${build.dir}/test" classpathref="compile-test.req"/>
         
         <jar destfile="${test.jar}">
-            <fileset dir="${built-test.dir}"/>
+            <fileset dir="${build.dir}/test"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
 
             <zipfileset src="${buildlib.dir}/hamcrest-all-1.3.0RC2.jar" excludes="**/META-INF/**"/>
@@ -124,16 +122,16 @@
     <target name="jar" description="Create jar files" depends="jar-main,jar-test"/>
 
     <target name="test" description="Test this project" depends="jar">
-        <property name="test-report.dir" value="${build.dir}/testreport"/>
-        <mkdir dir="${test-report.dir}"/>
+        <mkdir dir="${build.dir}/testreport"/>
+        <mkdir dir="${build.dir}/tmp"/>
 
-        <junit printsummary="yes" haltonfailure="yes" forkmode="once">
+        <junit printsummary="yes" haltonfailure="yes" forkmode="once" tempdir="${build.dir}/tmp">
             <classpath>
               <pathelement location="${main.jar}"/>
               <pathelement location="${test.jar}"/>
             </classpath>
             <formatter type="plain"/>
-            <batchtest fork="yes" todir="${test-report.dir}">
+            <batchtest fork="yes" todir="${build.dir}/testreport">
                 <zipfileset src="${test.jar}">
                     <include name="org/netmelody/cieye/**/*Test.class"/>
                 </zipfileset>
