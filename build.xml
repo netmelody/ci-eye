@@ -62,7 +62,7 @@
             <fileset dir="${lib.dir}" includes="**/*.jar"/>
         </path>
         <compile-module srcdir="${basedir}/src/main" destdir="${build.dir}/main" classpathref="compile-main.req"/>
-        <copy todir="${built-main.dir}">
+        <copy todir="${build.dir}/main">
             <fileset dir="${jslib.dir}"/>
         </copy>
 
@@ -95,7 +95,7 @@
 
     <target name="jar-test" depends="clean,jar-main">
         <path id="compile-test.req">
-            <fileset dir="${basedir}" includes="${main.jar}"/>
+            <fileset file="${main.jar}"/>
             <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
         </path>
         <compile-module srcdir="${basedir}/src/test" destdir="${build.dir}/test" classpathref="compile-test.req"/>
@@ -150,7 +150,7 @@
                 <include name="org/netmelody/cieye/**/*.class"/>
             </zipfileset>
             -->
-            <fileset dir="${basedir}" includes="${main.jar}"/>
+            <fileset file="${main.jar}"/>
         </classycleDependencyCheck>
     </target>
 
