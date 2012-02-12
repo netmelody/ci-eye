@@ -7,25 +7,9 @@
     <property name="lib.dir"        value="vendor/lib"/>
     <property name="jslib.dir"      value="vendor/jslib"/>
     <property name="buildlib.dir"   value="vendor/buildlib"/>
-    <property name="built-main.dir" value="${build.dir}/main"/>
-    <property name="built-test.dir" value="${build.dir}/test"/>
 
     <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
     <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
-
-    <path id="compile-main.req">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
-    </path>
-
-    <path id="run-main.req">
-        <path refid="compile-main.req"/>
-        <pathelement location="${built-main.dir}"/>
-    </path>
-
-    <path id="compile-test.req">
-        <path refid="run-main.req"/>
-        <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
-    </path>
 
     <macrodef name="compile-module">
         <attribute name="srcdir"/>
@@ -33,6 +17,8 @@
         <attribute name="classpathref"/>
 
         <sequential>
+            <mkdir dir="@{destdir}"/>
+
             <javac srcdir="@{srcdir}/java"
                    includes="**"
                    includeantruntime="false"
@@ -66,28 +52,19 @@
 
     <target name="clean" description="Clean this project">
         <delete dir="${build.dir}" failonerror="false"/>
-    </target>
-
-    <target name="prepare">
         <mkdir dir="${build.dir}"/>
     </target>
 
-    <target name="compile-main" depends="prepare">
-        <mkdir dir="${built-main.dir}"/>
+    <target name="jar-main" depends="clean,version">
+        <path id="compile-main.req">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </path>
+        <property name="built-main.dir" value="${build.dir}/main"/>
         <compile-module srcdir="src/main" destdir="${built-main.dir}" classpathref="compile-main.req"/>
         <copy todir="${built-main.dir}">
             <fileset dir="${jslib.dir}"/>
         </copy>
-    </target>
 
-    <target name="compile-test" depends="prepare,compile-main">
-        <mkdir dir="${built-test.dir}"/>
-        <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
-    </target>
-
-    <target name="compile" depends="compile-main,compile-test" description="Compile all this project's source"/>
-
-    <target name="jar-main" depends="clean,compile,version">
         <jar destfile="${build.dir}/ci-eye-${version.label}.jar">
             <fileset dir="${built-main.dir}"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README"/>
@@ -115,7 +92,14 @@
         </jar>
     </target>
 
-    <target name="jar-test" depends="clean,compile,version">
+    <target name="jar-test" depends="clean,jar-main">
+        <path id="compile-test.req">
+            <fileset dir="${basedir}" includes="${build.dir}/ci-eye-${version.label}.jar"/>
+            <fileset dir="${buildlib.dir}" includes="**/*.jar"/>
+        </path>
+        <property name="built-test.dir" value="${build.dir}/test"/>
+        <compile-module srcdir="src/test" destdir="${built-test.dir}" classpathref="compile-test.req"/>
+        
         <jar destfile="${build.dir}/ci-eye-tests-${version.label}.jar">
             <fileset dir="${built-test.dir}"/>
             <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
