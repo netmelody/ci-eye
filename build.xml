@@ -160,13 +160,13 @@
                  classname="classycle.ant.DependencyCheckingTask"
                  classpath="${buildlib.dir}/classycle-1.4.jar"/>
         
-        <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true">
+        <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true" includingClasses="org.netmelody.*">
             <!-- oh dear... classycle doesn't support zipfileset
             <zipfileset src="${build.dir}/ci-eye-${version.label}.jar">
                 <include name="org/netmelody/cieye/**/*.class"/>
             </zipfileset>
             -->
-            <fileset dir="${built-main.dir}" includes="**/*.class"/>
+            <fileset dir="${basedir}" includes="${build.dir}/ci-eye-${version.label}.jar"/>
         </classycleDependencyCheck>
     </target>
 
