@@ -18,6 +18,7 @@ import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -44,6 +45,7 @@ public final class RestRequester {
     public RestRequester(int port) {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
+        schemeRegistry.register(new Scheme("https", port, SSLSocketFactory.getSocketFactory()));
 
         final ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(schemeRegistry);
         connectionManager.setMaxTotal(200);

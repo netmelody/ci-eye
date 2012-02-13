@@ -23,4 +23,9 @@ public final class RestRequesterTest {
         server.respondWith("some response text");
         assertThat(requester.makeRequest("http://localhost/"), startsWith("some response text"));
     }
+    
+//    @Test public void
+//    makesASuccessfulHttpsRequest() {
+//        assertThat(requester.makeRequest("https://localhost/"), startsWith("some response text"));
+//    }
 }
