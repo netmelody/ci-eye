@@ -94,6 +94,7 @@ public final class PollingSpy implements CiSpyHandler {
             final TargetDigestGroup targets = delegate.targetsConstituting(feature);
             for (TargetDigest digest : targets) {
                 final TargetDetail target = delegate.statusOf(digest.id());
+                //TODO: target might be null... do not trust the agent!
                 newStatus.add(target);
                 intermediateStatus = intermediateStatus.updatedWith(target);
                 statuses.put(feature, intermediateStatus);
