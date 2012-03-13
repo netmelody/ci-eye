@@ -18,7 +18,7 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesMany;
+import org.netmelody.cieye.spies.teamcity.jsondomain.Changes;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
@@ -86,7 +86,7 @@ public final class TeamCityCommunicator {
     public List<Change> changesOf(final BuildDetail buildDetail) {
         final List<Change> changes = new ArrayList<Change>();
 
-            changes.addAll(makeTeamCityRestCall(endpoint + buildDetail.changes.href, ChangesMany.class).change());
+            changes.addAll(makeTeamCityRestCall(endpoint + buildDetail.changes.href, Changes.class).change());
         return changes;
     }
 
