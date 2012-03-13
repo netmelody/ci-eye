@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public final class ChangesMany {
+public final class Changes {
     //String @count
     public List<Change> change;
 
