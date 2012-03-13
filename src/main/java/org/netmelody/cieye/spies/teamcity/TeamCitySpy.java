@@ -1,6 +1,5 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
@@ -24,6 +23,7 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 public final class TeamCitySpy implements CiSpy {
 
@@ -31,41 +31,41 @@ public final class TeamCitySpy implements CiSpy {
     private final BuildTypeAnalyser buildTypeAnalyser;
 
     private final Map<TargetId, BuildType> recognisedBuildTypes = newHashMap();
-    
-    public TeamCitySpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
+
+    public TeamCitySpy(final String endpoint, final CommunicationNetwork network, final KnownOffendersDirectory detective) {
         this.communicator = new TeamCityCommunicator(network, endpoint);
         this.buildTypeAnalyser = new BuildTypeAnalyser(this.communicator, detective);
     }
 
     @Override
-    public TargetDigestGroup targetsConstituting(Feature feature) {
+    public TargetDigestGroup targetsConstituting(final Feature feature) {
         final Collection<BuildType> buildTypes = buildTypesFor(feature);
         final List<TargetDigest> digests = newArrayList();
-        
-        for (BuildType buildType : buildTypes) {
+
+        for (final BuildType buildType : buildTypes) {
             final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, UNKNOWN);
             digests.add(targetDigest);
             recognisedBuildTypes.put(targetDigest.id(), buildType);
         }
-        
+
         return new TargetDigestGroup(digests);
     }
 
     @Override
     public TargetDetail statusOf(final TargetId target) {
-        BuildType buildType = recognisedBuildTypes.get(target);
+        final BuildType buildType = recognisedBuildTypes.get(target);
         if (null == buildType) {
             return null;
         }
         return buildTypeAnalyser.targetFrom(buildType);
     }
-    
+
     @Override
-    public boolean takeNoteOf(TargetId target, String note) {
+    public boolean takeNoteOf(final TargetId target, final String note) {
         if (!recognisedBuildTypes.containsKey(target)) {
             return false;
         }
-        
+
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(recognisedBuildTypes.get(target));
         final Build lastCompletedBuild = communicator.lastCompletedBuildFor(buildTypeDetail);
         if (null != lastCompletedBuild && Status.BROKEN.equals(lastCompletedBuild.status())) {
@@ -74,26 +74,22 @@ public final class TeamCitySpy implements CiSpy {
 
         return true;
     }
-    
+
     private Collection<BuildType> buildTypesFor(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
             return newArrayList();
         }
-        
         communicator.loginAsGuest();
-        
-        final Project project = find(communicator.projects(), withName(feature.name()), null);
-        if (null == project) {
-            return newArrayList();
-        }
-        
-        return communicator.buildTypesFor(project);
+        final Iterable<Project> projects = Iterables.filter(communicator.projects(),withNameOrNameIsEmpty(feature.name()));
+
+
+        return communicator.buildTypesFor(projects);
     }
-    
-    private Predicate<Project> withName(final String featureName) {
+
+    private Predicate<Project> withNameOrNameIsEmpty(final String featureName) {
         return new Predicate<Project>() {
-            @Override public boolean apply(Project project) {
-                return project.name.trim().equals(featureName.trim());
+            @Override public boolean apply(final Project project) {
+                return project.name.trim().equals(featureName.trim()) || featureName.equals("");
             }
         };
     }
