@@ -1,8 +1,5 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import static com.google.common.base.Predicates.alwaysTrue;
-import static com.google.common.collect.Iterables.find;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,10 +16,16 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesMany;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesOne;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+
+import static com.google.common.base.Predicates.alwaysTrue;
+import static com.google.common.collect.Iterables.find;
 
 public final class TeamCityCommunicator {
 
@@ -81,12 +84,17 @@ public final class TeamCityCommunicator {
     
     public List<Change> changesOf(BuildDetail buildDetail) {
         final List<Change> changes = new ArrayList<Change>();
-        if (buildDetail.changes.count == 1) {
-            changes.add(makeTeamCityRestCall(endpoint + buildDetail.changes.href, ChangesOne.class).change);
+        final JsonElement json = contact.makeJsonRestCall(endpoint + buildDetail.changes.href);
+        final JsonElement change = json.isJsonObject() ? json.getAsJsonObject().get("change") : JsonNull.INSTANCE;
+        
+        if (null != change && change.isJsonObject()) {
+            changes.add(new Gson().fromJson(change, Change.class));
         }
-        else {
-            changes.addAll(makeTeamCityRestCall(endpoint + buildDetail.changes.href, ChangesMany.class).change());
+        
+        if (null != change && change.isJsonArray()) {
+            changes.addAll(new Gson().fromJson(json, ChangesMany.class).change());
         }
+        
         return changes;
     }
     

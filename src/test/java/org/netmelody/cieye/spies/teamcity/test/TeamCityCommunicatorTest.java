@@ -9,7 +9,6 @@ import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.spies.StubContact;
@@ -59,7 +58,6 @@ public final class TeamCityCommunicatorTest {
         assertThat(changes.get(1).id, is("47949"));
     }
 
-    @Ignore("pending implementation")
     @Test public void
     requestsSingularBuildChangesForTeamCitySevenApi() {
         final BuildDetail buildDetail = buildDetail(1);

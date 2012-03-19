@@ -5,6 +5,8 @@ import java.util.Map;
 import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -20,10 +22,15 @@ public final class StubContact implements Contact {
     
     @Override
     public <T> T makeJsonRestCall(String url, Class<T> type) {
+        return gson.fromJson(makeJsonRestCall(url), type);
+    }
+
+    @Override
+    public JsonElement makeJsonRestCall(String url) {
         if (!responses.containsKey(url)) {
             throw new AssertionError("Unexpected request for " + url);
         }
-        return gson.fromJson(responses.get(url), type);
+        return new JsonParser().parse(responses.get(url));
     }
 
     @Override

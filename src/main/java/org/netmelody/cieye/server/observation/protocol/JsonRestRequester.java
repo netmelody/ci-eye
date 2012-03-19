@@ -6,6 +6,9 @@ import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.common.base.Function;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonParser;
 
 public final class JsonRestRequester implements Contact {
 
@@ -56,6 +59,20 @@ public final class JsonRestRequester implements Contact {
         return result;
     }
 
+    @Override
+    public JsonElement makeJsonRestCall(String url) {
+        String content = null;
+        JsonElement result = null;
+        try {
+            content = contentMunger.apply(restRequester.makeRequest(url));
+            result = new JsonParser().parse(content);
+        }
+        catch (Exception e) {
+            LOG.error(String.format("Failed to parse json from (%s) of:\n %s", url, content), e);
+        }
+        return (result == null) ? JsonNull.INSTANCE : result; 
+    }
+    
     @Override
     public void performBasicLogin(String loginUrl) {
         restRequester.makeRequest(loginUrl);
