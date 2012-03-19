@@ -1,6 +1,5 @@
 package org.netmelody.cieye.spies.teamcity.test;
 
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -10,15 +9,11 @@ import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
-import org.netmelody.cieye.core.observation.Contact;
+import org.netmelody.cieye.spies.StubContact;
 import org.netmelody.cieye.spies.teamcity.TeamCityCommunicator;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesHref;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesMany;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesOne;
-
-import com.google.gson.Gson;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -28,7 +23,7 @@ public final class TeamCityCommunicatorTest {
     private final Mockery context = new Mockery();
     
     private final CommunicationNetwork network = context.mock(CommunicationNetwork.class);
-    private final Contact contact = context.mock(Contact.class);
+    private final StubContact contact = new StubContact(TeamCityCommunicatorTest.class);
     
     private TeamCityCommunicator communicator;
     
@@ -47,13 +42,9 @@ public final class TeamCityCommunicatorTest {
         buildDetail.changes.count = 1;
         buildDetail.changes.href = "/app/rest/changes/id:1";
         
-        context.checking(new Expectations() {{
-            allowing(contact).makeJsonRestCall("http://foo/app/rest/changes/id:1", ChangesOne.class);
-                will(returnValue(new Gson().fromJson(streamFor("tc_6.5.5_changes_1.json"), ChangesOne.class)));
-        }});
+        contact.respondingWith("http://foo/app/rest/changes/id:1", "tc_6.5.5_changes_1.json");
         
         final List<Change> changes = communicator.changesOf(buildDetail);
-        
         assertThat(changes, is(Matchers.<Change>iterableWithSize(1)));
     }
     
@@ -62,19 +53,11 @@ public final class TeamCityCommunicatorTest {
         final BuildDetail buildDetail = new BuildDetail();
         buildDetail.changes = new ChangesHref();
         buildDetail.changes.count = 2;
-        buildDetail.changes.href = "/app/rest/changes/id:1";
+        buildDetail.changes.href = "/app/rest/changes/id:2";
         
-        context.checking(new Expectations() {{
-            allowing(contact).makeJsonRestCall("http://foo/app/rest/changes/id:1", ChangesMany.class);
-            will(returnValue(new Gson().fromJson(streamFor("tc_6.5.5_changes_2.json"), ChangesMany.class)));
-        }});
-        
+        contact.respondingWith("http://foo/app/rest/changes/id:2", "tc_6.5.5_changes_2.json");
+
         final List<Change> changes = communicator.changesOf(buildDetail);
-        
         assertThat(changes, is(Matchers.<Change>iterableWithSize(2)));
-    }
-    
-    private InputStreamReader streamFor(String jsonFile) {
-        return new InputStreamReader(TeamCityCommunicatorTest.class.getResourceAsStream(jsonFile));
     }
 }
