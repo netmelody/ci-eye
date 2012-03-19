@@ -1,0 +1,17 @@
+{
+    "@count": "2",
+    "change": [
+        {
+            "@webLink": "http://teamcity.codebetter.com/viewModification.html?modId=47951&personal=false",
+            "@version": "ff12f0eb9d7add3072882070b42008465473a36f",
+            "@id": "47951",
+            "@href": "/app/rest/changes/id:47951"
+        },
+        {
+            "@webLink": "http://teamcity.codebetter.com/viewModification.html?modId=47949&personal=false",
+            "@version": "ddbfb6296b6e54159d6c3d6dc75872f8a93cdb6e",
+            "@id": "47949",
+            "@href": "/app/rest/changes/id:47949"
+        }
+    ]
+}
