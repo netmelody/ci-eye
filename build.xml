@@ -145,11 +145,6 @@
                  classpath="${buildlib.dir}/classycle-1.4.jar"/>
         
         <classycleDependencyCheck definitionFile="dependencies.ddf" failOnUnwantedDependencies="true" includingClasses="org.netmelody.*">
-            <!-- oh dear... classycle doesn't support zipfileset
-            <zipfileset src="${main.jar}">
-                <include name="org/netmelody/cieye/**/*.class"/>
-            </zipfileset>
-            -->
             <fileset file="${main.jar}"/>
         </classycleDependencyCheck>
     </target>
