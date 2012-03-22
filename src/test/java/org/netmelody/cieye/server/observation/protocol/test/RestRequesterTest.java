@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.startsWith;
 public final class RestRequesterTest {
 
     private final DummyServer server = new DummyServer();
-    private final RestRequester requester = new RestRequester(server.port());
+    private final RestRequester requester = new RestRequester();
 
     @After
     public void shutdownServer() {
@@ -21,11 +21,11 @@ public final class RestRequesterTest {
     @Test public void
     makesASuccessfulRequest() {
         server.respondWith("some response text");
-        assertThat(requester.makeRequest("http://localhost/"), startsWith("some response text"));
+        assertThat(requester.makeRequest("http://localhost:" + server.port() + "/"), startsWith("some response text"));
     }
     
 //    @Test public void
 //    makesASuccessfulHttpsRequest() {
-//        assertThat(requester.makeRequest("https://localhost/"), startsWith("some response text"));
+//        assertThat(requester.makeRequest("https://localhost:" + server.port() + "/"), startsWith("some response text"));
 //    }
 }

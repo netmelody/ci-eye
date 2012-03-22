@@ -19,17 +19,13 @@ public final class JsonRestRequester implements Contact {
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, 80);
-    }
-    
-    public JsonRestRequester(Gson jsonTranslator, int port) {
-        this(jsonTranslator, port, new Function<String, String>() {
+        this(jsonTranslator, new Function<String, String>() {
             @Override public String apply(String input) {  return input.replace("\"@", "\""); }
         });
     }
     
-    private JsonRestRequester(Gson jsonTranslator, int port, Function<String, String> contentMunger) {
-        this.restRequester = new RestRequester(port);
+    private JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
+        this.restRequester = new RestRequester();
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }

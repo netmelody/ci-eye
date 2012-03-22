@@ -39,18 +39,14 @@ public final class RestRequester {
     private final DefaultHttpClient client;
 
     public RestRequester() {
-        this(80);
-    }
-    
-    public RestRequester(int port) {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
-        schemeRegistry.register(new Scheme("https", port, SSLSocketFactory.getSocketFactory()));
+        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+        schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
 
         final ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(schemeRegistry);
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultMaxPerRoute(20);
-         
+        
         final HttpParams params = new BasicHttpParams();
         params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
         

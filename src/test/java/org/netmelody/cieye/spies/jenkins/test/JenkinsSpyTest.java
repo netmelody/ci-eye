@@ -47,6 +47,17 @@ public final class JenkinsSpyTest {
     }
     
     @Test public void
+    canPullFromSecureJenkinsLiveInstance() {
+        final GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        final Contact realContact = new JsonRestRequester(builder.create());
+        final JenkinsSpy witness = new JenkinsSpy("https://jenkins.puppetlabs.com", new RecordedKnownOffenders(new SettingsFile(new File(""))), realContact);
+        
+        final TargetDigestGroup digests = witness.targetsConstituting(new Feature("Known Good", "https://jenkins.puppetlabs.com", new CiServerType("JENKINS")));
+        
+        assertThat(witness.statusOf(digests.iterator().next().id()), is(notNullValue(TargetDetail.class)));
+    }
+    
+    @Test public void
     lazilyRetrievesJobDetails() {
         final JenkinsSpy spy = new JenkinsSpy("myEndpoint", detective, contact);
         
