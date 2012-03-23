@@ -1,10 +1,9 @@
 package org.netmelody.cieye.server.observation.test;
 
-import java.text.SimpleDateFormat;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.observation.GovernmentWatchdog;
@@ -20,7 +19,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class GovernmentWatchdogTest {
     
@@ -43,8 +41,7 @@ public class GovernmentWatchdogTest {
         final Contact contact = context.mock(Contact.class);
         
         context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(SimpleDateFormat.class)), with(Tags.class), with(notNullValue(TagsAdapter.class)));
-                will(returnValue(contact));
+            allowing(network).makeContact(with(any(CodeBook.class))); will(returnValue(contact));
                 
             oneOf(contact).makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
                 will(returnValue(new TagsHolder(newArrayList(new Tag("0.0.1"), new Tag("0.0.2"), new Tag("0.0.3"), new Tag("0.0.4")))));

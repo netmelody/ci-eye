@@ -1,26 +1,22 @@
 package org.netmelody.cieye.server.observation.protocol;
 
-import java.text.SimpleDateFormat;
+import java.util.Map.Entry;
 
 import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 
 public final class JsonRestRequesterBuilder implements CommunicationNetwork {
 
     @Override
     public Contact makeContact(CodeBook codeBook) {
-        return makeContact(codeBook.dateFormat(), null, null);
-    }
-
-    @Override
-    public Contact makeContact(SimpleDateFormat dateFormat, Class<?> type, Object typeAdapter) {
-        final GsonBuilder builder = new GsonBuilder().setDateFormat(dateFormat.toPattern());
+        final GsonBuilder builder = new GsonBuilder().setDateFormat(codeBook.dateFormat().toPattern());
         
-        if (null != typeAdapter) {
-            builder.registerTypeAdapter(type, typeAdapter);
+        for (Entry<Class<?>, JsonDeserializer<?>> entry : codeBook.deserialisers().entrySet()) {
+            builder.registerTypeAdapter(entry.getKey(), entry.getValue());
         }
         
         return new JsonRestRequester(builder.create());

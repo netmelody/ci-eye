@@ -1,7 +1,6 @@
 package org.netmelody.cieye.server.observation;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
@@ -96,7 +96,7 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
     }
     
     public GovernmentWatchdog(CommunicationNetwork network) {
-        contact = network.makeContact(new SimpleDateFormat(), Tags.class, new TagsAdapter());
+        contact = network.makeContact(new CodeBook().withJsonDeserializerFor(Tags.class, new TagsAdapter()));
     }
 
     @Override
