@@ -1,11 +1,9 @@
 package org.netmelody.cieye.server.configuration.test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -24,25 +22,37 @@ public final class RecordedObservationTargetsTest {
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
-    private RecordedObservationTargets targets;
 
-    @Before
-    public void createOffendersFile() throws IOException {
+    @Test public void
+    readsLandscapesFromFile() throws Exception {
         final File views = testFolder.newFile("views.txt");
-        FileUtils.copyInputStreamToFile(RecordedObservationTargets.class.getResourceAsStream("templates/views.txt.template"),
-                                        views);
-        
-        targets = new RecordedObservationTargets(new SettingsFile(views));
+        FileUtils.copyInputStreamToFile(RecordedObservationTargetsTest.class.getResourceAsStream("testviews.txt"), views);
+        final RecordedObservationTargets targets = new RecordedObservationTargets(new SettingsFile(views));
+        assertThat(targets.landscapes().landscapeNamed("Landscape- 1").name(), is("Landscape- 1"));
+        assertThat(targets.landscapes().landscapeNamed("Landscape- 2").name(), is("Landscape- 2"));
     }
     
     @Test public void
-    readsLandscapesFromFile() {
+    populatesLandscapeWithFeatures() throws Exception {
+        final File views = testFolder.newFile("views.txt");
+        FileUtils.copyInputStreamToFile(RecordedObservationTargetsTest.class.getResourceAsStream("testviews.txt"), views);
+        final RecordedObservationTargets targets = new RecordedObservationTargets(new SettingsFile(views));
+        final Collection<Feature> features = targets.landscapes().landscapeNamed("Landscape- 2").features();
+        assertThat(features, contains(new Feature("Jenkins 1", "http://jenkinsurl", new CiServerType("JENKINS")),
+                                      new Feature("Hudson 1", "http://hudsonurl", new CiServerType("HUDSON")),
+                                      new Feature("TeamCity 1", "http://teamcityurl", new CiServerType("TEAMCITY")),
+                                      new Feature("", "http://allurl", new CiServerType("JENKINS"))));
+    }
+
+    @Test public void
+    successfullyProcessesTemplateForViews() throws Exception {
+        final File views = testFolder.newFile("views.txt");
+        FileUtils.copyInputStreamToFile(RecordedObservationTargets.class.getResourceAsStream("templates/views.txt.template"), views);
+        final RecordedObservationTargets targets = new RecordedObservationTargets(new SettingsFile(views));
+
         assertThat(targets.landscapes().landscapeNamed("CI-eye Demo"), is(not(nullValue())));
         assertThat(targets.landscapes().landscapeNamed("Public Live"), is(not(nullValue())));
-    }
-    
-    @Test public void
-    populatesLandscapeWithFeatures() {
+        
         final Collection<Feature> features = targets.landscapes().landscapeNamed("Public Live").features();
         assertThat(features, contains(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")),
                                       new Feature("Main (trunk, branches, and alternative builds)", "http://hudson.magnolia-cms.com", new CiServerType("HUDSON")),

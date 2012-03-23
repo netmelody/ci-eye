@@ -1,5 +1,7 @@
 package org.netmelody.cieye.core.domain;
 
+import com.google.common.base.Preconditions;
+
 public final class Feature {
 
     private final String name;
@@ -7,6 +9,9 @@ public final class Feature {
     private final CiServerType type; 
     
     public Feature(String name, String endpoint, CiServerType type) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(endpoint);
+        Preconditions.checkNotNull(type);
         this.name = name;
         this.endpoint = endpoint;
         this.type = type;
