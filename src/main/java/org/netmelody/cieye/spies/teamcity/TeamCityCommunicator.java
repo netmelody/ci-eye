@@ -19,8 +19,11 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesMany;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
+import org.netmelody.menodora.wrapped.com.google.common.collect.ImmutableList;
+import org.netmelody.menodora.wrapped.com.google.common.collect.Lists;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 
@@ -83,16 +86,18 @@ public final class TeamCityCommunicator {
     }
     
     public List<Change> changesOf(BuildDetail buildDetail) {
-        final List<Change> changes = new ArrayList<Change>();
         final JsonElement json = contact.makeJsonRestCall(endpoint + buildDetail.changes.href);
         final JsonElement change = json.isJsonObject() ? json.getAsJsonObject().get("change") : JsonNull.INSTANCE;
         
-        if (null != change && change.isJsonObject()) {
-            changes.add(new Gson().fromJson(change, Change.class));
+        if (null == change || !(change.isJsonArray() || change.isJsonObject())) {
+            return ImmutableList.of();
         }
         
-        if (null != change && change.isJsonArray()) {
-            changes.addAll(new Gson().fromJson(json, ChangesMany.class).change());
+        final Gson gson = new Gson();
+        final List<Change> changes = new ArrayList<Change>();
+        final Iterable<JsonElement> changesJson = change.isJsonArray() ? change.getAsJsonArray() : ImmutableList.of(change);
+        for (JsonElement jsonElement : changesJson) {
+            changes.add(gson.fromJson(jsonElement, Change.class));
         }
         
         return changes;
