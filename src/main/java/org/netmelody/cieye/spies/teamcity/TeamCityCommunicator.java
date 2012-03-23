@@ -1,13 +1,10 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.observation.CodeBook;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
@@ -20,7 +17,6 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -34,13 +30,8 @@ public final class TeamCityCommunicator {
     private final Contact contact;
     private final String endpoint;
 
-    public TeamCityCommunicator(CommunicationNetwork network, String endpoint) {
-        this.contact = network.makeContact(new CodeBook(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"))
-                                               .withRawContentMunger(new Function<String, String>() {
-                                                   @Override public String apply(String input) {
-                                                       return input.replace("\"@", "\"");
-                                                   }
-                                               }));
+    public TeamCityCommunicator(Contact contact, String endpoint) {
+        this.contact = contact;
         this.endpoint = endpoint;
     }
     

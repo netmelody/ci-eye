@@ -1,10 +1,6 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
-import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
-
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +12,7 @@ import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
 import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
@@ -23,7 +20,13 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
 
 public final class TeamCitySpy implements CiSpy {
 
@@ -33,7 +36,13 @@ public final class TeamCitySpy implements CiSpy {
     private final Map<TargetId, BuildType> recognisedBuildTypes = newHashMap();
     
     public TeamCitySpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
-        this.communicator = new TeamCityCommunicator(network, endpoint);
+        final CodeBook codeBook = new CodeBook(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"))
+                                      .withRawContentMunger(new Function<String, String>() {
+                                          @Override public String apply(String input) {
+                                              return input.replace("\"@", "\"");
+                                          }
+                                      });
+        this.communicator = new TeamCityCommunicator(network.makeContact(codeBook), endpoint);
         this.buildTypeAnalyser = new BuildTypeAnalyser(this.communicator, detective);
     }
 

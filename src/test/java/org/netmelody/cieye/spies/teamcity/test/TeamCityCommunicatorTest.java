@@ -5,12 +5,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matchers;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
-import org.netmelody.cieye.core.observation.CodeBook;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.spies.StubContact;
 import org.netmelody.cieye.spies.teamcity.TeamCityCommunicator;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
@@ -22,21 +18,15 @@ import static org.hamcrest.Matchers.is;
 
 public final class TeamCityCommunicatorTest {
 
-    private final Mockery context = new Mockery();
-    
-    private final CommunicationNetwork network = context.mock(CommunicationNetwork.class);
     private final StubContact contact = new StubContact();
-    
+
     private TeamCityCommunicator communicator;
-    
+
     @Before
     public void setup() {
-        context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(CodeBook.class))); will(returnValue(contact));
-        }});
-        communicator = new TeamCityCommunicator(network, "http://foo");
+        communicator = new TeamCityCommunicator(contact, "http://foo");
     }
-    
+
     @Test public void
     requestsSingularBuildChangesForTeamCitySixApi() {
         final BuildDetail buildDetail = buildDetail(1);
