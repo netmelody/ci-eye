@@ -39,6 +39,6 @@ public final class IntelligenceAgency implements CiSpyAllocator {
 
     private CiSpyHandler createSpyFor(Feature feature) {
         final CiSpy spy = agencyConfiguration.agencyFor(feature.type()).provideSpyFor(feature, network, directory);
-        return new PollingSpy(spy);
+        return new PollingSpyHandler(spy);
     }
 }

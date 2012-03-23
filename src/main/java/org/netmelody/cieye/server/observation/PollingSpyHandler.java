@@ -31,9 +31,9 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 
-public final class PollingSpy implements CiSpyHandler {
+public final class PollingSpyHandler implements CiSpyHandler {
 
-    private static final Logbook LOG = LogKeeper.logbookFor(PollingSpy.class);
+    private static final Logbook LOG = LogKeeper.logbookFor(PollingSpyHandler.class);
     
     private static final long POLLING_PERIOD_SECONDS = 5L;
     private static final long CUTOFF_PERIOD_MINUTES = 15L;
@@ -44,7 +44,7 @@ public final class PollingSpy implements CiSpyHandler {
     private final ConcurrentMap<Feature, Long> requests = new MapMaker().makeMap();
     private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
     
-    public PollingSpy(CiSpy delegate) {
+    public PollingSpyHandler(CiSpy delegate) {
         this.delegate = delegate;
         executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
