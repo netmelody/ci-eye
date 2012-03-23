@@ -19,9 +19,7 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypes;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildsHref;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -56,8 +54,8 @@ public final class TeamCitySpyTest {
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
         context.checking(new Expectations() {{
-            allowing(contact).makeJsonRestCall(with(any(String.class)), with(TeamCityProjects.class));
-                will(returnValue(new TeamCityProjects()));
+            allowing(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypes.class));
+                will(returnValue(new BuildTypes()));
             
             oneOf(contact).performBasicLogin("myEndpoint/guestAuth/");
         }});
@@ -72,8 +70,8 @@ public final class TeamCitySpyTest {
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
         context.checking(new Expectations() {{
-            allowing(contact).makeJsonRestCall(with(any(String.class)), with(TeamCityProjects.class));
-                will(returnValue(projectsNamed("myFeatureName")));
+            allowing(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypes.class));
+                will(returnValue(buildTypesForProjectsNamed("myFeatureName")));
             allowing(contact).makeJsonRestCall(with(any(String.class)), with(ProjectDetail.class));
                 will(returnValue(projectNamed("myTarget")));
             
@@ -102,16 +100,16 @@ public final class TeamCitySpyTest {
         return detail;
     }
 
-    private TeamCityProjects projectsNamed(String... names) {
-        final TeamCityProjects projects = new TeamCityProjects();
-        projects.project = newArrayList();
+    private BuildTypes buildTypesForProjectsNamed(String... names) {
+        final BuildTypes buildTypes = new BuildTypes();
+        buildTypes.buildType = newArrayList();
         
         for (String name : names) {
-            final Project project = new Project();
-            project.name = name;
-            projects.project.add(project);
+            final BuildType buildType = new BuildType();
+            buildType.projectName = name;
+            buildTypes.buildType.add(buildType);
         }
-        return projects;
+        return buildTypes;
     }
     
     private ProjectDetail projectNamed(String... names) {

@@ -18,12 +18,11 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
@@ -84,26 +83,25 @@ public final class TeamCitySpy implements CiSpy {
 
         return true;
     }
-    
+
     private Collection<BuildType> buildTypesFor(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
             return newArrayList();
         }
-        
         communicator.loginAsGuest();
         
-        final Project project = find(communicator.projects(), withName(feature.name()), null);
-        if (null == project) {
-            return newArrayList();
+        final Collection<BuildType> buildTypes = communicator.buildTypes();
+        if (feature.name().isEmpty()) {
+            return buildTypes;
         }
         
-        return communicator.buildTypesFor(project);
+        return filter(buildTypes, withFeatureName(feature.name()));
     }
-    
-    private Predicate<Project> withName(final String featureName) {
-        return new Predicate<Project>() {
-            @Override public boolean apply(Project project) {
-                return project.name.trim().equals(featureName.trim());
+
+    private Predicate<BuildType> withFeatureName(final String featureName) {
+        return new Predicate<BuildType>() {
+            @Override public boolean apply(BuildType buildType) {
+                return buildType.projectName.trim().equals(featureName.trim());
             }
         };
     }

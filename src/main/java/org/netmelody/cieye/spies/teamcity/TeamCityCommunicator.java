@@ -10,6 +10,7 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
+import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypes;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
@@ -46,19 +47,23 @@ public final class TeamCityCommunicator {
     public void loginAsGuest() {
         contact.performBasicLogin(endpoint + "/guestAuth/");
     }
-    
+
     public Collection<Project> projects() {
         return makeTeamCityRestCall(endpoint + "/app/rest/projects", TeamCityProjects.class).project();
+    }
+
+    public Collection<BuildType> buildTypes() {
+        return makeTeamCityRestCall(endpoint + "/app/rest/buildTypes", BuildTypes.class).buildType();
     }
 
     public Collection<BuildType> buildTypesFor(Project projectDigest) {
         return makeTeamCityRestCall(endpoint + projectDigest.href, ProjectDetail.class).buildTypes.buildType();
     }
-    
+
     public BuildTypeDetail detailsFor(BuildType buildType) {
         return makeTeamCityRestCall(endpoint + buildType.href, BuildTypeDetail.class);
     }
-    
+
     public Build lastCompletedBuildFor(BuildTypeDetail buildTypeDetail) {
         final Builds completedBuilds = makeTeamCityRestCall(endpoint + buildTypeDetail.builds.href, Builds.class);
         if (null == completedBuilds.build() || completedBuilds.build().isEmpty()) {
