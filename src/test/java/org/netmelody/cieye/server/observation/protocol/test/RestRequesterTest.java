@@ -22,7 +22,7 @@ public final class RestRequesterTest {
     @Test public void
     makesASuccessfulRequest() {
         server.respondWith("some response text");
-        assertThat(requester.makeRequest("http://localhost:" + server.port() + "/"), startsWith("some response text"));
+        assertThat(requester.doGet("http://localhost:" + server.port() + "/"), startsWith("some response text"));
     }
 
     @Test public void
@@ -30,7 +30,7 @@ public final class RestRequesterTest {
         server.respondWithStatusCode(403);
         server.respondWith("some response text");
         
-        assertThat(requester.makeRequest("http://localhost:" + server.port() + "/"), is(""));
+        assertThat(requester.doGet("http://localhost:" + server.port() + "/"), is(""));
     }
 
 //    @Test public void

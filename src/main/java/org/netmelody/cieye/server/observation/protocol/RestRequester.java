@@ -53,7 +53,7 @@ public final class RestRequester {
         client = new DefaultHttpClient(connectionManager, params);
     }
 
-    public String makeRequest(String url) {
+    public String doGet(String url) {
         LOG.info(url);
         try {
             final HttpGet httpget = new HttpGet(url);

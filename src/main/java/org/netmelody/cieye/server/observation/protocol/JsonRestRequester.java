@@ -35,7 +35,7 @@ public final class JsonRestRequester implements Contact {
         T result = null;
         String content = "";
         try {
-            content = contentMunger.apply(restRequester.makeRequest(url));
+            content = contentMunger.apply(restRequester.doGet(url));
             result = json.fromJson(content, type);
         }
         catch (Exception e) {
@@ -60,7 +60,7 @@ public final class JsonRestRequester implements Contact {
         String content = null;
         JsonElement result = null;
         try {
-            content = contentMunger.apply(restRequester.makeRequest(url));
+            content = contentMunger.apply(restRequester.doGet(url));
             result = new JsonParser().parse(content);
         }
         catch (Exception e) {
@@ -71,7 +71,7 @@ public final class JsonRestRequester implements Contact {
     
     @Override
     public void performBasicLogin(String loginUrl) {
-        restRequester.makeRequest(loginUrl);
+        restRequester.doGet(loginUrl);
     }
 
     @Override
