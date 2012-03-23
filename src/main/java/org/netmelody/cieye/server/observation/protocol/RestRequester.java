@@ -132,7 +132,6 @@ public final class RestRequester {
         @Override
         public String handleResponse(HttpResponse response) {
             final HttpEntity entity = response.getEntity();
-            // TODO: check the response code... 403 Forbidden
             try {
                 EntityUtils.consume(entity);
             } catch (IOException e) {

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.netmelody.cieye.server.observation.protocol.RestRequester;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 
 public final class RestRequesterTest {
@@ -23,7 +24,15 @@ public final class RestRequesterTest {
         server.respondWith("some response text");
         assertThat(requester.makeRequest("http://localhost:" + server.port() + "/"), startsWith("some response text"));
     }
-    
+
+    @Test public void
+    returnsEmptyWhenResponseStatusIsError() {
+        server.respondWithStatusCode(403);
+        server.respondWith("some response text");
+        
+        assertThat(requester.makeRequest("http://localhost:" + server.port() + "/"), is(""));
+    }
+
 //    @Test public void
 //    makesASuccessfulHttpsRequest() {
 //        assertThat(requester.makeRequest("https://localhost:" + server.port() + "/"), startsWith("some response text"));

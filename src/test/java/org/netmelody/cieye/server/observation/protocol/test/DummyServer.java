@@ -16,6 +16,7 @@ public final class DummyServer {
     private final int port;
     private final Connection connection;
     private String responseText = "";
+    private int code = 200;
 
     public DummyServer() {
         try {
@@ -42,6 +43,10 @@ public final class DummyServer {
         this.responseText = responseText;
     }
 
+    public void respondWithStatusCode(int code) {
+        this.code = code;
+    }
+
     public int port() {
         return this.port;
     }
@@ -62,6 +67,7 @@ public final class DummyServer {
         response.set("Server", "HelloWorld/1.0 (Simple 4.0)");
         response.setDate("Date", time);
         response.setDate("Last-Modified", time);
+        response.setCode(code );
 
         body.println(responseText);
         body.close();
