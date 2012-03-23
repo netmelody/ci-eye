@@ -10,10 +10,7 @@ public interface Contact {
 
     void performBasicLogin(String loginUrl);
 
-    void performBasicAuthentication(String username, String password);
-
     void doPost(String url);
 
     void doPut(String url, String content);
-
 }

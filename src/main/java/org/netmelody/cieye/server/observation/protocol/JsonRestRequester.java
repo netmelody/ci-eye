@@ -20,13 +20,14 @@ public final class JsonRestRequester implements Contact {
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, Functions.<String>identity());
+        this(jsonTranslator, Functions.<String>identity(), "", "");
     }
 
-    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
+    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, String username, String password) {
         this.restRequester = new RestRequester();
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
+        restRequester.performBasicAuthentication(username, password);
     }
 
     @Override
@@ -73,11 +74,6 @@ public final class JsonRestRequester implements Contact {
         restRequester.doGet(loginUrl);
     }
 
-    @Override
-    public void performBasicAuthentication(String username, String password) {
-        restRequester.performBasicAuthentication(username, password);
-    }
-    
     @Override
     public void doPost(String url) {
         restRequester.doPost(url);

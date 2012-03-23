@@ -39,11 +39,6 @@ public final class StubContact implements Contact {
     }
 
     @Override
-    public void performBasicAuthentication(String username, String password) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void doPost(String url) {
         throw new UnsupportedOperationException();
     }
