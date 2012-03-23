@@ -5,6 +5,7 @@ import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.Contact;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -13,23 +14,21 @@ import com.google.gson.JsonParser;
 public final class JsonRestRequester implements Contact {
 
     private static final Logbook LOG = LogKeeper.logbookFor(JsonRestRequester.class);
-    
+
     private final Gson json;
     private final RestRequester restRequester;
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, new Function<String, String>() {
-            @Override public String apply(String input) {  return input.replace("\"@", "\""); }
-        });
+        this(jsonTranslator, Functions.<String>identity());
     }
-    
-    private JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
+
+    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger) {
         this.restRequester = new RestRequester();
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }
-    
+
     @Override
     public <T> T makeJsonRestCall(String url, Class<T> type) {
         T result = null;
