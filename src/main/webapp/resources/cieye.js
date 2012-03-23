@@ -192,7 +192,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
         dancerImg = $("<img src='/squirrel-dance.gif' title='all green!' alt='dancing squirrel'></img>").hide(),
-        dohAudio= $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
+        dohAudio = $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
         noisy = false,
@@ -231,6 +231,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                 dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
             });
             if (noisy) {
+                dohAudio[0].load();
                 dohAudio[0].play();
             }
         }
