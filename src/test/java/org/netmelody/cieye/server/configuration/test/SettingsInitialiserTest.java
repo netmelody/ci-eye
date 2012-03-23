@@ -39,7 +39,8 @@ public final class SettingsInitialiserTest {
         
         final String[] generatedFiles = new File(folder, "pictures").list(TRUE);
         Arrays.sort(generatedFiles);
-        assertThat(generatedFiles, is(arrayContaining("doh.png",
+        assertThat(generatedFiles, is(arrayContaining("all-green.gif",
+                                                      "doh.png",
                                                       "stupid.png",
                                                       "vlad.png")));
     }
