@@ -1,11 +1,5 @@
 package org.netmelody.cieye.spies.teamcity.test;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-import java.text.SimpleDateFormat;
-
 import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -15,6 +9,7 @@ import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -28,6 +23,10 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 public final class TeamCitySpyTest {
 
     private final Mockery context = new Mockery();
@@ -39,7 +38,7 @@ public final class TeamCitySpyTest {
     @Before
     public void setup() {
         context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(SimpleDateFormat.class))); will(returnValue(contact));
+            allowing(network).makeContact(with(any(CodeBook.class))); will(returnValue(contact));
         }});
     }
     

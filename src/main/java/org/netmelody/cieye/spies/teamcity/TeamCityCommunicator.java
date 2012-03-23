@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
@@ -33,7 +34,7 @@ public final class TeamCityCommunicator {
     private final String endpoint;
 
     public TeamCityCommunicator(CommunicationNetwork network, String endpoint) {
-        this.contact = network.makeContact(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"));
+        this.contact = network.makeContact(new CodeBook(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ")));
         this.endpoint = endpoint;
     }
     

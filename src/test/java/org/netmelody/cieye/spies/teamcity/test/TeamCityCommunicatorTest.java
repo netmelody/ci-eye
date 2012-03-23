@@ -1,7 +1,6 @@
 package org.netmelody.cieye.spies.teamcity.test;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -10,6 +9,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
+import org.netmelody.cieye.core.observation.CodeBook;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.spies.StubContact;
 import org.netmelody.cieye.spies.teamcity.TeamCityCommunicator;
@@ -32,7 +32,7 @@ public final class TeamCityCommunicatorTest {
     @Before
     public void setup() {
         context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(SimpleDateFormat.class))); will(returnValue(contact));
+            allowing(network).makeContact(with(any(CodeBook.class))); will(returnValue(contact));
         }});
         communicator = new TeamCityCommunicator(network, "http://foo");
     }
