@@ -3,8 +3,15 @@ package org.netmelody.cieye.server.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+import static com.google.common.base.Predicates.equalTo;
 
 public final class SettingsInitialiser {
     
@@ -58,11 +65,40 @@ public final class SettingsInitialiser {
             FileUtils.copyInputStreamToFile(resource("pictures.txt.template"), picturesFile);
         }
         
-        if (!picturesDir.exists()) {
-            FileUtils.copyInputStreamToFile(resource("picture1.png.template"), new File(picturesDir, "vlad.png"));
-            FileUtils.copyInputStreamToFile(resource("picture2.png.template"), new File(picturesDir, "stupid.png"));
-            FileUtils.copyInputStreamToFile(resource("picture3.png.template"), new File(picturesDir, "doh.png"));
+        placePicture("picture1.png.template", "vlad.png");
+        placePicture("picture2.png.template", "stupid.png");
+        placePicture("picture3.png.template", "doh.png");
+        placePicture("picture4.gif.template", "all-green.gif");
+    }
+
+    private void placePicture(String templateName, String targetName) throws IOException {
+        final File target = new File(picturesDir, targetName);
+        
+        if (!target.exists()) {
+            FileUtils.copyInputStreamToFile(resource(templateName), target);
         }
+        
+        if (FileUtils.readFileToString(picturesFile).contains(targetName)) {
+            return;
+        }
+        
+        final List<String> template = IOUtils.readLines(resource("pictures.txt.template"));
+        final String header = "[" + targetName + "]";
+
+        int index = Iterables.indexOf(template, equalTo(header)) + 1;
+        if (index == 0) {
+            return;
+        }
+        
+        final List<String> lines = Lists.newArrayList();
+        lines.add("");
+        lines.add(header);
+            
+        while (index < template.size() && !template.get(index).contains("[")) {
+            lines.add(template.get(index));
+            index += 1;
+        }
+        FileUtils.writeLines(picturesFile, lines, true);
     }
 
     private InputStream resource(String name) {
