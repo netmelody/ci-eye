@@ -26,5 +26,5 @@ The latest source of CI-Eye can be found on [GitHub].
 [Tom Denley]: https://github.com/scarytom
 [Apache 2 License]: https://raw.github.com/netmelody/ci-eye/master/LICENSE
 [downloads]: https://github.com/netmelody/ci-eye/downloads
-[release notes]: https://raw.github.com/netmelody/ci-eye/master/doc/RELEASENOTES.md
+[release notes]: https://github.com/netmelody/ci-eye/blob/master/doc/RELEASENOTES.md
 [GitHub]: https://github.com/netmelody/ci-eye
