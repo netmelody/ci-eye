@@ -1,10 +1,5 @@
 package org.netmelody.cieye.server.configuration.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.is;
-import static org.netmelody.menodora.wrapped.org.apache.commons.io.filefilter.TrueFileFilter.TRUE;
-
 import java.io.File;
 import java.util.Arrays;
 
@@ -12,6 +7,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.netmelody.cieye.server.configuration.SettingsInitialiser;
+
+import static org.apache.commons.io.filefilter.TrueFileFilter.TRUE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.is;
 
 public final class SettingsInitialiserTest {
     @Rule
