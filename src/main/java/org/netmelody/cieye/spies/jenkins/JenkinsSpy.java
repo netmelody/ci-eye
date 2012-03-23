@@ -86,9 +86,10 @@ public final class JenkinsSpy implements CiSpy {
             return newArrayList();
         }
         
-        final View viewDigest = find(communicator.views(), withName(feature.name()), null);
+        final String name = feature.name().isEmpty() ? "All" : feature.name();
+        final View viewDigest = find(communicator.views(), withName(name), null);
         if (null == viewDigest) {
-            LOG.error("No view named <" + feature.name() + "> found");
+            LOG.error("No view named <" + name + "> found");
             return newArrayList();
         }
         
