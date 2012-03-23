@@ -19,6 +19,8 @@ public final class JsonRestRequesterBuilder implements CommunicationNetwork {
             builder.registerTypeAdapter(entry.getKey(), entry.getValue());
         }
         
-        return new JsonRestRequester(builder.create(), codeBook.contentMunger());
+        final JsonRestRequester contact = new JsonRestRequester(builder.create(), codeBook.contentMunger());
+        contact.performBasicAuthentication(codeBook.username(), codeBook.password());
+        return contact;
     }
 }

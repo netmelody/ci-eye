@@ -37,6 +37,7 @@ public final class TeamCitySpy implements CiSpy {
     
     public TeamCitySpy(String endpoint, CommunicationNetwork network, KnownOffendersDirectory detective) {
         final CodeBook codeBook = new CodeBook(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"))
+                                      .withCredentials("cieye", "cieye")
                                       .withRawContentMunger(new Function<String, String>() {
                                           @Override public String apply(String input) {
                                               return input.replace("\"@", "\"");
