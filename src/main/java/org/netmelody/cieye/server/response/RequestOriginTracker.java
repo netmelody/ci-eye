@@ -10,4 +10,6 @@ public interface RequestOriginTracker {
     String originOf(Request request);
     
     Set<Sponsor> sponsorsOf(Request request, String operation);
+
+    Sponsor sponsorWith(String fingerprint);
 }

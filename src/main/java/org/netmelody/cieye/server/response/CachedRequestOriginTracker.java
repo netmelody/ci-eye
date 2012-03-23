@@ -9,8 +9,10 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.simpleframework.http.Request;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
 
 import static com.google.common.cache.CacheLoader.from;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -51,5 +53,10 @@ public final class CachedRequestOriginTracker implements RequestOriginTracker {
     @Override
     public Set<Sponsor> sponsorsOf(Request request, String operation) {
         return detective.search(originOf(request) + " " + operation);
+    }
+    
+    @Override
+    public Sponsor sponsorWith(String fingerprint) {
+        return Iterables.find(detective.search(fingerprint), Predicates.alwaysTrue(), null);
     }
 }

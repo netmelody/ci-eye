@@ -191,7 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
-        allGreenImg = $("<img src='/pictures/all-green.gif' title='all green!' alt='dancing squirrel'></img>").hide(),
+        allGreenImg = $("<img src='/pictures/all-green.gif' title='all green!'></img>").hide(),
         dohAudio = $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
@@ -294,6 +294,12 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     radiatorDiv.append(dohDiv);
     radiatorDiv.append(dohAudio);
     radiatorDiv.append(allGreenImg);
+    
+    $.getJSON("/sponsor.json", { "fingerprint": "all-green" }, function(sponsorJson) {
+        if (sponsorJson) {
+            allGreenImg.attr({ "src": sponsorJson.picture, "title": sponsorJson.name });
+        }
+    });
     
     return {
         "refresh": refresh,
