@@ -34,21 +34,21 @@ import static java.lang.System.currentTimeMillis;
 public final class PollingSpyHandler implements CiSpyHandler {
 
     private static final Logbook LOG = LogKeeper.logbookFor(PollingSpyHandler.class);
-    
+
     private static final long POLLING_PERIOD_SECONDS = 5L;
     private static final long CUTOFF_PERIOD_MINUTES = 15L;
-    
-    private final CiSpy delegate;
+
+    private final CiSpy trustedSpy;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     private final ConcurrentMap<Feature, Long> requests = new MapMaker().makeMap();
     private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
-    
-    public PollingSpyHandler(CiSpy delegate) {
-        this.delegate = delegate;
+
+    public PollingSpyHandler(CiSpy untrustedSpy) {
+        this.trustedSpy = new TrustedSpy(untrustedSpy);
         executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
-    
+
     @Override
     public TargetDetailGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
@@ -59,7 +59,7 @@ public final class PollingSpyHandler implements CiSpyHandler {
             return result.status();
         }
         
-        final TargetDetailGroup digest = new TargetDetailGroup(delegate.targetsConstituting(feature));
+        final TargetDetailGroup digest = new TargetDetailGroup(trustedSpy.targetsConstituting(feature));
         statuses.putIfAbsent(feature, new StatusResult(digest));
         
         return digest;
@@ -76,7 +76,7 @@ public final class PollingSpyHandler implements CiSpyHandler {
 
     @Override
     public boolean takeNoteOf(String targetId, String note) {
-        return delegate.takeNoteOf(new TargetId(targetId), note);
+        return trustedSpy.takeNoteOf(new TargetId(targetId), note);
     }
     
     private void update() {
@@ -91,10 +91,9 @@ public final class PollingSpyHandler implements CiSpyHandler {
             
             final List<TargetDetail> newStatus = newArrayList();
 
-            final TargetDigestGroup targets = delegate.targetsConstituting(feature);
+            final TargetDigestGroup targets = trustedSpy.targetsConstituting(feature);
             for (TargetDigest digest : targets) {
-                final TargetDetail target = delegate.statusOf(digest.id());
-                //TODO: target might be null... do not trust the agent!
+                final TargetDetail target = trustedSpy.statusOf(digest.id());
                 newStatus.add(target);
                 intermediateStatus = intermediateStatus.updatedWith(target);
                 statuses.put(feature, intermediateStatus);
