@@ -38,11 +38,11 @@ public final class RestRequester {
     
     private final DefaultHttpClient client;
 
-    public RestRequester() {
+    public RestRequester(String username, String password) {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
         schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
-
+        
         final ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(schemeRegistry);
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultMaxPerRoute(20);
@@ -51,6 +51,7 @@ public final class RestRequester {
         params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
         
         client = new DefaultHttpClient(connectionManager, params);
+        client.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
     }
 
     public String doGet(String url) {
@@ -76,11 +77,6 @@ public final class RestRequester {
         return "";
     }
 
-    public void performBasicAuthentication(String username, String password) {
-        client.getCredentialsProvider().setCredentials(new AuthScope(null, -1),
-                                                       new UsernamePasswordCredentials(username, password));
-    }
-    
     public void doPost(String url) {
         LOG.info(url);
         try {

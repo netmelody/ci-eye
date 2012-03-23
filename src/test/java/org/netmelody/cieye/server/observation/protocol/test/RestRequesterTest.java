@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.startsWith;
 public final class RestRequesterTest {
 
     private final DummyServer server = new DummyServer();
-    private final RestRequester requester = new RestRequester();
+    private final RestRequester requester = new RestRequester("", "");
 
     @After
     public void shutdownServer() {

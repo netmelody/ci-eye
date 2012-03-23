@@ -24,10 +24,9 @@ public final class JsonRestRequester implements Contact {
     }
 
     public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, String username, String password) {
-        this.restRequester = new RestRequester();
+        this.restRequester = new RestRequester(username, password);
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
-        restRequester.performBasicAuthentication(username, password);
     }
 
     @Override
