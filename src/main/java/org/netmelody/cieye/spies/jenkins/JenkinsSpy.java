@@ -35,7 +35,7 @@ public final class JenkinsSpy implements CiSpy {
     private final Map<TargetId, Job> recognisedJobs = newHashMap();
     
     public JenkinsSpy(String endpoint, KnownOffendersDirectory detective, Contact contact) {
-        this.communicator = new JenkinsCommunicator(endpoint, "ci", "", contact);
+        this.communicator = new JenkinsCommunicator(endpoint, contact);
         this.laboratory = new JobLaboratory(communicator, detective);
     }
 

@@ -15,14 +15,10 @@ public final class JenkinsCommunicator {
 
     private final Contact contact;
     private final String endpoint;
-    private final String username;
-    private final String password;
 
-    public JenkinsCommunicator(String endpoint, String username, String password, Contact contact) {
+    public JenkinsCommunicator(String endpoint, Contact contact) {
         this.endpoint = endpoint;
         this.contact = contact;
-        this.username = username;
-        this.password = password;
     }
     
     public String endpoint() {
@@ -34,7 +30,6 @@ public final class JenkinsCommunicator {
     }
     
     public void doJenkinsPost(String url) {
-        contact.performBasicAuthentication(username, password);
         contact.doPost(url);
     }
 

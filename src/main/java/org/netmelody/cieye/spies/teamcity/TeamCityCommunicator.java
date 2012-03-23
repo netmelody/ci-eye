@@ -76,7 +76,6 @@ public final class TeamCityCommunicator {
     }
     
     public void commentOn(Build lastCompletedBuild, String note) {
-        contact.performBasicAuthentication("cieye", "cieye");
         contact.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
     }
     

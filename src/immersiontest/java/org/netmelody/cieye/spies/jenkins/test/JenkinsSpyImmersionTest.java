@@ -27,7 +27,7 @@ public final class JenkinsSpyImmersionTest {
     @Test public void
     canAnalyseJobFromTheJenkinsLiveInstance() {
         final Contact contact = new JsonRestRequester(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create());
-        final JenkinsCommunicator communicator = new JenkinsCommunicator("http://ci.jenkins-ci.org", "", "", contact);
+        final JenkinsCommunicator communicator = new JenkinsCommunicator("http://ci.jenkins-ci.org", contact);
         final JobLaboratory lab = new JobLaboratory(communicator, new RecordedKnownOffenders(new SettingsFile(new File(""))));
 
         final Job job = new Job();

@@ -25,7 +25,7 @@ public final class JobLaboratoryTest {
     private final Contact contact = context.mock(Contact.class);
     private final KnownOffendersDirectory directory = context.mock(KnownOffendersDirectory.class);
     
-    private final JobLaboratory jobLab = new JobLaboratory(new JenkinsCommunicator("ep", "user", "pass", contact), directory);
+    private final JobLaboratory jobLab = new JobLaboratory(new JenkinsCommunicator("ep", contact), directory);
     private final Job job = defaultJob();
     
     @Test public void
