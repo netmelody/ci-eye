@@ -191,7 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
-        dancerImg = $("<img src='/pictures/all-green.gif' title='all green!' alt='dancing squirrel'></img>").hide(),
+        allGreenImg = $("<img src='/pictures/all-green.gif' title='all green!' alt='dancing squirrel'></img>").hide(),
         dohAudio = $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
@@ -269,12 +269,12 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         });
         
         if (radiatorDiv.children().filter("div:visible").length === 0) {
-            dancerImg.width("100%");
-            dancerImg.height("100%");
-            dancerImg.show();
+            allGreenImg.width("100%");
+            allGreenImg.height("100%");
+            allGreenImg.show();
         }
         else {
-            dancerImg.hide();
+            allGreenImg.hide();
         }
     }
     
@@ -293,7 +293,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     
     radiatorDiv.append(dohDiv);
     radiatorDiv.append(dohAudio);
-    radiatorDiv.append(dancerImg);
+    radiatorDiv.append(allGreenImg);
     
     return {
         "refresh": refresh,
