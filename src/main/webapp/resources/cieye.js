@@ -191,7 +191,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
 ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     var radiatorDiv = $("<div></div>"),
         dohDiv = $("<div></div>").addClass("doh").hide(),
-        allGreenImg = $("<img src='/pictures/all-green.gif' title='all green!'></img>").hide(),
+        allGreenImg = $("<img></img>").hide(),
         dohAudio = $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
