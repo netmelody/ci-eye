@@ -1,3 +1,16 @@
+## Release 0.3.0
+  * upgraded guava to 11.0.2; gson to 2.1; jquery to 1.7.1; httpcomponents httpclient to 4.1.3
+  * only cache reverse DNS lookup results for one hour
+  * fix tooltip bug in firefox
+  * show picture for "all-green and nothing building" event in desktop mode
+  * ensure readme is included in release jar
+  * fix logging bug causing log properties to be ignored
+  * support for https
+  * support for TeamCity 7.0
+  * support for radiating all builds on a given TeamCity server
+  
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.2.0...0.3.0)
+
 ## Release 0.2.0
   * upgraded guava to 11.0; gson to 2.0; jquery to 1.7.1; commons-io to 2.1
   * better startup message written to stdout
