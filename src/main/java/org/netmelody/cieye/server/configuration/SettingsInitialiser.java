@@ -63,10 +63,10 @@ public final class SettingsInitialiser {
         
         if (!picturesFile.exists()) {
             FileUtils.copyInputStreamToFile(resource("pictures.txt.template"), picturesFile);
+            placePicture("picture1.png.template", "vlad.png");
+            placePicture("picture2.png.template", "stupid.png");
         }
         
-        placePicture("picture1.png.template", "vlad.png");
-        placePicture("picture2.png.template", "stupid.png");
         placePicture("picture3.png.template", "doh.png");
         placePicture("picture4.gif.template", "all-green.gif");
     }
