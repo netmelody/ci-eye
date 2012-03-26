@@ -1,73 +1,106 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<title>CI-Eye</title>
-<style>
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CI-Eye</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+        function handleDownloads(response) {
+          var total_downloads = 0;
+          $.each(response.data, function(i, datum) {
+            total_downloads += parseInt(datum.download_count, 10);
+          });
+          $("#downloads").text(total_downloads).show();
+        }
+        $.getJSON("https://api.github.com/repos/netmelody/ci-eye/downloads?callback=?", handleDownloads);
+    });
+  </script>
+  <style>
 
-@import url(http://fonts.googleapis.com/css?family=Cabin+Sketch);
-@import url(http://fonts.googleapis.com/css?family=Alegreya);
+   @import url(http://fonts.googleapis.com/css?family=Cabin+Sketch);
+   @import url(http://fonts.googleapis.com/css?family=Alegreya);
 
-body {
-  font-family: "Alegreya";
-  margin: 40px auto;
-  width: 960px;
-}
+   body {
+     font-family: "Alegreya";
+     margin: 40px auto;
+     width: 960px;
+   }
 
-#body {
-  position: relative;
-}
+   .content {
+     position: relative;
+   }
 
-footer {
-  padding: 2em 0 1em 0;
-  font-size: 12px;
-}
+   footer {
+     padding: 2em 0 1em 0;
+     font-size: 12px;
+   }
 
-h1 {
-  font-size: 96px;
-  margin-top: .3em;
-  margin-bottom: 0;
-}
+   h1 {
+     font-size: 96px;
+     margin-top: .3em;
+     margin-bottom: 0;
+   }
 
-h1 + h2 {
-  margin-top: 0;
-}
+   h1 + h2 {
+     margin-top: 0;
+   }
 
-h2 {
-  font-weight: 400;
-  font-size: 28px;
-}
+   h2 {
+     font-weight: 400;
+     font-size: 28px;
+   }
 
-h1, h2 {
-  font-family: "Cabin Sketch";
-  text-rendering: optimizeLegibility;
-}
+   h1, h2 {
+     font-family: "Cabin Sketch";
+     text-rendering: optimizeLegibility;
+   }
 
-#body > p {
-  line-height: 1.5em;
-  width: 640px;
-  text-rendering: optimizeLegibility;
-}
+   .content > p {
+     line-height: 1.5em;
+     width: 640px;
+     text-rendering: optimizeLegibility;
+   }
 
-</style>
+   .numberCircle {
+    -webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+    border-radius: 999px;
+    cursor:pointer;
+    display:none;
+    padding: 8px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background: #007200;
+    border: 1px solid #7BB67B;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font: 12px Arial, sans-serif
+   }
+  </style>
+ </head>
+ <body>
+  <div class="content">
+   <h1>CI-Eye</h1>
 
-<div id="body">
+   <h2>The Easygoing Continuous Integration Build Radiator</h2>
 
-  <h1>CI-Eye</h1>
+   <p>CI-Eye is an infrastructure agnostic build radiator for displaying the status of your continuous integration builds -- on a big monitor, or a desktop sidebar.
+   <p>CI-Eye is an extremely lightweight standalone Java web application, so no installation is required, and all you need is a JVM and a web browser.</p>
+   <p>CI-Eye talks to many different CI servers through their public APIs (so no plug-ins required).  Currently, support is offered for Hudson, Jenkins, and TeamCity, with plans for expansion to include other favourites.</p>
+   <p>You can grab the latest stable release here: <a href="https://github.com/netmelody/ci-eye/downloads">https://github.com/netmelody/ci-eye/downloads</a></p>
+   <p>Documentation is on the <a href="https://github.com/netmelody/ci-eye/wiki">CI-Eye wiki</a></p>
 
-  <h2>The Easygoing Continuous Integration Build Radiator</h2>
-
-  <p>CI-Eye is an infrastructure agnostic build radiator for displaying the status of your continuous integration builds -- on a big monitor, or a desktop sidebar.
-  <p>CI-Eye is an extremely lightweight standalone Java web application, so no installation is required, and all you need is a JVM and a web browser.</p>
-  <p>CI-Eye talks to many different CI servers through their public APIs (so no plug-ins required).  Currently, support is offered for Hudson, Jenkins, and TeamCity, with plans for expansion to include other favourites.</p>
-  <p>You can grab the latest stable release here: <a href="https://github.com/netmelody/ci-eye/downloads">https://github.com/netmelody/ci-eye/downloads</a></p>
-  <p>Documentation is on the <a href="https://github.com/netmelody/ci-eye/wiki">CI-Eye wiki</a></p>
-
-  <footer>
+   <footer>
     <span style="float:right;">
       Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</a>.
     </span>
     Copyright 2011- <a href="http://scarytom.com">Tom Denley</a>
-  </footer>
-
-</div>
-
-<a href="http://github.com/netmelody/ci-eye"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/abad93f42020b733148435e2cd92ce15c542d320/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
+   </footer>
+  </div>
+  <a href="http://github.com/netmelody/ci-eye"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/abad93f42020b733148435e2cd92ce15c542d320/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
+  <a id="downloads" class="numberCircle" title="Total downloads to date" href="https://github.com/netmelody/ci-eye/downloads"></a>
+ </body>
+</html>
