@@ -2,10 +2,13 @@ package org.netmelody.cieye.core.observation;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 
 import static com.google.common.base.Functions.compose;
@@ -68,5 +71,14 @@ public final class CodeBook {
 
     private static <X, Y> ImmutableMap<X, Y> extend(Map<X, Y> map, X key, Y value) {
         return ImmutableMap.<X, Y>builder().putAll(map).put(key, value).build();
+    }
+
+    public Gson decoder() {
+        final GsonBuilder builder = new GsonBuilder().setDateFormat(dateFormat().toPattern());
+        
+        for (Entry<Class<?>, JsonDeserializer<?>> entry : deserialisers().entrySet()) {
+            builder.registerTypeAdapter(entry.getKey(), entry.getValue());
+        }
+        return builder.create();
     }
 }
