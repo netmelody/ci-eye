@@ -102,6 +102,7 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
 
     @Override
     public String getLatestVersion() {
+        //new api is "https://api.github.com/repos/netmelody/ci-eye/tags"
         final TagsHolder tags = contact.makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
         return tags.latest();
     }

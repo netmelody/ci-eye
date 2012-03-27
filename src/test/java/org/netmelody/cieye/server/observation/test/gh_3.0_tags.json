@@ -1,0 +1,83 @@
+[
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/36a7403223fb30828e3fdd2c94c2642d6eef9285",
+            "sha": "36a7403223fb30828e3fdd2c94c2642d6eef9285"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.2.0",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.2.0",
+        "name": "0.2.0"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/1a02a0139da32a73ab2a507a994becf17911694f",
+            "sha": "1a02a0139da32a73ab2a507a994becf17911694f"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.1.1",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.1.1",
+        "name": "0.1.1"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/9f09249bb60faf1ffd8d19d48bcd3706552e3ef7",
+            "sha": "9f09249bb60faf1ffd8d19d48bcd3706552e3ef7"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.0.2",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.0.2",
+        "name": "0.0.2"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/3168d37a3c6b410eb5dbd9861a235674e7acbf63",
+            "sha": "3168d37a3c6b410eb5dbd9861a235674e7acbf63"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.3.0",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.3.0",
+        "name": "0.3.0"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/52cb193488acd0c9e232463cbd3e17fa8bc78e77",
+            "sha": "52cb193488acd0c9e232463cbd3e17fa8bc78e77"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.1.2",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.1.2",
+        "name": "0.1.2"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/b161cbbc5bd891467b91ed3f3fe5d77516b8c1bd",
+            "sha": "b161cbbc5bd891467b91ed3f3fe5d77516b8c1bd"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.0.3",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.0.3",
+        "name": "0.0.3"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/9b980f4fadf8ddded63b365330308176b6f783d6",
+            "sha": "9b980f4fadf8ddded63b365330308176b6f783d6"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.1.3",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.1.3",
+        "name": "0.1.3"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/ed6afa9cace6b203c351cfbed83683574a353fe6",
+            "sha": "ed6afa9cace6b203c351cfbed83683574a353fe6"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.0.4",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.0.4",
+        "name": "0.0.4"
+    },
+    {
+        "commit": {
+            "url": "https://api.github.com/repos/netmelody/ci-eye/commits/681cef5dc3fba9afdf42cb22cea039e9d337b9fb",
+            "sha": "681cef5dc3fba9afdf42cb22cea039e9d337b9fb"
+        },
+        "zipball_url": "https://github.com/netmelody/ci-eye/zipball/0.1.0",
+        "tarball_url": "https://github.com/netmelody/ci-eye/tarball/0.1.0",
+        "name": "0.1.0"
+    }
+]
