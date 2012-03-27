@@ -20,11 +20,11 @@ public final class JsonRestRequester implements Contact {
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
-        this(jsonTranslator, Functions.<String>identity(), "", "");
+        this(jsonTranslator, Functions.<String>identity(), new RestRequester("", ""));
     }
 
-    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, String username, String password) {
-        this.restRequester = new RestRequester(username, password);
+    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, RestRequester channel) {
+        this.restRequester = channel;
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }
