@@ -7,30 +7,35 @@ import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.netmelody.cieye.spies.StubContact;
+import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
+import org.netmelody.cieye.server.observation.test.StubGrapeVine;
 import org.netmelody.cieye.spies.teamcity.TeamCityCommunicator;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesHref;
+
+import com.google.common.base.Functions;
+import com.google.gson.Gson;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public final class TeamCityCommunicatorTest {
 
-    private final StubContact contact = new StubContact();
+    private final StubGrapeVine channel = new StubGrapeVine();
 
     private TeamCityCommunicator communicator;
 
     @Before
     public void setup() {
-        communicator = new TeamCityCommunicator(contact, "http://foo");
+        communicator = new TeamCityCommunicator(new JsonRestRequester(new Gson(), Functions.<String>identity(), channel),
+                                                "http://foo");
     }
 
     @Test public void
     requestsSingularBuildChangesForTeamCitySixApi() {
         final BuildDetail buildDetail = buildDetail(1);
-        contact.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_6.5.5_changes_1.json").replace("@", ""));
+        channel.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_6.5.5_changes_1.json").replace("@", ""));
         
         final List<Change> changes = communicator.changesOf(buildDetail);
         assertThat(changes, is(Matchers.<Change>iterableWithSize(1)));
@@ -40,7 +45,7 @@ public final class TeamCityCommunicatorTest {
     @Test public void
     requestsMultipleBuildChangesForTeamCitySixApi() {
         final BuildDetail buildDetail = buildDetail(2);
-        contact.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_6.5.5_changes_2.json").replace("@", ""));
+        channel.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_6.5.5_changes_2.json").replace("@", ""));
 
         final List<Change> changes = communicator.changesOf(buildDetail);
         assertThat(changes, is(Matchers.<Change>iterableWithSize(2)));
@@ -51,7 +56,7 @@ public final class TeamCityCommunicatorTest {
     @Test public void
     requestsSingularBuildChangesForTeamCitySevenApi() {
         final BuildDetail buildDetail = buildDetail(1);
-        contact.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_7.0.0_changes_1.json"));
+        channel.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_7.0.0_changes_1.json"));
         
         final List<Change> changes = communicator.changesOf(buildDetail);
         assertThat(changes, is(Matchers.<Change>iterableWithSize(1)));
@@ -61,7 +66,7 @@ public final class TeamCityCommunicatorTest {
     @Test public void
     requestsMultipleBuildChangesForTeamCitySevenApi() {
         final BuildDetail buildDetail = buildDetail(2);
-        contact.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_7.0.0_changes_2.json"));
+        channel.respondingWith("http://foo" + buildDetail.changes.href, contentFrom("tc_7.0.0_changes_2.json"));
         
         final List<Change> changes = communicator.changesOf(buildDetail);
         assertThat(changes, is(Matchers.<Change>iterableWithSize(2)));
