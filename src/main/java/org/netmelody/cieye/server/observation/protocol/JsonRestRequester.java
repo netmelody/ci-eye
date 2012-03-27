@@ -16,15 +16,15 @@ public final class JsonRestRequester implements Contact {
     private static final Logbook LOG = LogKeeper.logbookFor(JsonRestRequester.class);
 
     private final Gson json;
-    private final RestRequester restRequester;
+    private final GrapeVine channel;
     private final Function<String, String> contentMunger;
 
     public JsonRestRequester(Gson jsonTranslator) {
         this(jsonTranslator, Functions.<String>identity(), new RestRequester("", ""));
     }
 
-    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, RestRequester channel) {
-        this.restRequester = channel;
+    public JsonRestRequester(Gson jsonTranslator, Function<String, String> contentMunger, GrapeVine channel) {
+        this.channel = channel;
         this.json = jsonTranslator;
         this.contentMunger = contentMunger;
     }
@@ -34,7 +34,7 @@ public final class JsonRestRequester implements Contact {
         T result = null;
         String content = "";
         try {
-            content = contentMunger.apply(restRequester.doGet(url));
+            content = contentMunger.apply(channel.doGet(url));
             result = json.fromJson(content, type);
         }
         catch (Exception e) {
@@ -59,7 +59,7 @@ public final class JsonRestRequester implements Contact {
         String content = null;
         JsonElement result = null;
         try {
-            content = contentMunger.apply(restRequester.doGet(url));
+            content = contentMunger.apply(channel.doGet(url));
             result = new JsonParser().parse(content);
         }
         catch (Exception e) {
@@ -70,20 +70,20 @@ public final class JsonRestRequester implements Contact {
     
     @Override
     public void performBasicLogin(String loginUrl) {
-        restRequester.doGet(loginUrl);
+        channel.doGet(loginUrl);
     }
 
     @Override
     public void doPost(String url) {
-        restRequester.doPost(url);
+        channel.doPost(url);
     }
 
     @Override
     public void doPut(String url, String content) {
-        restRequester.doPut(url, content);
+        channel.doPut(url, content);
     }
 
     public void shutdown() {
-        restRequester.shutdown();
+        channel.shutdown();
     }
 }

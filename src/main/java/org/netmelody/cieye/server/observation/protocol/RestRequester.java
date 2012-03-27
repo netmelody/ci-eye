@@ -32,7 +32,7 @@ import org.apache.http.util.EntityUtils;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 
-public final class RestRequester {
+public final class RestRequester implements GrapeVine {
 
     private static final Logbook LOG = LogKeeper.logbookFor(RestRequester.class);
     
@@ -54,6 +54,7 @@ public final class RestRequester {
         client.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
     }
 
+    @Override
     public String doGet(String url) {
         LOG.info(url);
         try {
@@ -77,6 +78,7 @@ public final class RestRequester {
         return "";
     }
 
+    @Override
     public void doPost(String url) {
         LOG.info(url);
         try {
@@ -90,6 +92,7 @@ public final class RestRequester {
         }
     }
     
+    @Override
     public void doPut(String url, String content) {
         LOG.info(url);
         try {
@@ -106,6 +109,7 @@ public final class RestRequester {
         }
     }
     
+    @Override
     public void shutdown() {
         try {
             client.getConnectionManager().shutdown();
