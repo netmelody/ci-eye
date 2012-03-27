@@ -57,16 +57,8 @@ public final class CodeBook {
         return password;
     }
 
-    public SimpleDateFormat dateFormat() {
-        return dateFormat;
-    }
-
     public Function<String, String> contentMunger() {
         return munger;
-    }
-
-    public Map<Class<?>, JsonDeserializer<?>> deserialisers() {
-        return this.deserialisers;
     }
 
     private static <X, Y> ImmutableMap<X, Y> extend(Map<X, Y> map, X key, Y value) {
@@ -74,9 +66,9 @@ public final class CodeBook {
     }
 
     public Gson decoder() {
-        final GsonBuilder builder = new GsonBuilder().setDateFormat(dateFormat().toPattern());
+        final GsonBuilder builder = new GsonBuilder().setDateFormat(dateFormat.toPattern());
         
-        for (Entry<Class<?>, JsonDeserializer<?>> entry : deserialisers().entrySet()) {
+        for (Entry<Class<?>, JsonDeserializer<?>> entry : this.deserialisers.entrySet()) {
             builder.registerTypeAdapter(entry.getKey(), entry.getValue());
         }
         return builder.create();
