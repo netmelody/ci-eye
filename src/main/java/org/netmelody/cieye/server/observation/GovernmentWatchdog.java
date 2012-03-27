@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,29 +80,28 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
         }
     }
 
-    public static final class TagsAdapter implements JsonDeserializer<Tags> {
+    public static final class TagsHolderAdapter implements JsonDeserializer<TagsHolder> {
         @Override
-        public Tags deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return new Tags(transform(json.getAsJsonObject().entrySet(), toTagNames()));
+        public TagsHolder deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            return new TagsHolder(transform(json.getAsJsonArray(), toTagNames()));
         }
-
-        private Function<Entry<String, JsonElement>, Tag> toTagNames() {
-            return new Function<Entry<String, JsonElement>, Tag>() {
-                @Override public Tag apply(Entry<String, JsonElement> entry) {
-                    return new Tag(entry.getKey());
+        
+        private Function<JsonElement, Tag> toTagNames() {
+            return new Function<JsonElement, Tag>() {
+                @Override public Tag apply(JsonElement entry) {
+                    return new Tag(entry.getAsJsonObject().get("name").getAsString());
                 }
             };
         }
     }
 
     public GovernmentWatchdog(CommunicationNetwork network) {
-        contact = network.makeContact(new CodeBook().withJsonDeserializerFor(Tags.class, new TagsAdapter()));
+        contact = network.makeContact(new CodeBook().withJsonDeserializerFor(TagsHolder.class, new TagsHolderAdapter()));
     }
 
     @Override
     public String getLatestVersion() {
-        //new api is "https://api.github.com/repos/netmelody/ci-eye/tags"
-        final TagsHolder tags = contact.makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
+        final TagsHolder tags = contact.makeJsonRestCall("https://api.github.com/repos/netmelody/ci-eye/tags", TagsHolder.class);
         return tags.latest();
     }
 }
