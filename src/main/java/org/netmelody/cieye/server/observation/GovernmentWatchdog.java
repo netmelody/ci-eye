@@ -14,6 +14,7 @@ import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -30,14 +31,14 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
     public static final class TagsHolder {
         private Tags tags;
         
-        public TagsHolder() { }
+        public TagsHolder() { this(ImmutableList.<Tag>of()); }
         public TagsHolder(Iterable<Tag> tagNames) { this.tags = new Tags(tagNames); }
         
         public String latest() {
             return tags.latest();
         }
     }
-    
+
     public static final class Tags {
         private final ArrayList<Tag> names;
         public Tags(Iterable<Tag> tagNames) {
@@ -51,7 +52,7 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
             return names.get(names.size() - 1).name;
         }
     }
-    
+
     public static final class Tag {
         private static final Pattern REGEX = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)([0-9A-Za-z-]*)");
 
@@ -72,14 +73,14 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
         private final String specialSuffix;
 
         public Tag(String name) {
-            this.name = name;
-            final Matcher matcher = REGEX.matcher(name);
+            this.name = (name == null) ? "" : name;
+            final Matcher matcher = REGEX.matcher(this.name);
             matcher.matches();
             version = new int[] {parseInt(matcher.group(1)), parseInt(matcher.group(2)), parseInt(matcher.group(3))};
             specialSuffix = "".equals(matcher.group(4)) ? "~" : matcher.group(4);
         }
     }
-    
+
     public static final class TagsAdapter implements JsonDeserializer<Tags> {
         @Override
         public Tags deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -94,15 +95,14 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
             };
         }
     }
-    
+
     public GovernmentWatchdog(CommunicationNetwork network) {
         contact = network.makeContact(new CodeBook().withJsonDeserializerFor(Tags.class, new TagsAdapter()));
     }
 
     @Override
     public String getLatestVersion() {
-        TagsHolder tags = contact.makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
-        
-        return (tags == null) ? "" : tags.latest();
+        final TagsHolder tags = contact.makeJsonRestCall("http://github.com/api/v2/json/repos/show/netmelody/ci-eye/tags", TagsHolder.class);
+        return tags.latest();
     }
 }
