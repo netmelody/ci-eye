@@ -91,7 +91,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         titleSpan = $("<span></span>"),
         sponsorDiv = $("<div></div>").addClass("sponsors"),
         buildsDiv = $("<div></div>"),
-        sponsorMugshots = {};
+        sponsorMugshots = {},
+        displayedMugshots = {};
     
     function sortedSponsors(unsortedSponsors) {
         return unsortedSponsors.sort(function(a, b) {
@@ -104,7 +105,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function updateFrom(newTargetJson) {
-        var lastTargetJson = currentTargetJson;
+        var lastTargetJson = currentTargetJson,
+            deadMugshots = $.extend({}, displayedMugshots);
         
         currentTargetJson = newTargetJson;
         if (lastTargetJson.status !== newTargetJson.status) {
@@ -128,14 +130,26 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
             sponsorDiv.empty();
+            displayedMugshots = {};
             return;
         }
         
         $.each(sortedSponsors(newTargetJson.sponsors), function(index, sponsorJson) {
-            if (!sponsorMugshots[sponsorJson.picture]) {
-                sponsorMugshots[sponsorJson.picture] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, calculateImageSize);
+            var mugshotId = sponsorJson.picture;
+            if (!sponsorMugshots[mugshotId]) {
+                sponsorMugshots[mugshotId] = ORG.NETMELODY.CIEYE.newMugshotWidget(sponsorJson, calculateImageSize);
             }
-            sponsorDiv.append(sponsorMugshots[sponsorJson.picture].getContent());
+            delete deadMugshots[mugshotId];
+            if (!displayedMugshots[mugshotId]) {
+                displayedMugshots[mugshotId] = true;
+                sponsorDiv.append(sponsorMugshots[mugshotId].getContent());
+            }
+        });
+        $.each(deadMugshots, function(mugshotId, value) {
+            if (displayedMugshots[mugshotId]) {
+                sponsorMugshots[mugshotId].getContent().detach();
+                delete displayedMugshots[mugshotId];
+            }
         });
     }
     
