@@ -38,11 +38,15 @@ ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
     var image = $("<img></img>"),
         heightFactor = 1.0,
         widthFactor = 1.0,
-        currentMaxSize = -1;
+        currentMaxSize = -1,
+        loaded = false;
     
     function resizeImage() {
-        var maxSize = sizeCalculator();
+        if (!loaded) {
+            return;
+        }
         
+        var maxSize = sizeCalculator();
         if (maxSize === currentMaxSize) {
             return;
         }
@@ -63,6 +67,7 @@ ORG.NETMELODY.CIEYE.newMugshotWidget = function(sponsorJson, sizeCalculator) {
             widthFactor = width / height;
         }
         
+        loaded = true;
         resizeImage();
     }
     
