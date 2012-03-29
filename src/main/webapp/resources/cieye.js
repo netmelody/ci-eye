@@ -121,12 +121,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
         });
 
-        if (newTargetJson.builds.length === 0) {
-            targetDiv.removeClass("building");
-        }
-        else {
-            targetDiv.addClass("building");
-        }
+        targetDiv.toggleClass("building", newTargetJson.builds.length !== 0);
         
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
             sponsorDiv.empty();
