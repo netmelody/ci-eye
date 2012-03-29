@@ -3,15 +3,10 @@ package org.netmelody.cieye.server.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
-import static com.google.common.base.Predicates.equalTo;
+import com.google.common.collect.ImmutableList;
 
 public final class SettingsInitialiser {
     
@@ -63,42 +58,29 @@ public final class SettingsInitialiser {
         
         if (!picturesFile.exists()) {
             FileUtils.copyInputStreamToFile(resource("pictures.txt.template"), picturesFile);
-            placePicture("picture1.png.template", "vlad.png");
-            placePicture("picture2.png.template", "stupid.png");
+            includePicture("vlad.png", "picture1.png.template");
+            includePicture("stupid.png", "picture2.png.template");
         }
         
-        placePicture("picture3.png.template", "doh.png");
-        placePicture("picture4.gif.template", "all-green.gif");
+        ensureSpecialPicturePresent("-doh-", "doh.png", "picture3.png.template");
+        ensureSpecialPicturePresent("-all-green-", "all-green.gif", "picture4.gif.template");
     }
 
-    private void placePicture(String templateName, String targetName) throws IOException {
+    private void ensureSpecialPicturePresent(String targetHandle, String targetFileName, String templateName) throws IOException {
+        if (FileUtils.readFileToString(picturesFile).contains(targetHandle)) {
+            return;
+        }
+        
+        includePicture(targetFileName, templateName);
+        FileUtils.writeLines(picturesFile, ImmutableList.of("", "[" + targetFileName + "]", targetHandle), true);
+    }
+
+    private void includePicture(String targetName, String templateName) throws IOException {
         final File target = new File(picturesDir, targetName);
         
         if (!target.exists()) {
             FileUtils.copyInputStreamToFile(resource(templateName), target);
         }
-        
-        if (FileUtils.readFileToString(picturesFile).contains(targetName)) {
-            return;
-        }
-        
-        final List<String> template = IOUtils.readLines(resource("pictures.txt.template"));
-        final String header = "[" + targetName + "]";
-
-        int index = Iterables.indexOf(template, equalTo(header)) + 1;
-        if (index == 0) {
-            return;
-        }
-        
-        final List<String> lines = Lists.newArrayList();
-        lines.add("");
-        lines.add(header);
-            
-        while (index < template.size() && !template.get(index).contains("[")) {
-            lines.add(template.get(index));
-            index += 1;
-        }
-        FileUtils.writeLines(picturesFile, lines, true);
     }
 
     private InputStream resource(String name) {

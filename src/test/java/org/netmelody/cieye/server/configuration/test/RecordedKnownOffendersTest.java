@@ -1,9 +1,5 @@
 package org.netmelody.cieye.server.configuration.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -17,6 +13,10 @@ import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+
 
 public final class RecordedKnownOffendersTest {
 
@@ -27,8 +27,7 @@ public final class RecordedKnownOffendersTest {
     @Before
     public void createOffendersFile() throws IOException {
         final File peeps = testFolder.newFile("peeps.txt");
-        FileUtils.copyInputStreamToFile(RecordedKnownOffenders.class.getResourceAsStream("templates/pictures.txt.template"),
-                                        peeps);
+        FileUtils.copyInputStreamToFile(RecordedKnownOffendersTest.class.getResourceAsStream("testPictures.txt"), peeps);
         offenders = new RecordedKnownOffenders(new SettingsFile(peeps));
     }
     
