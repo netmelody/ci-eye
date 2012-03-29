@@ -22,7 +22,7 @@ Source
 The latest source of CI-Eye can be found on [GitHub].
 
 [logo]: https://raw.github.com/netmelody/ci-eye/master/doc/images/logo.png
-[website]: http://netmelody.org
+[website]: http://netmelody.org/ci-eye
 [Tom Denley]: https://github.com/scarytom
 [Apache 2 License]: https://raw.github.com/netmelody/ci-eye/master/LICENSE
 [downloads]: https://github.com/netmelody/ci-eye/downloads
