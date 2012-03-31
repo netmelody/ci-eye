@@ -1,0 +1,10 @@
+#radiator {
+    font-size: 2em;
+    font-weight: normal;
+}
+div.target {
+    width:24.25%;
+    height:3.5em;
+	float:left;
+    overflow: hidden;
+}

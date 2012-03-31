@@ -468,10 +468,22 @@ $(document).ready(function() {
         window.setTimeout(radiator.refresh, 200);
     }
     
+    function gridMode(gridModeOn) {
+        if (gridModeOn) {
+            $("head").append($("<link rel='stylesheet' href='/grid.css' type='text/css'/>"));
+        }
+        else {
+            $("head > link[href='/grid.css']").remove();
+        }
+        radiator.refresh();
+        window.setTimeout(radiator.refresh, 200);
+    }
+    
     document.title = landscapeNameFromUri() + " - " + document.title;
     desktopMode(initialdesktopModeStatus);
     radiator.silentMode(initialdesktopModeStatus);
     $("body").flyMenu([{"label": "Desktop Mode", "initialState": initialdesktopModeStatus, "changeHandler": desktopMode },
+                       {"label": "Grid Mode", "initialState": false, "changeHandler": gridMode },
                        {"label": "Silent", "initialState": initialdesktopModeStatus, "changeHandler": radiator.silentMode }]);
     
     radiator.start();
