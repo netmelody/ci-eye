@@ -37,6 +37,7 @@ div.target {
     margin: 2px 2px 2px 5px;
     padding: 1px;
     cursor: pointer;
+    word-wrap: break-word;
 }
 div.target.GREEN {
     color: #ffffff;
