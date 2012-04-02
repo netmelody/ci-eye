@@ -445,7 +445,9 @@ $(document).ready(function() {
     var scheduler = ORG.NETMELODY.CIEYE.newScheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
         updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
-        initialdesktopModeStatus = $(window).width() <= 750;
+        initialDesktopModeStatus = $(window).width() <= 750,
+        initialGridModeStatus = false,
+        initialSilentModeStatus = initialDesktopModeStatus;
     
     function landscapeNameFromUri() {
         var path = $(location).attr("pathname");
@@ -479,12 +481,29 @@ $(document).ready(function() {
         window.setTimeout(radiator.refresh, 200);
     }
     
+    function silentMode(silentModeOn) {
+        radiator.silentMode(silentModeOn);
+    }
+    
+    if (window.localStorage) {
+        if (window.localStorage.getItem("desktopModeEnabled") !== null) {
+            initialDesktopModeStatus = window.localStorage.getItem("desktopModeEnabled") === true;
+        }
+        if (window.localStorage.getItem("gridModeEnabled") !== null) {
+            initialGridModeStatus = window.localStorage.getItem("silentModeEnabled") === true;
+        }
+        if (window.localStorage.getItem("silentModeEnabled") !== null) {
+            initialSilentModeStatus = window.localStorage.getItem("silentModeEnabled") === true;
+        }
+    }
+    
     document.title = landscapeNameFromUri() + " - " + document.title;
-    desktopMode(initialdesktopModeStatus);
-    radiator.silentMode(initialdesktopModeStatus);
-    $("body").flyMenu([{"label": "Desktop Mode", "initialState": initialdesktopModeStatus, "changeHandler": desktopMode },
-                       {"label": "Grid Mode", "initialState": false, "changeHandler": gridMode },
-                       {"label": "Silent", "initialState": initialdesktopModeStatus, "changeHandler": radiator.silentMode }]);
+    gridMode(initialGridModeStatus);
+    desktopMode(initialDesktopModeStatus);
+    radiator.silentMode(initialSilentModeStatus);
+    $("body").flyMenu([{"label": "Desktop Mode", "initialState": initialDesktopModeStatus, "changeHandler": desktopMode },
+                       {"label": "Grid Mode", "initialState": initialGridModeStatus, "changeHandler": gridMode },
+                       {"label": "Silent", "initialState": initialSilentModeStatus, "changeHandler": silentMode }]);
     
     radiator.start();
     updater.start();
