@@ -437,6 +437,27 @@ ORG.NETMELODY.CIEYE.newVersionChecker = function(scheduler) {
     };
 };
 
+ORG.NETMELODY.CIEYE.newStore = function(disk) {
+    function saveBooleanValue(key, value) {
+        if (!disk) {
+            return;
+        }
+        disk.setItem(key, (value === true) ? "true" : "false");
+    }
+    
+    function loadBooleanValue(key, defaultValue) {
+        if (!disk) {
+            return defaultValue === true;
+        }
+        return disk.getItem(key) === "true";
+    }
+    
+    return {
+        "saveBoolean": saveBooleanValue,
+        "loadBoolean": loadBooleanValue
+    };
+};
+
 $(document).ready(function() {
     if (!$("#radiator").length) {
         return;
@@ -445,9 +466,10 @@ $(document).ready(function() {
     var scheduler = ORG.NETMELODY.CIEYE.newScheduler(window),
         radiator = ORG.NETMELODY.CIEYE.newRadiator($("#radiator"), scheduler),
         updater = ORG.NETMELODY.CIEYE.newVersionChecker(scheduler),
-        initialDesktopModeStatus = $(window).width() <= 750,
-        initialGridModeStatus = false,
-        initialSilentModeStatus = initialDesktopModeStatus;
+        store = ORG.NETMELODY.CIEYE.newStore(window.localStorage),
+        initialDesktopModeStatus = store.loadBoolean("desktopModeEnabled", $(window).width() <= 750),
+        initialGridModeStatus = store.loadBoolean("gridModeEnabled", false),
+        initialSilentModeStatus = store.loadBoolean("silentModeEnabled", initialDesktopModeStatus);
     
     function landscapeNameFromUri() {
         var path = $(location).attr("pathname");
@@ -466,6 +488,7 @@ $(document).ready(function() {
         else {
             $("head > link[href='/desktop.css']").remove();
         }
+        store.saveBoolean("desktopModeEnabled", desktopModeOn);
         radiator.refresh();
         window.setTimeout(radiator.refresh, 200);
     }
@@ -477,24 +500,14 @@ $(document).ready(function() {
         else {
             $("head > link[href='/grid.css']").remove();
         }
+        store.saveBoolean("gridModeEnabled", gridModeOn);
         radiator.refresh();
         window.setTimeout(radiator.refresh, 200);
     }
     
     function silentMode(silentModeOn) {
+        store.saveBoolean("silentModeEnabled", silentModeOn);
         radiator.silentMode(silentModeOn);
-    }
-    
-    if (window.localStorage) {
-        if (window.localStorage.getItem("desktopModeEnabled") !== null) {
-            initialDesktopModeStatus = window.localStorage.getItem("desktopModeEnabled") === true;
-        }
-        if (window.localStorage.getItem("gridModeEnabled") !== null) {
-            initialGridModeStatus = window.localStorage.getItem("silentModeEnabled") === true;
-        }
-        if (window.localStorage.getItem("silentModeEnabled") !== null) {
-            initialSilentModeStatus = window.localStorage.getItem("silentModeEnabled") === true;
-        }
     }
     
     document.title = landscapeNameFromUri() + " - " + document.title;
