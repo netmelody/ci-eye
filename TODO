@@ -9,6 +9,4 @@ Consider sticky marking
 Consider rewarding build fixers
 dependency-check of the tests
 adding a comment to a running, failing, build makes it go green!
-replace click-driven popup menu with hover-over fly-out button menu.
-us a cookie (or something) for local storage of desktop-mode and silent preferences
-bug with picures losing aspect ration and going square
+replace click-driven pop-up menu with hover-over fly-out button menu.
