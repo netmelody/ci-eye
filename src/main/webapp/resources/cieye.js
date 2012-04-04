@@ -446,10 +446,8 @@ ORG.NETMELODY.CIEYE.newStore = function(disk) {
     }
     
     function loadBooleanValue(key, defaultValue) {
-        if (!disk) {
-            return defaultValue === true;
-        }
-        return disk.getItem(key) === "true";
+        var result = disk ? disk.getItem(key) : null;
+        return (result === null) ? (defaultValue === true) : (result === "true");
     }
     
     return {
