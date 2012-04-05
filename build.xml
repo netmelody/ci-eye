@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="CI-Eye" default="snapshot" basedir=".">
 
-    <property name="target.version" value="0.3.1"/>
+    <property name="target.version" value="0.3.2"/>
 
     <property name="build.dir"      value="${basedir}/build"/>
     <property name="lib.dir"        value="${basedir}/vendor/lib"/>
