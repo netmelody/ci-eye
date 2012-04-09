@@ -1,3 +1,13 @@
+## Release 0.3.1
+  * Upgrade check for new versions to use GitHub v3 API
+  * Fix bug that caused potential aggressive replacement of template pictures on restart
+  * Logic tweak for when the all-green squirrel is shown
+  * Bugfix to picture display code -- ensure pictures are correctly removed when not relevant
+  * Introduce 'grid mode' as a trial
+  * Support local storage (where available) to store radiator settings
+
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.3.0...0.3.1)
+
 ## Release 0.3.0
   * upgraded guava to 11.0.2; gson to 2.1; jquery to 1.7.1; httpcomponents httpclient to 4.1.3
   * only cache reverse DNS lookup results for one hour
