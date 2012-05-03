@@ -24,8 +24,8 @@
                    includeantruntime="false"
                    encoding="utf-8"
                    destdir="@{destdir}"
-                   source="1.5"
-                   target="1.5"
+                   source="1.6"
+                   target="1.6"
                    debug="true"
                    debuglevel="lines,source">
                 <classpath refid="@{classpathref}"/>
