@@ -26,7 +26,5 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="vendor/buildlib/jmock-2.5.1.jar"/>
-	<classpathentry kind="lib" path="vendor/lib/jgravatar-1.0-SNAPSHOT.jar" sourcepath="vendor/src/jgravatar-1.0-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="vendor/lib/commons-lang-2.6.jar" sourcepath="vendor/src/commons-lang-2.6-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

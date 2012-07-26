@@ -1,9 +1,11 @@
 package org.netmelody.cieye.server.configuration.test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+
 import java.io.File;
 import java.io.IOException;
-
-import jgravatar.Gravatar;
 
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
@@ -12,12 +14,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.netmelody.cieye.core.domain.Sponsor;
+import org.netmelody.cieye.server.configuration.Gravatar;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
 
 
 public final class RecordedKnownOffendersTest {

@@ -5,8 +5,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jgravatar.Gravatar;
-
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
@@ -106,7 +104,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     private static String getPictureUrl(final Matcher matcher) {
         String image = matcher.group(1);
         if (image.startsWith("gravatar:")) {
-            String email = image.replace("gravatar:", "");
+            String email = image.substring("gravatar:".length());
             return new Gravatar().getUrl(email);
         } else {
             return "/pictures/" + image;
