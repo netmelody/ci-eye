@@ -85,7 +85,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
                     throw new IllegalStateException();
                 }
                 
-                final String pictureUrl = "/pictures/" + matcher.group(1);
+                final String pictureUrl = getPictureUrl(matcher);
                 final Iterable<String> fingerprints = filter(skip(data, 1), notBlank());
                 final String name = getFirst(fingerprints, pictureUrl);
                 return new Biometric(new Sponsor(name, pictureUrl), fingerprints);
@@ -99,5 +99,15 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
                 return line.trim().length() > 0;
             }
         };
+    }
+
+    private static String getPictureUrl(final Matcher matcher) {
+        String image = matcher.group(1);
+        if (image.startsWith("gravatar:")) {
+            String email = image.substring("gravatar:".length());
+            return new Gravatar().getUrl(email);
+        } else {
+            return "/pictures/" + image;
+        }
     }
 }

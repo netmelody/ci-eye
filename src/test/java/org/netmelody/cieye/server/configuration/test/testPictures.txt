@@ -13,3 +13,6 @@ stupid
 
 [all-green.gif]
 -all-green-
+
+[gravatar:john.doe@gmail.com]
+john
