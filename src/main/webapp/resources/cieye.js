@@ -255,10 +255,17 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             play(dohAudio[0]);
         }
     }
+    
+    function doUnDoh() {
+        if (!dohDiv.is(":hidden")) {
+            dohDiv.hide();
+            dohDiv.empty();
+            play(woohooAudio[0]);
+        }
+    }
 
     function unDoh() {
         $.post("doh", { "active": false });
-        play(woohooAudio[0]);
     }
 
     function updateFrom(targetGroupJson) {
@@ -267,10 +274,8 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
 
         if (targetGroupJson.dohGroup) {
             doDoh(targetGroupJson.dohGroup);
-        }
-        else {
-            dohDiv.hide();
-            dohDiv.empty();
+        } else {
+            doUnDoh();
         }
 
         $.each(targets, function(index, targetJson) {
