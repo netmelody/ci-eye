@@ -207,6 +207,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         dohDiv = $("<div></div>").addClass("doh").hide(),
         allGreenImg = $("<img></img>").hide(),
         dohAudio = $("<audio><source src='/doh.ogg' type='audio/ogg'/><source src='/doh.wav' type='audio/wav'/></audio>"),
+        woohooAudio = $("<audio><source src='/woohoo.ogg' type='audio/ogg'/><source src='/woohoo.wav' type='audio/wav'/></audio>"),
         targetWidgets = {},
         dohMugshots = {},
         noisy = false,
@@ -232,6 +233,13 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         return compare(a.name, b.name);
     }
 
+    function play(audio) {
+        if(noisy) {
+            audio.load();
+            audio.play();
+        }
+    }
+    
     function doDoh(dohGroup) {
         function dohSizeCalculator() {
             return (radiatorDiv.width() / dohGroup.length) - 50;
@@ -244,15 +252,13 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
                 dohDiv.show();
                 dohDiv.popupMenu(function() { return [{"label": "D'OH OVER", "handler": unDoh}]; });
             });
-            if (noisy) {
-                dohAudio[0].load();
-                dohAudio[0].play();
-            }
+            play(dohAudio[0]);
         }
     }
 
     function unDoh() {
         $.post("doh", { "active": false });
+        play(woohooAudio[0]);
     }
 
     function updateFrom(targetGroupJson) {
