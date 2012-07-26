@@ -3,6 +3,8 @@ package org.netmelody.cieye.server.configuration.test;
 import java.io.File;
 import java.io.IOException;
 
+import jgravatar.Gravatar;
+
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -34,6 +36,11 @@ public final class RecordedKnownOffendersTest {
     @Test public void
     looksUpSimpleOffenderStrings() {
         assertThat(offenders.search("vlad"), contains(new Sponsor("", "/pictures/vlad.png")));
+    }
+    
+    @Test public void
+    looksUpSimpleOffenderStringsWithAlias() {
+        assertThat(offenders.search("dracula"), contains(new Sponsor("", "/pictures/vlad.png")));
     }
     
     @Test public void
@@ -70,5 +77,11 @@ public final class RecordedKnownOffendersTest {
     @Test public void
     ignoresOffenderNamesAppearingInTheMiddleOfAWord() {
         assertThat(offenders.search("markoVLADies"), is(Matchers.<Sponsor>empty()));
+    }
+    
+    @Test public void
+    looksUpOffenderAndProvidesLinkToGravatarMugshot() {
+        String gravatarUrlWithHashedEmail = new Gravatar().getUrl("john.doe@gmail.com");
+        assertThat(offenders.search("john"), contains(new Sponsor("", gravatarUrlWithHashedEmail)));
     }
 }
