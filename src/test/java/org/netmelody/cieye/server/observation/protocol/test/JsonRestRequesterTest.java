@@ -1,17 +1,14 @@
 package org.netmelody.cieye.server.observation.protocol.test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
+
 import org.junit.After;
 import org.junit.Test;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
 
 import com.google.gson.GsonBuilder;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 public final class JsonRestRequesterTest {
 
@@ -27,9 +24,8 @@ public final class JsonRestRequesterTest {
     @Test public void
     makesASuccessfulRequest() {
         server.respondWith("{ \"property\": \"value\" }");
-        assertThat(requester.makeJsonRestCall("http://localhost:" + server.port() + "/", DummyJson.class),
-                   both(is(instanceOf(DummyJson.class)))
-                   .and(hasProperty("property", equalTo("value"))));
+        final DummyJson result = requester.makeJsonRestCall("http://localhost:" + server.port() + "/", DummyJson.class);
+        assertThat(result, hasProperty("property", equalTo("value")));
     }
     
     public static final class DummyJson {
