@@ -80,7 +80,7 @@ public final class RecordedKnownOffendersTest {
     
     @Test public void
     looksUpOffenderAndProvidesLinkToGravatarMugshot() {
-        String gravatarUrlWithHashedEmail = new Gravatar().getUrl("john.doe@gmail.com");
+        String gravatarUrlWithHashedEmail = new Gravatar().imageUrlFor("john.doe@gmail.com");
         assertThat(offenders.search("john"), contains(new Sponsor("", gravatarUrlWithHashedEmail)));
     }
 }

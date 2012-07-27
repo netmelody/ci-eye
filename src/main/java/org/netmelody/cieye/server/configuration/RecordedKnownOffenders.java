@@ -23,7 +23,10 @@ import static org.netmelody.cieye.core.utility.Irritables.partition;
 public final class RecordedKnownOffenders implements KnownOffendersDirectory, Refreshable {
     
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
-
+    private static final String GRAVATAR_PREFIX = "gravatar:";
+    
+    private static final Gravatar gravatarService = new Gravatar();
+    
     private final SettingsFile picturesFile;
     
     private Iterable<Biometric> biometrics = newArrayList();
@@ -85,7 +88,7 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
                     throw new IllegalStateException();
                 }
                 
-                final String pictureUrl = getPictureUrl(matcher);
+                final String pictureUrl = getPictureUrl(matcher.group(1));
                 final Iterable<String> fingerprints = filter(skip(data, 1), notBlank());
                 final String name = getFirst(fingerprints, pictureUrl);
                 return new Biometric(new Sponsor(name, pictureUrl), fingerprints);
@@ -101,13 +104,11 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
         };
     }
 
-    private static String getPictureUrl(final Matcher matcher) {
-        String image = matcher.group(1);
-        if (image.startsWith("gravatar:")) {
-            String email = image.substring("gravatar:".length());
-            return new Gravatar().getUrl(email);
-        } else {
-            return "/pictures/" + image;
+    private static String getPictureUrl(final String image) {
+        if (image.startsWith(GRAVATAR_PREFIX)) {
+            final String email = image.substring(GRAVATAR_PREFIX.length());
+            return gravatarService.imageUrlFor(email);
         }
+        return "/pictures/" + image;
     }
 }
