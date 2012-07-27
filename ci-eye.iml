@@ -15,11 +15,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/commons-codec-1.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/commons-codec-1.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/commons-codec-1.4-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/commons-codec-1.6-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -70,55 +70,55 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/httpclient-4.1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/httpclient-4.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.1.3-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.2.1-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/httpclient-cache-4.1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/httpclient-cache-4.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.1.3-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.2.1-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/httpcore-4.1.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/httpcore-4.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-core-4.1.4-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-core-4.2.1-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/httpcore-nio-4.1.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/httpcore-nio-4.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-core-4.1.4-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-core-4.2.1-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/httpmime-4.1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/httpmime-4.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.1.3-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/httpcomponents-client-4.2.1-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
