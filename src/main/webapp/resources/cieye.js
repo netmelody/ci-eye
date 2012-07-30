@@ -268,6 +268,21 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         $.post("doh", { "active": false });
     }
 
+    function isAllGreen(targetsJson) {
+        if (targetsJson.length === 0) {
+            return false;
+        }
+        
+        var result = true;
+        $.each(targetsJson, function(index, targetJson) {
+            if (targetJson.builds.length !== 0 || (targetJson.status !== "GREEN" && targetJson.status !== "DISABLED")) {
+                result = false;
+                return false;
+            }
+        });
+        return result;
+    }
+    
     function updateFrom(targetGroupJson) {
         var targets = targetGroupJson.targets.sort(targetComparator),
             deadTargetWidgets = $.extend({}, targetWidgets);
@@ -293,7 +308,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             delete targetWidgets[index];
         });
         
-        if (radiatorDiv.children(".target").length > 0 && radiatorDiv.children().filter("div:visible").length === 0) {
+        if (isAllGreen(targets) && !targetGroupJson.dohGroup) {
             allGreenImg.width("100%");
             allGreenImg.height("100%");
             allGreenImg.show();
