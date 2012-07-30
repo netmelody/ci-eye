@@ -22,7 +22,14 @@ public final class Percentage {
     }
     
     public static Percentage percentageOf(long numerator, long denominator) {
-        return (denominator <= 0L) ? percentageOf(0) : percentageOf((int)min((((double)numerator) / denominator) * 100, 100));
+        if (denominator <= 0L || numerator <= 0L) {
+            return percentageOf(0);
+        }
+        if (numerator >= denominator) {
+            return percentageOf(100);
+        }
+        final double magnetude = ((double)numerator / denominator) * 100;
+        return percentageOf(min((int)magnetude, 100));
     }
     
     public int value() {
