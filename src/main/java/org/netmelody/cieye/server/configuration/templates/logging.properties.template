@@ -1,7 +1,8 @@
 # CI-Eye Logging Configuration File
 
-handlers= java.util.logging.ConsoleHandler
-#handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+handlers = java.util.logging.FileHandler
+#handlers = java.util.logging.ConsoleHandler
+#handlers = java.util.logging.FileHandler, java.util.logging.ConsoleHandler
 
 .level= WARNING
 
