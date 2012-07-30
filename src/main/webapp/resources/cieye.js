@@ -293,7 +293,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
             delete targetWidgets[index];
         });
         
-        if (radiatorDiv.children().length >= 0 && radiatorDiv.children().filter("div:visible").length === 0) {
+        if (radiatorDiv.children(".target").length > 0 && radiatorDiv.children().filter("div:visible").length === 0) {
             allGreenImg.width("100%");
             allGreenImg.height("100%");
             allGreenImg.show();
