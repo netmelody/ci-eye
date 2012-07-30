@@ -60,7 +60,7 @@ ORG.NETMELODY.CIEYE.newVersionInformationWidget = function() {
     
     function displayVersion(versionJson) {
         var versionText = "Version " + versionJson.currentServerVersion;
-        if (versionJson.currentServerVersion !== versionJson.latestServerVersion) {
+        if (versionJson.latestServerVersion !== "" && versionJson.currentServerVersion !== versionJson.latestServerVersion) {
             versionText = versionText + " -- NEW VERSION AVAILABLE (" + versionJson.latestServerVersion + ")";
         }
         versionSpan.text(versionText);

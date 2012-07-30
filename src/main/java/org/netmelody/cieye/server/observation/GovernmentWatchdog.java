@@ -1,6 +1,8 @@
 package org.netmelody.cieye.server.observation;
 
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -101,6 +103,12 @@ public final class GovernmentWatchdog implements CiEyeNewVersionChecker {
 
     @Override
     public String getLatestVersion() {
+        try {
+            InetAddress.getAllByName("api.github.com");
+        }
+        catch (UnknownHostException firewalled) {
+            return "";
+        }
         final TagsHolder tags = contact.makeJsonRestCall("https://api.github.com/repos/netmelody/ci-eye/tags", TagsHolder.class);
         return tags.latest();
     }
