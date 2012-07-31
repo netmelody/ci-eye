@@ -5,14 +5,13 @@ vimpaler
 dracula
 
 [stupid.png]
--stupid-
 stupid
+
+[gravatar:john.doe@gmail.com]
+john
 
 [doh.png]
 -doh-
 
 [all-green.gif]
 -all-green-
-
-[gravatar:john.doe@gmail.com]
-john
