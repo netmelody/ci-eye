@@ -42,7 +42,9 @@ public final class JsonRestRequester implements Contact {
         }
         
         if (null == result) {
-            LOG.warn("null result for json request: " + url);
+            if (null == content || content.isEmpty()) {
+                LOG.warn("null result for json request: " + url);
+            }
             try {
                 result = type.newInstance();
             }

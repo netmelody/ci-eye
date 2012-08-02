@@ -14,6 +14,8 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypes;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
+import org.netmelody.cieye.spies.teamcity.jsondomain.Investigation;
+import org.netmelody.cieye.spies.teamcity.jsondomain.Investigations;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
@@ -74,6 +76,10 @@ public final class TeamCityCommunicator {
     
     public List<Build> runningBuildsFor(BuildType buildType) {
         return makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build();
+    }
+    
+    public List<Investigation> investigationsOf(BuildType buildType) {
+        return makeTeamCityRestCall(endpoint + buildType.href + "/investigations", Investigations.class).investigation();
     }
     
     public BuildDetail detailsOf(Build build) {
