@@ -132,10 +132,14 @@ public final class RestRequester implements GrapeVine {
         @Override
         public String handleResponse(HttpResponse response) {
             final HttpEntity entity = response.getEntity();
+            final int statusCode = response.getStatusLine().getStatusCode();
             try {
+                if (statusCode >= 300) {
+                    LOG.error("Failed to put/post\n\n" + EntityUtils.toString(entity));
+                }
                 EntityUtils.consume(entity);
             } catch (IOException e) {
-                LOG.error("Failed to consume rsponse entity");
+                LOG.error("Failed to consume response entity");
             }
             return "";
         }
