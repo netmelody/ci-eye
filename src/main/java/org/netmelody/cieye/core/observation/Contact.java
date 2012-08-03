@@ -10,9 +10,6 @@ public interface Contact {
 
     boolean privileged();
 
-    @Deprecated
-    void performBasicLogin(String loginUrl);
-
     void doPost(String url);
 
     void doPut(String url, String content);

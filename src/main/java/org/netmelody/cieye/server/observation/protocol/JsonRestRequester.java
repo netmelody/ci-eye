@@ -76,11 +76,6 @@ public final class JsonRestRequester implements Contact {
     }
     
     @Override
-    public void performBasicLogin(String loginUrl) {
-        channel.doGet(loginUrl);
-    }
-
-    @Override
     public void doPost(String url) {
         channel.doPost(url);
     }

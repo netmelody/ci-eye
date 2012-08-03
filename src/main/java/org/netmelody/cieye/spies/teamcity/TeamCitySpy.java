@@ -88,7 +88,6 @@ public final class TeamCitySpy implements CiSpy {
         if (!communicator.canSpeakFor(feature)) {
             return newArrayList();
         }
-        communicator.loginAsGuest();
         
         final Collection<BuildType> buildTypes = communicator.buildTypes();
         if (feature.name().isEmpty()) {

@@ -48,10 +48,6 @@ public final class TeamCityCommunicator {
         return endpoint.equals(feature.endpoint());
     }
 
-    public void loginAsGuest() {
-      //  contact.performBasicLogin(endpoint + "/guestAuth/");
-    }
-
     public Collection<Project> projects() {
         return makeTeamCityRestCall(endpoint + prefix + "/projects", TeamCityProjects.class).project();
     }

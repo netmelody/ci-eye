@@ -35,8 +35,6 @@ public final class JenkinsSpyTest {
                 will(returnValue(viewWithJobsNamed("myJob")));
             
             never(contact).makeJsonRestCall(with(any(String.class)), with(JobDetail.class));
-            
-            ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
         final Feature feature = new Feature("myFeatureName", "myEndpoint", new CiServerType("JENKINS"));
