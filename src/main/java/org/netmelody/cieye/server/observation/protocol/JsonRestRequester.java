@@ -30,6 +30,11 @@ public final class JsonRestRequester implements Contact {
     }
 
     @Override
+    public boolean privileged() {
+        return channel.privileged();
+    }
+
+    @Override
     public <T> T makeJsonRestCall(String url, Class<T> type) {
         T result = null;
         String content = "";

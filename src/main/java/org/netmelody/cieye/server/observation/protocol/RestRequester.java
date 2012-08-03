@@ -37,6 +37,7 @@ public final class RestRequester implements GrapeVine {
     private static final Logbook LOG = LogKeeper.logbookFor(RestRequester.class);
     
     private final DefaultHttpClient client;
+    private final boolean privileged;
 
     public RestRequester(String username, String password) {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -50,8 +51,15 @@ public final class RestRequester implements GrapeVine {
         final HttpParams params = new BasicHttpParams();
         params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
         
+        privileged = !username.isEmpty();
+        
         client = new DefaultHttpClient(connectionManager, params);
         client.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
+    }
+
+    @Override
+    public boolean privileged() {
+        return privileged;
     }
 
     @Override

@@ -32,10 +32,12 @@ public final class TeamCityCommunicator {
 
     private final Contact contact;
     private final String endpoint;
+    private final String prefix;
 
     public TeamCityCommunicator(Contact contact, String endpoint) {
         this.contact = contact;
         this.endpoint = endpoint;
+        this.prefix = (contact.privileged() ? "/httpAuth" : "/guestAuth") + "/app/rest";
     }
     
     public String endpoint() {
@@ -47,15 +49,15 @@ public final class TeamCityCommunicator {
     }
 
     public void loginAsGuest() {
-        contact.performBasicLogin(endpoint + "/guestAuth/");
+      //  contact.performBasicLogin(endpoint + "/guestAuth/");
     }
 
     public Collection<Project> projects() {
-        return makeTeamCityRestCall(endpoint + "/app/rest/projects", TeamCityProjects.class).project();
+        return makeTeamCityRestCall(endpoint + prefix + "/projects", TeamCityProjects.class).project();
     }
 
     public Collection<BuildType> buildTypes() {
-        return makeTeamCityRestCall(endpoint + "/app/rest/buildTypes", BuildTypes.class).buildType();
+        return makeTeamCityRestCall(endpoint + prefix + "/buildTypes", BuildTypes.class).buildType();
     }
 
     public Collection<BuildType> buildTypesFor(Project projectDigest) {
@@ -73,23 +75,23 @@ public final class TeamCityCommunicator {
         }
         return find(completedBuilds.build(), alwaysTrue());
     }
-    
+
     public List<Build> runningBuildsFor(BuildType buildType) {
-        return makeTeamCityRestCall(endpoint + "/app/rest/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build();
+        return makeTeamCityRestCall(endpoint + prefix + "/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build();
     }
-    
+
     public List<Investigation> investigationsOf(BuildType buildType) {
         return makeTeamCityRestCall(endpoint + buildType.href + "/investigations", Investigations.class).investigation();
     }
-    
+
     public BuildDetail detailsOf(Build build) {
         return makeTeamCityRestCall(endpoint + build.href, BuildDetail.class);
     }
-    
+
     public void commentOn(Build lastCompletedBuild, String note) {
         contact.doPut(endpoint + lastCompletedBuild.href + "/comment", note);
     }
-    
+
     public List<Change> changesOf(BuildDetail buildDetail) {
         final JsonElement json = contact.makeJsonRestCall(endpoint + buildDetail.changes.href);
         final JsonElement change = json.isJsonObject() ? json.getAsJsonObject().get("change") : JsonNull.INSTANCE;

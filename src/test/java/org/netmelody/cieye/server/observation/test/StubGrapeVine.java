@@ -24,6 +24,11 @@ public final class StubGrapeVine implements GrapeVine {
     }
 
     @Override
+    public boolean privileged() {
+        return false;
+    }
+
+    @Override
     public void doPost(String url) {
         throw new UnsupportedOperationException();
     }

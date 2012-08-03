@@ -42,6 +42,10 @@ public final class TeamCitySpyTest {
     
     @Test public void
     givesEmptyStatusForAnUnknownEndpoint() {
+        context.checking(new Expectations() {{
+            allowing(contact).privileged(); will(returnValue(false));
+        }});
+        
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
         final TargetDigestGroup result = spy.targetsConstituting(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
@@ -51,13 +55,33 @@ public final class TeamCitySpyTest {
     
     @Test public void
     logsInUsingGuestAccess() {
+        context.checking(new Expectations() {{
+            allowing(contact).privileged(); will(returnValue(false));
+        }});
+        
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
         context.checking(new Expectations() {{
-            allowing(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypes.class));
+            oneOf(contact).makeJsonRestCall(with(Matchers.startsWith("myEndpoint/guestAuth")), with(BuildTypes.class));
                 will(returnValue(new BuildTypes()));
-            
-            oneOf(contact).performBasicLogin("myEndpoint/guestAuth/");
+        }});
+        
+        spy.targetsConstituting(new Feature("", "myEndpoint", new CiServerType("TEAMCITY")));
+        
+        context.assertIsSatisfied();
+    }
+    
+    @Test public void
+    logsInUsingBasicHttpAccess() {
+        context.checking(new Expectations() {{
+            allowing(contact).privileged(); will(returnValue(true));
+        }});
+        
+        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
+        
+        context.checking(new Expectations() {{
+            oneOf(contact).makeJsonRestCall(with(Matchers.startsWith("myEndpoint/httpAuth")), with(BuildTypes.class));
+            will(returnValue(new BuildTypes()));
         }});
         
         spy.targetsConstituting(new Feature("", "myEndpoint", new CiServerType("TEAMCITY")));
@@ -67,6 +91,10 @@ public final class TeamCitySpyTest {
     
     @Test public void
     lazilyRetrievesBuildTypeDetails() {
+        context.checking(new Expectations() {{
+            allowing(contact).privileged(); will(returnValue(false));
+        }});
+
         final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
         
         context.checking(new Expectations() {{
@@ -76,8 +104,6 @@ public final class TeamCitySpyTest {
                 will(returnValue(projectNamed("myTarget")));
             
             never(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypeDetail.class));
-            
-            ignoring(contact).performBasicLogin(with(any(String.class)));
         }});
         
         final TargetDigestGroup digest = spy.targetsConstituting(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));

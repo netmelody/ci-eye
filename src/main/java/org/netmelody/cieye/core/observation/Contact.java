@@ -5,9 +5,12 @@ import com.google.gson.JsonElement;
 public interface Contact {
 
     <T> T makeJsonRestCall(String url, Class<T> type);
-    
+
     JsonElement makeJsonRestCall(String url);
 
+    boolean privileged();
+
+    @Deprecated
     void performBasicLogin(String loginUrl);
 
     void doPost(String url);
