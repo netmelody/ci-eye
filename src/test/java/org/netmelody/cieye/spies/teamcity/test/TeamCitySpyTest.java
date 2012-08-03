@@ -1,16 +1,17 @@
 package org.netmelody.cieye.spies.teamcity.test;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.junit.Before;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDigest;
 import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.observation.CodeBook;
-import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.teamcity.TeamCitySpy;
@@ -21,24 +22,12 @@ import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildsHref;
 import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 public final class TeamCitySpyTest {
 
     private final Mockery context = new Mockery();
     
-    private final CommunicationNetwork network = context.mock(CommunicationNetwork.class);
     private final KnownOffendersDirectory detective = context.mock(KnownOffendersDirectory.class);
     private final Contact contact = context.mock(Contact.class);
-    
-    @Before
-    public void setup() {
-        context.checking(new Expectations() {{
-            allowing(network).makeContact(with(any(CodeBook.class))); will(returnValue(contact));
-        }});
-    }
     
     @Test public void
     givesEmptyStatusForAnUnknownEndpoint() {
@@ -46,7 +35,7 @@ public final class TeamCitySpyTest {
             allowing(contact).privileged(); will(returnValue(false));
         }});
         
-        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
+        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", detective, contact);
         
         final TargetDigestGroup result = spy.targetsConstituting(new Feature("", "myOtherEndpoint", new CiServerType("TEAMCITY")));
         
@@ -59,7 +48,7 @@ public final class TeamCitySpyTest {
             allowing(contact).privileged(); will(returnValue(false));
         }});
         
-        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
+        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", detective, contact);
         
         context.checking(new Expectations() {{
             oneOf(contact).makeJsonRestCall(with(Matchers.startsWith("myEndpoint/guestAuth")), with(BuildTypes.class));
@@ -77,7 +66,7 @@ public final class TeamCitySpyTest {
             allowing(contact).privileged(); will(returnValue(true));
         }});
         
-        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
+        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", detective, contact);
         
         context.checking(new Expectations() {{
             oneOf(contact).makeJsonRestCall(with(Matchers.startsWith("myEndpoint/httpAuth")), with(BuildTypes.class));
@@ -95,7 +84,7 @@ public final class TeamCitySpyTest {
             allowing(contact).privileged(); will(returnValue(false));
         }});
 
-        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", network, detective);
+        final TeamCitySpy spy = new TeamCitySpy("myEndpoint", detective, contact);
         
         context.checking(new Expectations() {{
             allowing(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypes.class));
