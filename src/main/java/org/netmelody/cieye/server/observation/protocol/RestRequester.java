@@ -81,7 +81,6 @@ public final class RestRequester implements GrapeVine {
         }
         catch (Exception e) {
             LOG.error(url, e);
-//            httpget.abort();
         }
         return "";
     }
