@@ -1,3 +1,9 @@
+## Release 0.4.0 (forthcoming release)
+  * Support specification of username/password for CI servers without guest access
+  * Lots of extra documentation added to the Wiki
+  * Failing TeamCity build types that are assigned and under investigation radiate as such
+  * Fix bug with marking builds as fixed in TeamCity
+
 ## Release 0.3.2
   * Support Gravatar hosted pictures (thanks to Grundlefleck)
   * Play woohoo when doh is over (thanks to Grundlefleck)
