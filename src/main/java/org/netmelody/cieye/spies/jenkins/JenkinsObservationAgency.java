@@ -14,7 +14,7 @@ public final class JenkinsObservationAgency implements ObservationAgency {
     @Override
     public CiSpy provideSpyFor(Feature feature, CommunicationNetwork network, KnownOffendersDirectory directory) {
         final CodeBook codeBook = new CodeBook(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-                                      .withCredentials("ci", "");
+                                      .withCredentials(feature.username(), feature.password());
         return new JenkinsSpy(feature.endpoint(), directory, network.makeContact(codeBook));
     }
 }

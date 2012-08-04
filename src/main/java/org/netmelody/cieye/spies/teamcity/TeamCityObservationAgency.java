@@ -16,7 +16,7 @@ public final class TeamCityObservationAgency implements ObservationAgency {
     @Override
     public CiSpy provideSpyFor(Feature feature, CommunicationNetwork network, KnownOffendersDirectory directory) {
         final CodeBook codeBook = new CodeBook(new SimpleDateFormat("yyyyMMdd'T'HHmmssZ"))
-                                      .withCredentials("cieye", "cieye")
+                                      .withCredentials(feature.username(), feature.password())
                                       .withRawContentMunger(new Function<String, String>() {
                                           @Override public String apply(String input) {
                                               return input.replace("\"@", "\"");

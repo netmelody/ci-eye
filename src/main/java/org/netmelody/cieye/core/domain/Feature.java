@@ -6,15 +6,23 @@ public final class Feature {
 
     private final String name;
     private final String endpoint;
-    private final CiServerType type; 
+    private final CiServerType type;
+    private final String username;
+    private final String password; 
     
     public Feature(String name, String endpoint, CiServerType type) {
+        this(name, endpoint, type, null, null);
+    }
+
+    public Feature(String name, String endpoint, CiServerType type, String username, String password) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(endpoint);
         Preconditions.checkNotNull(type);
         this.name = name;
         this.endpoint = endpoint;
         this.type = type;
+        this.username = (null == username) ? "" : username;
+        this.password = (null == password) ? "" : password;
     }
     
     public String name() {
@@ -27,6 +35,14 @@ public final class Feature {
     
     public CiServerType type() {
         return type;
+    }
+    
+    public String username() {
+        return username;
+    }
+    
+    public String password() {
+        return password;
     }
     
     @Override
