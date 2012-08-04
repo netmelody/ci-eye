@@ -5,5 +5,5 @@ DEMO||Product_Zappa
 [Public Live]
 JENKINS|http://ci.jenkins-ci.org|Jenkins core
 HUDSON|http://hudson.magnolia-cms.com|Main (trunk, branches, and alternative builds)
-TEAMCITY|http://teamcity.jetbrains.com|Gradle
+TEAMCITY|http://teamcity.jetbrains.com|Apache Ivy
 TEAMCITY|http://teamcity.codebetter.com|CI-Eye

@@ -34,4 +34,8 @@ public final class TargetDigestGroup implements Iterable<TargetDigest> {
     public Iterator<TargetDigest> iterator() {
         return targets.iterator();
     }
+
+    public boolean isEmpty() {
+        return targets.isEmpty();
+    }
 }
