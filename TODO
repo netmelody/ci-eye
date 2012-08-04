@@ -1,4 +1,3 @@
-push user/pass for ci into settings -- or at least standardise on cieye/cieye (and document this)
 support for Cruise/Go, Bamboo, AnthillPro, CI Joe, Buildomatic, cruisecontrol?
 give immediate feedback when marking a build
 indicate when targets are pending a build, but are in the queue
