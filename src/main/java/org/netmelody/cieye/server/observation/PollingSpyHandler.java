@@ -1,6 +1,5 @@
 package org.netmelody.cieye.server.observation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -120,9 +119,6 @@ public final class PollingSpyHandler implements CiSpyHandler {
         private final ImmutableMap<TargetId, TargetDetail> status;
         private final long timestamp;
 
-        public StatusResult() {
-            this(new ArrayList<TargetDetail>());
-        }
         public StatusResult(Iterable<TargetDetail> status) {
             this(Maps.uniqueIndex(status, toId()), System.currentTimeMillis());
         }
