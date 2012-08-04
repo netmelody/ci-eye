@@ -1,8 +1,5 @@
 package org.netmelody.cieye.core.domain;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Iterables.find;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -10,7 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 
 public final class TargetDetail extends Target {
 
@@ -23,18 +23,15 @@ public final class TargetDetail extends Target {
     }
     
     public TargetDetail(String id, String webUrl, String name, Status status, long lastStartTime, Collection<RunningBuild> builds, Set<Sponsor> sponsors) {
-        super(id, webUrl, name, find(transform(builds, toStatus()), isBroken(), status));
+        super(id, webUrl, name, statusFrom(builds, status));
         this.lastStartTime = lastStartTime;
         this.sponsors.addAll(sponsors);
         this.builds.addAll(builds);
     }
 
-    private static Predicate<Status> isBroken() {
-        return new Predicate<Status>() {
-            @Override public boolean apply(Status status) {
-                return Status.BROKEN.equals(status);
-            }
-        };
+    private static Status statusFrom(Collection<RunningBuild> builds, Status parentStatus) {
+        final Status result = Status.RANK.max(concat(transform(builds, toStatus()), newArrayList(parentStatus)));
+        return Status.UNKNOWN.equals(result) ? parentStatus : result;
     }
 
     private static Function<RunningBuild, Status> toStatus() {
