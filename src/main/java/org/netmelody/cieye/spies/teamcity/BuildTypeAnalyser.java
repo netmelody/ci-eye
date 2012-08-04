@@ -48,7 +48,7 @@ public final class BuildTypeAnalyser {
             runningBuilds.add(new RunningBuild(percentageOf(build.percentageComplete), buildDetail.status()));
         }
         
-        Status currentStatus = Status.GREEN;
+        Status currentStatus = Status.UNKNOWN;
         final Build lastCompletedBuild = communicator.lastCompletedBuildFor(buildTypeDetail);
         if (null != lastCompletedBuild) {
             currentStatus = lastCompletedBuild.status();
