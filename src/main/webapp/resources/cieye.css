@@ -47,6 +47,9 @@ div.target.BROKEN {
     color: #ffffff;
     background-color: #aa0000;
 }
+div.target.BROKEN.marked {
+    box-shadow: 0px 15px 15px rgba(253, 146, 21, 0.7) inset, 0px -15px 15px rgba(253, 146, 21, 0.7) inset;
+}
 div.target.UNDER_INVESTIGATION {
     color: #ffffff;
     background-color: #f87217;

@@ -92,7 +92,8 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
         sponsorDiv = $("<div></div>").addClass("sponsors"),
         buildsDiv = $("<div></div>"),
         sponsorMugshots = {},
-        displayedMugshots = {};
+        displayedMugshots = {},
+        markedOn = 0;
     
     function sortedSponsors(unsortedSponsors) {
         return unsortedSponsors.sort(function(a, b) {
@@ -121,6 +122,7 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
             buildsDiv.append(ORG.NETMELODY.CIEYE.newBuildWidget(buildJson).getContent());
         });
 
+        targetDiv.toggleClass("marked", (new Date() - markedOn) < 12000);
         targetDiv.toggleClass("building", newTargetJson.builds.length !== 0);
         
         if (newTargetJson.builds.length === 0 && newTargetJson.status === "GREEN") {
@@ -153,7 +155,11 @@ ORG.NETMELODY.CIEYE.newTargetWidget = function(targetJson) {
     }
     
     function markAs(note) {
-        return function() { $.post("addNote", { "id": targetJson.id, "note": note }); };
+        return function() {
+            $.post("addNote", { "id": targetJson.id, "note": note });
+            markedOn = new Date() - 1;
+            targetDiv.addClass("marked");
+        };
     }
     
     function doh() {
