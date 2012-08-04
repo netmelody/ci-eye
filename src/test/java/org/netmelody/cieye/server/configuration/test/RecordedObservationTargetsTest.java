@@ -41,7 +41,8 @@ public final class RecordedObservationTargetsTest {
         assertThat(features, contains(new Feature("Jenkins 1", "http://jenkinsurl", new CiServerType("JENKINS")),
                                       new Feature("Hudson 1", "http://hudsonurl", new CiServerType("HUDSON")),
                                       new Feature("TeamCity 1", "http://teamcityurl", new CiServerType("TEAMCITY")),
-                                      new Feature("", "http://allurl", new CiServerType("JENKINS"))));
+                                      new Feature("", "http://allurl", new CiServerType("JENKINS")),
+                                      new Feature("TeamCity 2", "http://tcsecure", new CiServerType("TEAMCITY"), "user", "pass")));
     }
 
     @Test public void

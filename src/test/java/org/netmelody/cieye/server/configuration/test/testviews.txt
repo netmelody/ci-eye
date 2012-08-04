@@ -7,3 +7,4 @@ JENKINS|http://jenkinsurl|Jenkins 1
 HUDSON|http://hudsonurl|Hudson 1
 TEAMCITY|http://teamcityurl|TeamCity 1
 JENKINS|http://allurl|
+TEAMCITY|http://tcsecure|TeamCity 2|user|pass

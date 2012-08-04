@@ -52,7 +52,11 @@ public final class Feature {
         }
         
         final Feature other = (Feature)obj;
-        return other.name.equals(name) && other.endpoint.equals(endpoint) && other.type.equals(type);
+        return other.name.equals(name)
+                && other.endpoint.equals(endpoint)
+                && other.type.equals(type)
+                && other.username.equals(username)
+                && other.password.equals(password);
     }
     
     @Override

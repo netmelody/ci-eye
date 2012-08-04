@@ -22,7 +22,7 @@ import com.google.common.base.Predicate;
 public final class RecordedObservationTargets implements LandscapeFetcher, Refreshable {
 
     private static final Pattern LANDSCAPE_NAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
-    private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)$");
+    private static final Pattern FEATURE_REGEX = Pattern.compile("^(.*?)\\|(.*?)\\|(.*?)(?:\\|(.*?)\\|(.*?))?$");
 
     private final SettingsFile viewsFile;
     
@@ -106,7 +106,11 @@ public final class RecordedObservationTargets implements LandscapeFetcher, Refre
     private static Function<Matcher, Feature> toFeature() {
         return new Function<Matcher, Feature>() {
             @Override public Feature apply(Matcher featureMatcher) {
-                return new Feature(featureMatcher.group(3), featureMatcher.group(2), new CiServerType(featureMatcher.group(1)));
+                return new Feature(featureMatcher.group(3),
+                                   featureMatcher.group(2),
+                                   new CiServerType(featureMatcher.group(1)),
+                                   featureMatcher.group(4),
+                                   featureMatcher.group(5));
             }
         };
     }
