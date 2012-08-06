@@ -15,6 +15,9 @@ div.target.GREEN {
 div.target.GREEN.building {
     display: block;
 }
+div.target.BROKEN.marked {
+    box-shadow: 0px 5px 5px rgba(253, 146, 21, 0.7) inset, 0px -5px 5px rgba(253, 146, 21, 0.7) inset;
+}
 div.sponsors {
     margin: 1px 1px 0 0;
 }
