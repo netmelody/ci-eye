@@ -1,4 +1,4 @@
-## Release 0.4.0 (forthcoming release)
+## Release 0.4.0
   * Support specification of username/password for CI servers without guest access
   * Lots of extra documentation added to the Wiki
   * Failing TeamCity build types that are assigned and under investigation radiate as such
@@ -7,6 +7,8 @@
   * Report a failure when any component of a view is providing no build data
   * TeamCity build targets that have not yet build should report an 'unknown' status
   * Improve scanning of builds on start-up
+
+[Full changelog](https://github.com/netmelody/ci-eye/compare/0.3.2...0.4.0)
 
 ## Release 0.3.2
   * Support Gravatar hosted pictures (thanks to Grundlefleck)
