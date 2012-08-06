@@ -27,7 +27,7 @@ The CI-Eye executable JAR file can be downloaded from GitHub [downloads] -- see 
 
 Documentation
 -------------
-Full, detailed documentation on the CI-Eye [Wiki].
+Full, detailed documentation on the CI-Eye [Wiki] -- yes, there are **screenshots** there too!
 
 Source
 ------
