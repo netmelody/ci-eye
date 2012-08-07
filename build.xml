@@ -76,10 +76,7 @@
             <zipfileset src="${lib.dir}/gson-2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/guava-12.0.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpclient-4.2.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/httpclient-cache-4.2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpcore-4.2.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/httpcore-nio-4.2.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/httpmime-4.2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/simple-4.1.21.jar" excludes="**/META-INF/**"/>
 
             <manifest>
