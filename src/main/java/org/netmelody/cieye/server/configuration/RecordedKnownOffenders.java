@@ -10,6 +10,7 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import org.netmelody.cieye.server.configuration.avatar.PictureUrlRegistry;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
@@ -23,9 +24,8 @@ import static org.netmelody.cieye.core.utility.Irritables.partition;
 public final class RecordedKnownOffenders implements KnownOffendersDirectory, Refreshable {
     
     private static final Pattern PICTURE_FILENAME_REGEX = Pattern.compile("^\\s*\\[(.*)\\]\\s*$");
-    private static final String GRAVATAR_PREFIX = "gravatar:";
-    
-    private static final Gravatar gravatarService = new Gravatar();
+
+    private static final PictureUrlRegistry pictureUrlRegistry = new PictureUrlRegistry();
     
     private final SettingsFile picturesFile;
     
@@ -105,10 +105,6 @@ public final class RecordedKnownOffenders implements KnownOffendersDirectory, Re
     }
 
     private static String getPictureUrl(final String image) {
-        if (image.startsWith(GRAVATAR_PREFIX)) {
-            final String email = image.substring(GRAVATAR_PREFIX.length());
-            return gravatarService.imageUrlFor(email);
-        }
-        return "/pictures/" + image;
+      return pictureUrlRegistry.getPictureUrl(image);
     }
 }
