@@ -11,9 +11,9 @@ final class Gravatar implements PictureUrlProvider {
         return GRAVATAR_URL + DigestUtils.md5Hex(email.toLowerCase().trim()) + ".jpg";
     }
 
-  @Override
-  public String handlesPrefix() {
-    return "gravatar";
-  }
+    @Override
+    public String handlesPrefix() {
+        return "gravatar";
+    }
 
 }
