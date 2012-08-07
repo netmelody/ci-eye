@@ -11,6 +11,7 @@ public final class PictureUrlRegistry {
         this.providers = new ArrayList<PictureUrlProvider>();
         providers.add(new Gravatar());
         providers.add(new Robohash());
+        providers.add(new SimpleHttp());
         defaultProvider = new LocalImage();
         providers.add(defaultProvider);
     }
