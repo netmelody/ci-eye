@@ -1,4 +1,5 @@
 [![][logo]][website] *because it's not easy being green*
+
 CI-Eye
 ======
 Copyright &copy; 2011-, [Tom Denley]. Licensed under [Apache 2 License].
@@ -29,7 +30,7 @@ Documentation
 -------------
 Full, detailed documentation on the CI-Eye [Wiki] -- yes, there are **screenshots** there too!
 
-Source
+Source [![Build Status](https://secure.travis-ci.org/netmelody/ci-eye.png?branch=master)](http://travis-ci.org/netmelody/ci-eye)
 ------
 The latest source of CI-Eye can be found on [GitHub].
 
