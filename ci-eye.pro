@@ -1,5 +1,5 @@
--injars build/ci-eye-1.0.0-SNAPSHOT-20120807090858.jar
--outjars build/ci-eye-dist.jar
+-injars build/ci-eye-in.jar
+-outjars build/ci-eye-out.jar
 -libraryjars  <java.home>/lib/rt.jar
 -libraryjars vendor/buildlib/jsr305-2.0.0.jar
 
