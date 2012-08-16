@@ -17,7 +17,7 @@ describe("BuildWidget", function() {
         var progressBar = widget.getContent(),
             progressBarFilling = progressBar.children().first();
     
-        expect(progressBarFilling.attr("style")).toEqual("width: 85%");
+        expect(progressBarFilling.attr("style")).toEqual("width: 85%;");
     });
 
     describe("when the status has been updated", function() {
@@ -36,7 +36,7 @@ describe("BuildWidget", function() {
             var progressBar = widget.getContent(),
                 progressBarFilling = progressBar.children().first();
         
-            expect(progressBarFilling.attr("style")).toEqual("width: 11%");
+            expect(progressBarFilling.attr("style")).toEqual("width: 11%;");
         });
     });
 });

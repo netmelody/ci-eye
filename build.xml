@@ -73,8 +73,8 @@
             <zipfileset src="${lib.dir}/commons-codec-1.6.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/commons-io-2.4.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/commons-logging-1.1.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/gson-2.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/guava-12.0.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/gson-2.2.2.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/guava-13.0.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpclient-4.2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpcore-4.2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/simple-4.1.21.jar" excludes="**/META-INF/**"/>
@@ -149,4 +149,10 @@
 
     <target name="snapshot" description="Create a tested snapshot jar file" depends="test,dependency-check"/>
     <target name="release" description="Create a tested release jar file" depends="version-for-release,snapshot"/>
+
+    <target name="shrink" depends="release">
+        <taskdef resource="proguard/ant/task.properties" classpath="${buildlib.dir}/proguard.jar" />
+        <copy file="${main.jar}" tofile="${build.dir}/ci-eye-in.jar"></copy>
+        <proguard configuration="ci-eye.pro"/>
+    </target>
 </project>
