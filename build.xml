@@ -73,7 +73,7 @@
             <zipfileset src="${lib.dir}/commons-codec-1.6.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/commons-io-2.4.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/commons-logging-1.1.1.jar" excludes="**/META-INF/**"/>
-            <zipfileset src="${lib.dir}/gson-2.1.jar" excludes="**/META-INF/**"/>
+            <zipfileset src="${lib.dir}/gson-2.2.2.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/guava-13.0.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpclient-4.2.1.jar" excludes="**/META-INF/**"/>
             <zipfileset src="${lib.dir}/httpcore-4.2.1.jar" excludes="**/META-INF/**"/>
