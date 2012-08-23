@@ -2,7 +2,7 @@ package org.netmelody.cieye.server.configuration.avatar;
 
 import java.text.MessageFormat;
 
-final class Robohash implements PictureUrlProvider {
+public final class Robohash implements PictureUrlProvider {
 
     private final static String ROBOHASH_URL = "http://robohash.org/";
 

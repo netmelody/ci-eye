@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PictureUrlRegistry {
-    private       List<PictureUrlProvider> providers;
-    private final LocalImage               defaultProvider;
+    private final List<PictureUrlProvider> providers;
+    private final LocalImage defaultProvider;
 
     public PictureUrlRegistry() {
         this.providers = new ArrayList<PictureUrlProvider>();

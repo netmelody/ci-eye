@@ -1,6 +1,6 @@
 package org.netmelody.cieye.server.configuration.avatar;
 
-class LocalImage implements PictureUrlProvider {
+public final class LocalImage implements PictureUrlProvider {
     @Override
     public String imageUrlFor(String image) {
         return "/pictures/" + image;

@@ -2,7 +2,7 @@ package org.netmelody.cieye.server.configuration.avatar;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-final class Gravatar implements PictureUrlProvider {
+public final class Gravatar implements PictureUrlProvider {
 
     private final static String GRAVATAR_URL = "http://www.gravatar.com/avatar/";
 
