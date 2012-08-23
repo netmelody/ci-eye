@@ -1,6 +1,5 @@
 package org.netmelody.cieye.server.configuration.avatar;
 
-import java.text.MessageFormat;
 
 public final class Robohash implements PictureUrlProvider {
 
@@ -8,7 +7,7 @@ public final class Robohash implements PictureUrlProvider {
 
     @Override
     public String imageUrlFor(String picture) {
-        return MessageFormat.format("{0}{1}.png", ROBOHASH_URL, picture.toLowerCase().trim());
+        return ROBOHASH_URL + picture.toLowerCase().trim() + ".jpg";
     }
 
     @Override
