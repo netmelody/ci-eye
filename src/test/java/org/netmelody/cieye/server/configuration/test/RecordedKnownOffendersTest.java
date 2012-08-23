@@ -16,6 +16,7 @@ import org.junit.rules.TemporaryFolder;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
+import org.netmelody.cieye.server.configuration.avatar.Gravatar;
 
 
 public final class RecordedKnownOffendersTest {
@@ -79,6 +80,7 @@ public final class RecordedKnownOffendersTest {
     
     @Test public void
     looksUpOffenderAndProvidesLinkToGravatarMugshot() {
-        assertThat(offenders.search("john").size(), is(1));
+        final String gravatarUrlWithHashedEmail = new Gravatar().imageUrlFor("john.doe@gmail.com");
+        assertThat(offenders.search("john"), contains(new Sponsor("", gravatarUrlWithHashedEmail)));
     }
 }
