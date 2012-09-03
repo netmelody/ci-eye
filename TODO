@@ -7,3 +7,4 @@ Consider sticky marking
 Consider rewarding build fixers
 dependency-check of the tests
 replace click-driven pop-up menu with hover-over fly-out button menu.
+ChangeSetItem needs updating to reflect changes to Jenkins REST API.
