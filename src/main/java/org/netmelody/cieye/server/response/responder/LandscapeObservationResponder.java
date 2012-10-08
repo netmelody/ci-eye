@@ -40,7 +40,7 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
             result = result.withDoh(prison.prisonersFor(landscape));
         }
         
-        response.set("Content-Type", "application/json");
+        response.set("Content-Type", "application/json; charset=utf-8");
         response.setDate("Expires", System.currentTimeMillis() + timeToLive);
         response.getPrintStream().println(new JsonTranslator().toJson(result));
     }
