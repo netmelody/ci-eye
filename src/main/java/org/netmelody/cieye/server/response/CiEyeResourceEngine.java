@@ -10,7 +10,6 @@ import org.netmelody.cieye.server.response.resource.CiEyeResource;
 import org.netmelody.cieye.server.response.resource.DohHandler;
 import org.netmelody.cieye.server.response.resource.NotFoundResource;
 import org.netmelody.cieye.server.response.resource.RedirectResource;
-import org.netmelody.cieye.server.response.resource.SponsorResource;
 import org.netmelody.cieye.server.response.resource.TargetNotationHandler;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.FileResponder;
@@ -18,6 +17,7 @@ import org.netmelody.cieye.server.response.responder.LandscapeListResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeObservationResponder;
 import org.netmelody.cieye.server.response.responder.PictureResponder;
 import org.netmelody.cieye.server.response.responder.SettingsLocationResponder;
+import org.netmelody.cieye.server.response.responder.SponsorResponder;
 import org.simpleframework.http.Address;
 import org.simpleframework.http.resource.Resource;
 import org.simpleframework.http.resource.ResourceEngine;
@@ -67,7 +67,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
                 return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher, updateChecker));
             }
             if ("sponsor.json".equals(path[0])) {
-                return new SponsorResource(tracker);
+                return new CiEyeResource(new SponsorResponder(tracker));
             }
             
             final String name = "/resources/" + path[0];
