@@ -5,8 +5,9 @@ import java.io.IOException;
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.JsonTranslator;
-import org.simpleframework.http.Response;
+import org.simpleframework.http.Request;
 
 public final class CiEyeVersionResponder implements CiEyeResponder {
     
@@ -28,14 +29,11 @@ public final class CiEyeVersionResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
-        response.set("Content-Type", "application/json");
-        response.setDate("Expires", System.currentTimeMillis() + 10000L);
-        
+    public CiEyeResponse respond(Request request) throws IOException {
         final VersionInformation versionInformation = new VersionInformation(configurationFetcher.getVersion(),
                                                                              updateChecker.getLatestVersion());
         
-        response.getPrintStream().println(new JsonTranslator().toJson(versionInformation));
+        return CiEyeResponse.withJson(new JsonTranslator().toJson(versionInformation)).expiringInMillis(10000L);
     }
-    
+
 }

@@ -3,7 +3,6 @@ package org.netmelody.cieye.server.response.responder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
@@ -11,7 +10,8 @@ import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.CiEyeResponder;
-import org.simpleframework.http.Response;
+import org.netmelody.cieye.server.response.CiEyeResponse;
+import org.simpleframework.http.Request;
 
 public final class PictureResponder implements CiEyeResponder {
 
@@ -30,25 +30,18 @@ public final class PictureResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
+    public CiEyeResponse respond(Request request) throws IOException {
         FileInputStream picture = null;
-        OutputStream body = null;
+        byte[] content = new byte[0];
         try {
-            body = response.getOutputStream();
             final File file = pictureFetcher.getPictureResource(name);
             picture = new FileInputStream(file);
-            response.set("Content-Type", contentTypeOf(extension));
-            response.setDate("Last-Modified", file.lastModified());
-            IOUtils.copy(picture, body);
+            content = IOUtils.toByteArray(picture);
+            return CiEyeResponse.forResource(content, MIME_TYPES.getString(extension)).lastModified(file.lastModified());
         }
         finally {
             IOUtils.closeQuietly(picture);
-            IOUtils.closeQuietly(body);
         }
-    }
-
-    private static String contentTypeOf(String extension) {
-        return MIME_TYPES.getString(extension);
     }
 }
 

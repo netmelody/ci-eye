@@ -1,7 +1,5 @@
 package org.netmelody.cieye.server.response.responder;
 
-import static java.lang.Math.min;
-
 import java.io.IOException;
 
 import org.netmelody.cieye.core.domain.Feature;
@@ -10,9 +8,12 @@ import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.JsonTranslator;
 import org.netmelody.cieye.server.response.Prison;
-import org.simpleframework.http.Response;
+import org.simpleframework.http.Request;
+
+import static java.lang.Math.min;
 
 public final class LandscapeObservationResponder implements CiEyeResponder {
 
@@ -27,21 +28,19 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
+    public CiEyeResponse respond(Request request) throws IOException {
         LandscapeObservation result = new LandscapeObservation();
-        long timeToLive = Long.MAX_VALUE;
+        long timeToLiveMillis = Long.MAX_VALUE;
         for (Feature feature : landscape.features()) {
             final CiSpyHandler spy = spyAllocator.spyFor(feature);
             result = result.add(spy.statusOf(feature));
-            timeToLive = min(timeToLive, spy.millisecondsUntilNextUpdate(feature));
+            timeToLiveMillis = min(timeToLiveMillis, spy.millisecondsUntilNextUpdate(feature));
         }
         
         if (prison.crimeReported(landscape)) {
             result = result.withDoh(prison.prisonersFor(landscape));
         }
         
-        response.set("Content-Type", "application/json; charset=utf-8");
-        response.setDate("Expires", System.currentTimeMillis() + timeToLive);
-        response.getPrintStream().println(new JsonTranslator().toJson(result));
+        return CiEyeResponse.withJson(new JsonTranslator().toJson(result)).expiringInMillis(timeToLiveMillis);
     }
 }

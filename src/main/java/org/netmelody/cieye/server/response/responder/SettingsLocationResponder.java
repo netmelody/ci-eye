@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.JsonTranslator;
-import org.simpleframework.http.Response;
+import org.simpleframework.http.Request;
 
 public final class SettingsLocationResponder implements CiEyeResponder {
 
@@ -16,10 +17,7 @@ public final class SettingsLocationResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
-        response.set("Content-Type", "application/json");
-        response.setDate("Expires", System.currentTimeMillis() + 10000L);
-        response.getPrintStream().println(new JsonTranslator().toJson(configurationFetcher.settingsLocation()));
+    public CiEyeResponse respond(Request request) throws IOException {
+        return CiEyeResponse.withJson(new JsonTranslator().toJson(configurationFetcher.settingsLocation())).expiringInMillis(10000L);
     }
-    
 }

@@ -2,14 +2,14 @@ package org.netmelody.cieye.server.response.responder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.response.CiEyeResponder;
-import org.simpleframework.http.Response;
+import org.netmelody.cieye.server.response.CiEyeResponse;
+import org.simpleframework.http.Request;
 
 public final class FileResponder implements CiEyeResponder {
 
@@ -26,23 +26,17 @@ public final class FileResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
+    public CiEyeResponse respond(Request request) throws IOException {
         InputStream input = null;
-        OutputStream body = null;
+        byte[] content = new byte[0];
         try {
             input = getClass().getResourceAsStream(name);
-            body = response.getOutputStream();
-            response.set("Content-Type", MIME_TYPES.getString(extension));
-            IOUtils.copy(input, body);
+            content = IOUtils.toByteArray(input);
         }
         finally {
             IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(body);
         }
-    }
-
-    public boolean exists() {
-        return null != getClass().getResource(name);
+        return CiEyeResponse.forResource(content, MIME_TYPES.getString(extension));
     }
 }
 

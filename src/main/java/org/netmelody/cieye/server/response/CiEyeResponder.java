@@ -2,9 +2,9 @@ package org.netmelody.cieye.server.response;
 
 import java.io.IOException;
 
-import org.simpleframework.http.Response;
+import org.simpleframework.http.Request;
 
 public interface CiEyeResponder {
 
-    void writeTo(Response response) throws IOException;
+    CiEyeResponse respond(Request request) throws IOException;
 }

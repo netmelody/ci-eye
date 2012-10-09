@@ -70,9 +70,9 @@ public final class CiEyeResourceEngine implements ResourceEngine {
                 return new SponsorResource(tracker);
             }
             
-            final FileResponder staticFile = new FileResponder("/resources/" + path[0]);
-            if (staticFile.exists()) {
-                return new CiEyeResource(staticFile);
+            final String name = "/resources/" + path[0];
+            if (null != getClass().getResource(name)) {
+                return new CiEyeResource(new FileResponder(name));
             }
         }
         

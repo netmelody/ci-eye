@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.JsonTranslator;
-import org.simpleframework.http.Response;
+import org.simpleframework.http.Request;
 
 public final class LandscapeListResponder implements CiEyeResponder {
 
@@ -16,9 +17,7 @@ public final class LandscapeListResponder implements CiEyeResponder {
     }
 
     @Override
-    public void writeTo(Response response) throws IOException {
-        response.set("Content-Type", "application/json");
-        response.setDate("Expires", System.currentTimeMillis() + 10000L);
-        response.getPrintStream().println(new JsonTranslator().toJson(landscapeFetcher.landscapes()));
+    public CiEyeResponse respond(Request request) throws IOException {
+        return CiEyeResponse.withJson(new JsonTranslator().toJson(landscapeFetcher.landscapes())).expiringInMillis(10000L);
     }
 }

@@ -2,9 +2,11 @@ package org.netmelody.cieye.server.response.resource;
 
 import java.io.IOException;
 
+import org.apache.commons.io.IOUtils;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.Status;
@@ -23,12 +25,14 @@ public final class CiEyeResource implements Resource {
     @Override
     public void handle(Request request, Response response) {
         try {
-            long time = System.currentTimeMillis();
-            response.set("Content-Type", "text/html");
+            CiEyeResponse result = responder.respond(request);
+            response.set("Content-Type", result.contentType);
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
-            response.setDate("Date", time);
-            response.setDate("Last-Modified", time);
-            responder.writeTo(response);
+            response.setDate("Date", result.date);
+            response.setDate("Last-Modified", result.lastModified);
+            response.setDate("Expires", result.expires);
+            response.setContentLength(result.contentLength());
+            IOUtils.copy(result.inputStream(), response.getOutputStream());
         }
         catch (Exception e) {
             LOG.error("Failed to respond to request for resource " + request.getPath().getPath(), e);
