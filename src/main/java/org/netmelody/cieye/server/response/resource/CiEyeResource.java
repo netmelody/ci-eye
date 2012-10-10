@@ -1,6 +1,7 @@
 package org.netmelody.cieye.server.response.resource;
 
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.netmelody.cieye.core.logging.LogKeeper;
@@ -32,6 +33,11 @@ public final class CiEyeResource implements Resource {
             response.setDate("Last-Modified", result.lastModified);
             response.setDate("Expires", result.expires);
             response.setContentLength(result.contentLength());
+            response.setCode(result.status.getCode());
+            response.setText(result.status.getDescription());
+            for (Entry<String, String> header : result.additionalStringHeaders.entrySet()) {
+                response.set(header.getKey(), header.getValue());
+            }
             IOUtils.copy(result.inputStream(), response.getOutputStream());
         }
         catch (Exception e) {

@@ -44,62 +44,66 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         this.allocator = allocator;
         this.updateChecker = updateChecker;
     }
-    
+
     @Override
     public Resource resolve(Address target) {
+        return new CiEyeResource(route(target));
+    }
+
+    private CiEyeResponder route(Address target) {
         final String[] path = target.getPath().getSegments();
         
         if (path.length == 0) {
-            return new CiEyeResource(new FileResponder("/resources/welcome.html"));
+            return new FileResponder("/resources/welcome.html");
         }
         
         if (path.length == 1) {
             if ("mugshotconfig.html".equals(path[0])) {
-                return new CiEyeResource(new FileResponder("/resources/mugshotconfig.html"));
+                return new FileResponder("/resources/mugshotconfig.html");
             }
             if ("landscapelist.json".equals(path[0])) {
-                return new CiEyeResource(new LandscapeListResponder(landscapeFetcher));
+                return new LandscapeListResponder(landscapeFetcher);
             }
             if ("settingslocation.json".equals(path[0])) {
-                return new CiEyeResource(new SettingsLocationResponder(configurationFetcher));
+                return new SettingsLocationResponder(configurationFetcher);
             }
             if ("version.json".equals(path[0])) {
-                return new CiEyeResource(new CiEyeVersionResponder(configurationFetcher, updateChecker));
+                return new CiEyeVersionResponder(configurationFetcher, updateChecker);
             }
             if ("sponsor.json".equals(path[0])) {
-                return new CiEyeResource(new SponsorResponder(tracker));
+                return new SponsorResponder(tracker);
             }
             
             final String name = "/resources/" + path[0];
             if (null != getClass().getResource(name)) {
-                return new CiEyeResource(new FileResponder(name));
+                return new FileResponder(name);
             }
         }
         
         if (path.length == 2) {
             if ("pictures".equals(path[0])) {
-                return new CiEyeResource(new PictureResponder(pictureFetcher, path[1]));
+                return new PictureResponder(pictureFetcher, path[1]);
             }
             
             if ("landscapes".equals(path[0])) {
                 if (!target.getPath().getPath().endsWith("/")) {
                     return new RedirectResource(target.getPath().getPath() + "/");
                 }
-                return new CiEyeResource(new FileResponder("/resources/cieye.html"));
+                return new FileResponder("/resources/cieye.html");
             }
         }
         
         if (path.length == 3) {
             if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
-                return new CiEyeResource(new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), allocator, prison));
+                return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), allocator, prison);
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
-                return new CiEyeResource(new TargetNotationHandler(landscapeFetcher, allocator, tracker));
+                return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
             }
             
             if ("landscapes".equals(path[0]) && "doh".equals(path[2])) {
-                return new CiEyeResource(new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker));
+                return new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker);
             }
         }
         
