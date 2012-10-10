@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.response.resource;
+package org.netmelody.cieye.server.response.responder;
 
 import java.io.IOException;
 
