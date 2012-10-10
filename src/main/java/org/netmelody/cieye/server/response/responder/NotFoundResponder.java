@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.response.resource;
+package org.netmelody.cieye.server.response.responder;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Status;
 
-public final class NotFoundResource implements CiEyeResponder {
+public final class NotFoundResponder implements CiEyeResponder {
 
     private static final String CONTENT =
             "<!DOCTYPE html>" +

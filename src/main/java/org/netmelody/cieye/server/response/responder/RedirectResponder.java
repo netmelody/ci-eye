@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.response.resource;
+package org.netmelody.cieye.server.response.responder;
 
 import java.io.IOException;
 
@@ -6,11 +6,11 @@ import org.netmelody.cieye.server.response.CiEyeResponder;
 import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.simpleframework.http.Request;
 
-public final class RedirectResource implements CiEyeResponder {
+public final class RedirectResponder implements CiEyeResponder {
 
     private final String newLocation;
 
-    public RedirectResource(String newLocation) {
+    public RedirectResponder(String newLocation) {
         this.newLocation = newLocation;
     }
 

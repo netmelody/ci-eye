@@ -7,14 +7,14 @@ import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.resource.CiEyeResource;
-import org.netmelody.cieye.server.response.resource.NotFoundResource;
-import org.netmelody.cieye.server.response.resource.RedirectResource;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.DohHandler;
 import org.netmelody.cieye.server.response.responder.FileResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeListResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeObservationResponder;
+import org.netmelody.cieye.server.response.responder.NotFoundResponder;
 import org.netmelody.cieye.server.response.responder.PictureResponder;
+import org.netmelody.cieye.server.response.responder.RedirectResponder;
 import org.netmelody.cieye.server.response.responder.SettingsLocationResponder;
 import org.netmelody.cieye.server.response.responder.SponsorResponder;
 import org.netmelody.cieye.server.response.responder.TargetNotationHandler;
@@ -87,7 +87,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             
             if ("landscapes".equals(path[0])) {
                 if (!target.getPath().getPath().endsWith("/")) {
-                    return new RedirectResource(target.getPath().getPath() + "/");
+                    return new RedirectResponder(target.getPath().getPath() + "/");
                 }
                 return new FileResponder("/resources/cieye.html");
             }
@@ -107,6 +107,6 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
         }
         
-        return new NotFoundResource();
+        return new NotFoundResponder();
     }
 }
