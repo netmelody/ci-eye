@@ -9,12 +9,12 @@ import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.LandscapeFetcher;
+import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
-import org.simpleframework.http.Response;
-import org.simpleframework.http.resource.Resource;
 
-public final class TargetNotationHandler implements Resource {
+public final class TargetNotationHandler implements CiEyeResponder {
 
     private static final Logbook LOG = LogKeeper.logbookFor(TargetNotationHandler.class);
     
@@ -28,34 +28,31 @@ public final class TargetNotationHandler implements Resource {
         this.tracker = tracker;
     }
 
+    private void makeNote(final String landscapeName, final String targetId, final String note) {
+        if (targetId == null || targetId.isEmpty()) {
+            return;
+        }
+
+        final Landscape landscape = landscapeFetcher.landscapeNamed(landscapeName);
+        for (Feature feature : landscape.features()) {
+            final CiSpyHandler spy = spyAllocator.spyFor(feature);
+            if (spy.takeNoteOf(targetId, note)) {
+                return;
+            }
+        }
+    }
+
     @Override
-    public void handle(Request request, Response response) {
+    public CiEyeResponse respond(Request request) throws IOException {
         try {
             final String targetId = request.getForm().get("id");
             final String note = request.getForm().get("note") + " by " + tracker.originOf(request);
-            
-            if (targetId == null || targetId.isEmpty()) {
-                return;
-            }
-            
             final String[] segments = request.getAddress().getPath().getSegments();
-            final Landscape landscape = landscapeFetcher.landscapeNamed(segments[segments.length - 2]);
-            
-            for (Feature feature : landscape.features()) {
-                final CiSpyHandler spy = spyAllocator.spyFor(feature);
-                if (spy.takeNoteOf(targetId, note)) {
-                    return;
-                }
-            }
+            final String landscapeName = segments[segments.length - 2];
+            makeNote(landscapeName, targetId, note);
         } catch (Exception e) {
             LOG.error("Failed to handle request to note a build", e);
         }
-        finally {
-            try {
-                response.close();
-            } catch (IOException e) {
-                LOG.error("Failed to close response object", e);
-            }
-        }
+        return CiEyeResponse.withJson("");
     }
 }

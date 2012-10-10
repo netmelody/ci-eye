@@ -1,9 +1,5 @@
 package org.netmelody.cieye.server.response.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
@@ -15,12 +11,14 @@ import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.CiEyeResourceEngine;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.netmelody.cieye.server.response.resource.CiEyeResource;
-import org.netmelody.cieye.server.response.resource.DohHandler;
 import org.netmelody.cieye.server.response.resource.NotFoundResource;
 import org.netmelody.cieye.server.response.resource.RedirectResource;
-import org.netmelody.cieye.server.response.resource.TargetNotationHandler;
 import org.simpleframework.http.parse.AddressParser;
 import org.simpleframework.http.resource.Resource;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
 public final class CiEyeResourceEngineTest {
 
@@ -105,7 +103,7 @@ public final class CiEyeResourceEngineTest {
     @Test public void
     handlesAddNoteRequest() {
         final Resource resource = engine.resolve(new AddressParser("http://ci-eye/landscapes/myLandscape/addNote"));
-        assertThat(resource, is(instanceOf(TargetNotationHandler.class)));
+        assertThat(resource, is(instanceOf(CiEyeResource.class)));
     }
     
     @Test public void
@@ -117,6 +115,6 @@ public final class CiEyeResourceEngineTest {
         final Resource resource = engine.resolve(new AddressParser("http://ci-eye/landscapes/myLandscape/doh"));
         
         context.assertIsSatisfied();
-        assertThat(resource, is(instanceOf(DohHandler.class)));
+        assertThat(resource, is(instanceOf(CiEyeResource.class)));
     }
 }

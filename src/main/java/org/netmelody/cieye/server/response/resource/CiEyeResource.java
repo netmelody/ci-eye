@@ -25,7 +25,7 @@ public final class CiEyeResource implements Resource {
     @Override
     public void handle(Request request, Response response) {
         try {
-            CiEyeResponse result = responder.respond(request);
+            final CiEyeResponse result = responder.respond(request);
             response.set("Content-Type", result.contentType);
             response.set("Server", "CiEye/1.0 (Simple 4.0)");
             response.setDate("Date", result.date);

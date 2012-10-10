@@ -95,11 +95,11 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
-                return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
+                return new CiEyeResource(new TargetNotationHandler(landscapeFetcher, allocator, tracker));
             }
             
             if ("landscapes".equals(path[0]) && "doh".equals(path[2])) {
-                return new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker);
+                return new CiEyeResource(new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker));
             }
         }
         

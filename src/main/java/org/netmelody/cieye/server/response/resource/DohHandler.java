@@ -5,13 +5,13 @@ import java.io.IOException;
 import org.netmelody.cieye.core.domain.Landscape;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
+import org.netmelody.cieye.server.response.CiEyeResponder;
+import org.netmelody.cieye.server.response.CiEyeResponse;
 import org.netmelody.cieye.server.response.Prison;
 import org.netmelody.cieye.server.response.RequestOriginTracker;
 import org.simpleframework.http.Request;
-import org.simpleframework.http.Response;
-import org.simpleframework.http.resource.Resource;
 
-public final class DohHandler implements Resource {
+public final class DohHandler implements CiEyeResponder {
 
     private static final Logbook LOG = LogKeeper.logbookFor(DohHandler.class);
     
@@ -27,7 +27,7 @@ public final class DohHandler implements Resource {
     }
 
     @Override
-    public void handle(Request request, Response response) {
+    public CiEyeResponse respond(Request request) throws IOException {
         try {
             final String active = request.getForm().get("active");
             if ("true".equals(active)) {
@@ -40,13 +40,6 @@ public final class DohHandler implements Resource {
         } catch (Exception e) {
             LOG.error("Failed to handle request to doh", e);
         }
-        finally {
-            try {
-                response.close();
-            } catch (IOException e) {
-                LOG.error("Failed to close response object", e);
-            }
-        }
+        return CiEyeResponse.withJson("");
     }
-
 }
