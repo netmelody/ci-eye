@@ -14,7 +14,7 @@ public final class FileResponderTest {
     @Test public void
     suppliesTheCorrectMimeType() throws IOException {
         final FileResponder responder = new FileResponder("/org/netmelody/cieye/server/response/responder/test/bob.js");
-        assertThat(responder.respond(null).contentType, is("text/javascript"));
+        assertThat(responder.respond(null).contentType, is("text/javascript; charset=utf-8"));
     }
 
     @Test public void
