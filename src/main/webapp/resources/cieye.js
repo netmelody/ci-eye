@@ -341,6 +341,7 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
     radiatorDiv.append(dohAudio);
     radiatorDiv.append(allGreenImg);
     
+    allGreenImg.mousemove(function() { allGreenImg.hide(); });
     $.getJSON("/sponsor.json", { "fingerprint": "all-green" }, function(sponsorJson) {
         if (sponsorJson) {
             allGreenImg.attr({ "src": sponsorJson.picture, "title": sponsorJson.name });
