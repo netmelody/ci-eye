@@ -1,31 +1,18 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.observation.Contact;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypes;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Builds;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Investigation;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Investigations;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Project;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ProjectDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.TeamCityProjects;
-
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.observation.Contact;
+import org.netmelody.cieye.spies.teamcity.jsondomain.*;
 
-import static com.google.common.base.Predicates.alwaysTrue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import static com.google.common.collect.Iterables.find;
 
 public final class TeamCityCommunicator {
@@ -69,7 +56,13 @@ public final class TeamCityCommunicator {
         if (null == completedBuilds.build() || completedBuilds.build().isEmpty()) {
             return null;
         }
-        return find(completedBuilds.build(), alwaysTrue());
+        return find(completedBuilds.build(), new Predicate<Build>() {
+            @Override
+            public boolean apply(Build input) {
+                //If defaultBranch is null, then this build does not use feature branches
+                return input.defaultBranch== null || input.defaultBranch;
+            }
+        });
     }
 
     public List<Build> runningBuildsFor(BuildType buildType) {

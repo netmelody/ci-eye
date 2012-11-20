@@ -11,7 +11,9 @@ public final class Build {
     public String webUrl;
     public boolean running;
     public int percentageComplete;
-    
+    public String branchName;
+    public Boolean defaultBranch;
+
     public Status status() {
         if (status == null || "SUCCESS".equals(status)) {
             return Status.GREEN;
