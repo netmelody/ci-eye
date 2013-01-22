@@ -24,7 +24,7 @@ Key Features
 
 Downloads
 ---------
-The CI-Eye executable JAR file can be downloaded from GitHub [downloads] -- see the [release notes].
+The CI-Eye executable JAR file can be downloaded from googlecode [downloads] -- see the [release notes].
 
 Documentation
 -------------
@@ -38,7 +38,7 @@ The latest source of CI-Eye can be found on [GitHub].
 [website]: http://netmelody.org/ci-eye
 [Tom Denley]: https://github.com/scarytom
 [Apache 2 License]: https://raw.github.com/netmelody/ci-eye/master/LICENSE
-[downloads]: https://github.com/netmelody/ci-eye/downloads
+[downloads]: http://code.google.com/p/ci-eye/downloads/list
 [release notes]: https://github.com/netmelody/ci-eye/blob/master/doc/RELEASENOTES.md
 [Wiki]: https://github.com/netmelody/ci-eye/wiki
 [GitHub]: https://github.com/netmelody/ci-eye
