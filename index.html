@@ -3,25 +3,30 @@
  <head>
   <meta charset="UTF-8">
   <title>CI-Eye</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="jquery.dateFormat-1.0.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
         function handleDownloads(response) {
           var total_downloads = 0,
-              latest = {"created_at": ""};
-          $.each(response.data, function(i, datum) {
+              latest = {};
+          $.each(response, function(i, datum) {
             total_downloads += parseInt(datum.download_count, 10);
-            if (datum.created_at > latest.created_at) {
+            if (datum.tags.indexOf("'Featured'") >= 0) {
               latest = datum;
             }
           });
           $("#downloads").text(total_downloads).show();
           $("#downloadlink").attr("href", latest.html_url);
           $("#downloadlink").text("Download latest " + latest.description).show();
-          $("#downloadmsg").text("available since " + $.format.date(latest.created_at, "dd MMM yyyy")).show();
+          $("#downloadmsg").text("available since " + latest.created_at).show();
         }
-        $.getJSON("https://api.github.com/repos/netmelody/ci-eye/downloads?callback=?", handleDownloads);
+        
+        $.ajax({
+          url: "https://api.scraperwiki.com/api/1.0/datastore/sqlite",
+          dataType: "jsonp",
+          data: { name: "ci-eye-downloads", query: "select * from swdata" },
+          success: handleDownloads
+        });
     });
   </script>
   <style>
@@ -150,7 +155,7 @@
    <p>CI-Eye is an extremely lightweight standalone Java web application, so no installation is required, and all you need is a JVM and a web browser.</p>
    <p><img class="sshot" src="https://raw.github.com/netmelody/ci-eye/master/doc/screenshots/title.png" title="CI-Eye welcome page" alt="shows menu of radiator views"></img><img class="sshot" src="https://raw.github.com/netmelody/ci-eye/master/doc/screenshots/demo.png" title="CI-Eye running in Demo-Mode" alt="shows several builds being run, some green, some red"></img></p>
    <p>CI-Eye talks to many different CI servers through their public APIs (so no plug-ins required).  Currently, support is offered for Hudson, Jenkins, and TeamCity, with plans for expansion to include other favourites.</p>
-   <p>You can grab the latest stable release here: <a href="http://code.google.com/p/ci-eye/downloads/list">http://code.google.com/p/ci-eye/downloads/list</a></p>
+   <p>You can grab the latest stable release here: <a href="http://code.google.com/p/ci-eye/downloads/list?can=1">http://code.google.com/p/ci-eye/downloads/list</a></p>
    <p>Documentation is on the <a href="https://github.com/netmelody/ci-eye/wiki">CI-Eye wiki</a></p>
 
    <footer>
@@ -161,6 +166,6 @@
    </footer>
   </div>
   <a href="http://github.com/netmelody/ci-eye"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-  <a id="downloads" class="numberCircle hidden" title="Total downloads to date" href="https://github.com/netmelody/ci-eye/downloads"></a>
+  <a id="downloads" class="numberCircle hidden" title="Total downloads to date" href="http://code.google.com/p/ci-eye/downloads/list?can=1"></a>
  </body>
 </html>
