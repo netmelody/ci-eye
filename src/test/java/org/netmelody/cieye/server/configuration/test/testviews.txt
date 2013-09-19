@@ -3,8 +3,8 @@ DEMO||Product_Alpha
 DEMO||Product_Zappa
 
 [Landscape- 2]
-JENKINS|http://jenkinsurl|Jenkins 1
-HUDSON|http://hudsonurl|Hudson 1
+JENKINS|http://jenkinsurl|Jenkins 1|False
+HUDSON|http://hudsonurl|Hudson 1|TRUE
 TEAMCITY|http://teamcityurl|TeamCity 1
 JENKINS|http://allurl|
-TEAMCITY|http://tcsecure|TeamCity 2|user|pass
+TEAMCITY|http://tcsecure|TeamCity 2|user|pass|True

@@ -39,10 +39,10 @@ public final class RecordedObservationTargetsTest {
         final RecordedObservationTargets targets = new RecordedObservationTargets(new SettingsFile(views));
         final Collection<Feature> features = targets.landscapes().landscapeNamed("Landscape- 2").features();
         assertThat(features, contains(new Feature("Jenkins 1", "http://jenkinsurl", new CiServerType("JENKINS")),
-                                      new Feature("Hudson 1", "http://hudsonurl", new CiServerType("HUDSON")),
+                                      new Feature("Hudson 1", "http://hudsonurl", new CiServerType("HUDSON"), "TRUE"),
                                       new Feature("TeamCity 1", "http://teamcityurl", new CiServerType("TEAMCITY")),
                                       new Feature("", "http://allurl", new CiServerType("JENKINS")),
-                                      new Feature("TeamCity 2", "http://tcsecure", new CiServerType("TEAMCITY"), "user", "pass")));
+                                      new Feature("TeamCity 2", "http://tcsecure", new CiServerType("TEAMCITY"), "user", "pass", "True")));
     }
 
     @Test public void
@@ -57,7 +57,7 @@ public final class RecordedObservationTargetsTest {
         final Collection<Feature> features = targets.landscapes().landscapeNamed("Public Live").features();
         assertThat(features, contains(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")),
                                       new Feature("Main (trunk, branches, and alternative builds)", "http://hudson.magnolia-cms.com", new CiServerType("HUDSON")),
-                                      new Feature("Apache Ivy", "http://teamcity.jetbrains.com", new CiServerType("TEAMCITY")),
+                                      new Feature("Apache Ivy", "http://teamcity.jetbrains.com", new CiServerType("TEAMCITY"), "true"),
                                       new Feature("CI-Eye", "http://teamcity.codebetter.com", new CiServerType("TEAMCITY"))));
     }
 }

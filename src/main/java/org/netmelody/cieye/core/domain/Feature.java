@@ -8,13 +8,22 @@ public final class Feature {
     private final String endpoint;
     private final CiServerType type;
     private final String username;
-    private final String password; 
-    
+    private final String password;
+    private final boolean isPersonalBuildEnabled;
+
     public Feature(String name, String endpoint, CiServerType type) {
-        this(name, endpoint, type, null, null);
+        this(name, endpoint, type, null, null, null);
+    }
+
+    public Feature(String name, String endpoint, CiServerType type, String isPersonalBuildEnabled) {
+        this(name, endpoint, type, null, null, isPersonalBuildEnabled);
     }
 
     public Feature(String name, String endpoint, CiServerType type, String username, String password) {
+        this(name, endpoint, type, username, password, null);
+    }
+
+    public Feature(String name, String endpoint, CiServerType type, String username, String password, String isPersonalBuildEnabled) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(endpoint);
         Preconditions.checkNotNull(type);
@@ -23,8 +32,9 @@ public final class Feature {
         this.type = type;
         this.username = (null == username) ? "" : username;
         this.password = (null == password) ? "" : password;
+        this.isPersonalBuildEnabled = (null != isPersonalBuildEnabled) && isPersonalBuildEnabled.equalsIgnoreCase("true");
     }
-    
+
     public String name() {
         return name;
     }
@@ -56,7 +66,8 @@ public final class Feature {
                 && other.endpoint.equals(endpoint)
                 && other.type.equals(type)
                 && other.username.equals(username)
-                && other.password.equals(password);
+                && other.password.equals(password)
+                && other.isPersonalBuildEnabled == isPersonalBuildEnabled;
     }
     
     @Override
