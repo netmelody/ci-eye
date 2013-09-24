@@ -9,14 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Percentage;
-import org.netmelody.cieye.core.domain.RunningBuild;
-import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDigest;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.domain.*;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.spies.demo.DemoModeFakeCiServer.BuildData;
@@ -68,7 +61,7 @@ public final class DemoModeSpy implements CiSpy {
     }
     
     @Override
-    public TargetDetail statusOf(final TargetId target) {
+    public TargetDetail statusOf(final TargetId target, Flag showPersonalBuilds) {
         final TargetInfo targetInfo = recognisedTargets.get(target);
         if (null == targetInfo) {
             return null;

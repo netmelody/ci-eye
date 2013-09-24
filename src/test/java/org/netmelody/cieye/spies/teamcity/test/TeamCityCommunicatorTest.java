@@ -10,9 +10,7 @@ import org.junit.Test;
 import org.netmelody.cieye.server.observation.protocol.JsonRestRequester;
 import org.netmelody.cieye.server.observation.test.StubGrapeVine;
 import org.netmelody.cieye.spies.teamcity.TeamCityCommunicator;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangesHref;
+import org.netmelody.cieye.spies.teamcity.jsondomain.*;
 
 import com.google.common.base.Functions;
 import com.google.gson.Gson;

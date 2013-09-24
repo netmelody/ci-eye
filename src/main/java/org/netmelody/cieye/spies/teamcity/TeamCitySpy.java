@@ -9,12 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDigest;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.domain.*;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
@@ -51,12 +46,12 @@ public final class TeamCitySpy implements CiSpy {
     }
 
     @Override
-    public TargetDetail statusOf(final TargetId target) {
+    public TargetDetail statusOf(final TargetId target, Flag showPersonalBuilds) {
         BuildType buildType = recognisedBuildTypes.get(target);
         if (null == buildType) {
             return null;
         }
-        return buildTypeAnalyser.targetFrom(buildType);
+        return buildTypeAnalyser.targetFrom(buildType, showPersonalBuilds);
     }
     
     @Override

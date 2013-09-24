@@ -9,21 +9,21 @@ public final class Feature {
     private final CiServerType type;
     private final String username;
     private final String password;
-    private final boolean isPersonalBuildEnabled;
+    private final Flag showPersonalBuilds;
 
     public Feature(String name, String endpoint, CiServerType type) {
         this(name, endpoint, type, null, null, null);
     }
 
-    public Feature(String name, String endpoint, CiServerType type, String isPersonalBuildEnabled) {
-        this(name, endpoint, type, null, null, isPersonalBuildEnabled);
+    public Feature(String name, String endpoint, CiServerType type, String showPersonalBuilds) {
+        this(name, endpoint, type, null, null, showPersonalBuilds);
     }
 
     public Feature(String name, String endpoint, CiServerType type, String username, String password) {
         this(name, endpoint, type, username, password, null);
     }
 
-    public Feature(String name, String endpoint, CiServerType type, String username, String password, String isPersonalBuildEnabled) {
+    public Feature(String name, String endpoint, CiServerType type, String username, String password, String showPersonalBuilds) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(endpoint);
         Preconditions.checkNotNull(type);
@@ -32,7 +32,8 @@ public final class Feature {
         this.type = type;
         this.username = (null == username) ? "" : username;
         this.password = (null == password) ? "" : password;
-        this.isPersonalBuildEnabled = (null != isPersonalBuildEnabled) && isPersonalBuildEnabled.equalsIgnoreCase("true");
+        this.showPersonalBuilds = null == showPersonalBuilds ? Flag.ANY :
+                showPersonalBuilds.equalsIgnoreCase("true") ? Flag.TRUE : Flag.FALSE;
     }
 
     public String name() {
@@ -54,6 +55,10 @@ public final class Feature {
     public String password() {
         return password;
     }
+
+    public Flag showPersonalBuilds() {
+        return showPersonalBuilds;
+    }
     
     @Override
     public boolean equals(Object obj) {
@@ -67,7 +72,7 @@ public final class Feature {
                 && other.type.equals(type)
                 && other.username.equals(username)
                 && other.password.equals(password)
-                && other.isPersonalBuildEnabled == isPersonalBuildEnabled;
+                && other.showPersonalBuilds == showPersonalBuilds;
     }
     
     @Override

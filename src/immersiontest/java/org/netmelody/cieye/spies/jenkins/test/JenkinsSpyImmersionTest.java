@@ -3,10 +3,7 @@ package org.netmelody.cieye.spies.jenkins.test;
 import java.io.File;
 
 import org.junit.Test;
-import org.netmelody.cieye.core.domain.CiServerType;
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
+import org.netmelody.cieye.core.domain.*;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.server.configuration.RecordedKnownOffenders;
 import org.netmelody.cieye.server.configuration.SettingsFile;
@@ -42,10 +39,11 @@ public final class JenkinsSpyImmersionTest {
         final GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         final Contact realContact = new JsonRestRequester(builder.create());
         final JenkinsSpy witness = new JenkinsSpy("http://ci.jenkins-ci.org", new RecordedKnownOffenders(new SettingsFile(new File(""))), realContact);
+        final Feature feature = new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS"));
+
+        final TargetDigestGroup digests = witness.targetsConstituting(feature);
         
-        final TargetDigestGroup digests = witness.targetsConstituting(new Feature("Jenkins core", "http://ci.jenkins-ci.org", new CiServerType("JENKINS")));
-        
-        assertThat(witness.statusOf(digests.iterator().next().id()), is(notNullValue(TargetDetail.class)));
+        assertThat(witness.statusOf(digests.iterator().next().id(), feature.showPersonalBuilds()), is(notNullValue(TargetDetail.class)));
     }
 
     @Test public void
@@ -53,9 +51,9 @@ public final class JenkinsSpyImmersionTest {
         final GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         final Contact realContact = new JsonRestRequester(builder.create());
         final JenkinsSpy witness = new JenkinsSpy("https://jenkins.puppetlabs.com", new RecordedKnownOffenders(new SettingsFile(new File(""))), realContact);
+        final Feature feature = new Feature("Known Good", "https://jenkins.puppetlabs.com", new CiServerType("JENKINS"));
+        final TargetDigestGroup digests = witness.targetsConstituting(feature);
         
-        final TargetDigestGroup digests = witness.targetsConstituting(new Feature("Known Good", "https://jenkins.puppetlabs.com", new CiServerType("JENKINS")));
-        
-        assertThat(witness.statusOf(digests.iterator().next().id()), is(notNullValue(TargetDetail.class)));
+        assertThat(witness.statusOf(digests.iterator().next().id(), feature.showPersonalBuilds()), is(notNullValue(TargetDetail.class)));
     }
 }

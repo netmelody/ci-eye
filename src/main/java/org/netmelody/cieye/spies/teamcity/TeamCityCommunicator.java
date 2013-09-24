@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.netmelody.cieye.core.domain.Feature;
+import org.netmelody.cieye.core.domain.Flag;
 import org.netmelody.cieye.core.observation.Contact;
 import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
 import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
@@ -72,8 +73,9 @@ public final class TeamCityCommunicator {
         return find(completedBuilds.build(), alwaysTrue());
     }
 
-    public List<Build> runningBuildsFor(BuildType buildType) {
-        return makeTeamCityRestCall(endpoint + prefix + "/builds/?locator=running:true,buildType:id:" + buildType.id, Builds.class).build();
+    public List<Build> runningBuildsFor(BuildType buildType, Flag showPersonalBuilds) {
+        return makeTeamCityRestCall(endpoint + prefix + "/builds/?locator=running:true,buildType:id:" + buildType.id
+                + ",personal:" + showPersonalBuilds, Builds.class).build();
     }
 
     public List<Investigation> investigationsOf(BuildType buildType) {

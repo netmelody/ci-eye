@@ -93,7 +93,8 @@ public final class PollingSpyHandler implements CiSpyHandler {
             
             final List<TargetDetail> newStatus = newArrayList();
             for (TargetDigest digest : targets) {
-                final TargetDetail target = trustedSpy.statusOf(digest.id());
+
+                final TargetDetail target = trustedSpy.statusOf(digest.id(), feature.showPersonalBuilds());
                 newStatus.add(target);
                 intermediateStatus = intermediateStatus.updatedWith(target);
                 statuses.put(feature, intermediateStatus);

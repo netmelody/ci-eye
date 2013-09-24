@@ -2,12 +2,7 @@ package org.netmelody.cieye.server.observation;
 
 import java.util.Map;
 
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDigest;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.domain.*;
 import org.netmelody.cieye.core.observation.CiSpy;
 
 import com.google.common.collect.ImmutableList;
@@ -41,12 +36,12 @@ public final class TrustedSpy implements CiSpy {
     }
 
     @Override
-    public TargetDetail statusOf(TargetId targetId) {
+    public TargetDetail statusOf(TargetId targetId, Flag showPersonalBuilds) {
         if (emptyFeatureTargets.containsKey(targetId)) {
             final TargetDigest noTarget = emptyFeatureTargets.get(targetId);
             return new TargetDetail(targetId.id(), noTarget.webUrl(), noTarget.name(), noTarget.status(), 0L);
         }
-        final TargetDetail untrustedResult = untrustedSpy.statusOf(targetId);
+        final TargetDetail untrustedResult = untrustedSpy.statusOf(targetId, showPersonalBuilds);
         return (untrustedResult == null) ? new TargetDetail(targetId.id(), "", "", Status.UNKNOWN, 0L) : untrustedResult;
     }
 

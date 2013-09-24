@@ -45,7 +45,7 @@ public final class JenkinsSpyTest {
             oneOf(contact).makeJsonRestCall(with(any(String.class)), with(JobDetail.class));
                 will(returnValue(new JobDetail()));
         }});
-        spy.statusOf(targets.iterator().next().id());
+        spy.statusOf(targets.iterator().next().id(), feature.showPersonalBuilds());
         context.assertIsSatisfied();
     }
     

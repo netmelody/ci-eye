@@ -94,18 +94,19 @@ public final class TeamCitySpyTest {
             
             never(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypeDetail.class));
         }});
-        
-        final TargetDigestGroup digest = spy.targetsConstituting(new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY")));
+
+        final Feature feature = new Feature("myFeatureName", "myEndpoint", new CiServerType("TEAMCITY"));
+        final TargetDigestGroup digest = spy.targetsConstituting(feature);
         context.assertIsSatisfied();
         
         context.checking(new Expectations() {{
             oneOf(contact).makeJsonRestCall(with(any(String.class)), with(BuildTypeDetail.class));
-                will(returnValue(buildTypeDetail()));
+            will(returnValue(buildTypeDetail()));
             allowing(contact).makeJsonRestCall(with(any(String.class)), with(Builds.class));
-                will(returnValue(new Builds()));
+            will(returnValue(new Builds()));
         }});
         
-        spy.statusOf(digest.iterator().next().id());
+        spy.statusOf(digest.iterator().next().id(), feature.showPersonalBuilds());
         context.assertIsSatisfied();
     }
 

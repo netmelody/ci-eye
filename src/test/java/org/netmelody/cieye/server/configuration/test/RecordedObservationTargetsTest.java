@@ -38,7 +38,7 @@ public final class RecordedObservationTargetsTest {
         FileUtils.copyInputStreamToFile(RecordedObservationTargetsTest.class.getResourceAsStream("testviews.txt"), views);
         final RecordedObservationTargets targets = new RecordedObservationTargets(new SettingsFile(views));
         final Collection<Feature> features = targets.landscapes().landscapeNamed("Landscape- 2").features();
-        assertThat(features, contains(new Feature("Jenkins 1", "http://jenkinsurl", new CiServerType("JENKINS")),
+        assertThat(features, contains(new Feature("Jenkins 1", "http://jenkinsurl", new CiServerType("JENKINS"), ("False")),
                                       new Feature("Hudson 1", "http://hudsonurl", new CiServerType("HUDSON"), "TRUE"),
                                       new Feature("TeamCity 1", "http://teamcityurl", new CiServerType("TEAMCITY")),
                                       new Feature("", "http://allurl", new CiServerType("JENKINS")),

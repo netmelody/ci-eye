@@ -6,11 +6,7 @@ import java.util.Map;
 
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.netmelody.cieye.core.domain.Feature;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.domain.TargetDigest;
-import org.netmelody.cieye.core.domain.TargetDigestGroup;
-import org.netmelody.cieye.core.domain.TargetId;
+import org.netmelody.cieye.core.domain.*;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.CiSpy;
@@ -54,7 +50,7 @@ public final class JenkinsSpy implements CiSpy {
     }
 
     @Override
-    public TargetDetail statusOf(final TargetId target) {
+    public TargetDetail statusOf(final TargetId target, Flag showPersonalBuilds) {
         Job job = recognisedJobs.get(target);
         if (null == job) {
             return null;
