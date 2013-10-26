@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.observation.ForeignAgents;
-import org.netmelody.cieye.core.observation.ForeignAgents.CallingCard;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 
 import com.google.common.collect.FluentIterable;
@@ -17,7 +16,6 @@ import com.google.common.collect.FluentIterable;
 public class ServiceLoaderObservationAgencyConfiguration implements ObservationAgencyConfiguration {
 
     private final ClassLoader pluginsClassLoader;
-    
 
     public ServiceLoaderObservationAgencyConfiguration(ForeignAgents foreignAgents) {
         this.pluginsClassLoader = new URLClassLoader(urls(foreignAgents.search()), Thread.currentThread().getContextClassLoader());
