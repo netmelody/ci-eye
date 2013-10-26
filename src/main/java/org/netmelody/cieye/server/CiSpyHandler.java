@@ -10,4 +10,6 @@ public interface CiSpyHandler {
     long millisecondsUntilNextUpdate(Feature feature);
 
     boolean takeNoteOf(String targetId, String note);
+
+    void endMission();
 }

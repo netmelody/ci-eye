@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.netmelody.cieye.core.domain.Feature;
@@ -24,10 +25,12 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 
 public final class PollingSpyHandler implements CiSpyHandler {
@@ -38,14 +41,23 @@ public final class PollingSpyHandler implements CiSpyHandler {
     private static final long CUTOFF_PERIOD_MINUTES = 15L;
 
     private final CiSpy trustedSpy;
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor;
 
     private final ConcurrentMap<Feature, Long> requests = new MapMaker().makeMap();
     private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
 
-    public PollingSpyHandler(CiSpy untrustedSpy) {
+    public PollingSpyHandler(CiSpy untrustedSpy, Feature feature) {
         this.trustedSpy = new TrustedSpy(untrustedSpy);
-        executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
+        this.executor = Executors.newSingleThreadScheduledExecutor(threadsNamed(feature, untrustedSpy));
+        this.executor.scheduleWithFixedDelay(new StatusUpdater(), 0L, POLLING_PERIOD_SECONDS, TimeUnit.SECONDS);
+    }
+
+    private ThreadFactory threadsNamed(Feature feature, CiSpy untrustedSpy) {
+        String threadPrefix = format("%s-%s-%s", 
+                untrustedSpy.getClass().getSimpleName(), 
+                feature.type().name(), 
+                feature.name());
+        return new ThreadFactoryBuilder().setNameFormat(threadPrefix + "-%d").build();
     }
 
     @Override
@@ -76,6 +88,11 @@ public final class PollingSpyHandler implements CiSpyHandler {
     @Override
     public boolean takeNoteOf(String targetId, String note) {
         return trustedSpy.takeNoteOf(new TargetId(targetId), note);
+    }
+    
+    @Override
+    public void endMission() {
+        this.executor.shutdown();
     }
     
     private void update() {
@@ -154,4 +171,5 @@ public final class PollingSpyHandler implements CiSpyHandler {
             }
         }
     }
+
 }

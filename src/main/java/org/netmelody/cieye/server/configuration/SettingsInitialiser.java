@@ -113,7 +113,7 @@ public final class SettingsInitialiser {
         }
     }
 
-    public File pluginDirectory() {
-        return pluginsDir;
+    public PluginDirectory pluginDirectory() {
+        return new PluginDirectory(pluginsDir);
     }
 }

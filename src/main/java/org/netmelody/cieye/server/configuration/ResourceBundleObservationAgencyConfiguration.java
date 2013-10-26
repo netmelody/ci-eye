@@ -1,11 +1,12 @@
-package org.netmelody.cieye.server.observation;
+package org.netmelody.cieye.server.configuration;
 
 import java.util.ResourceBundle;
 
 import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.core.observation.ForeignAgencies;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 
-public final class ResourceBundleObservationAgencyConfiguration implements ObservationAgencyConfiguration {
+public final class ResourceBundleObservationAgencyConfiguration implements ForeignAgencies {
     
     private static final ResourceBundle AGENCY_CONFIGURATION = ResourceBundle.getBundle(ResourceBundleObservationAgencyConfiguration.class.getName());
 
@@ -24,5 +25,10 @@ public final class ResourceBundleObservationAgencyConfiguration implements Obser
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load CI Observation Module for " + typeName, e);
         }
+    }
+
+    @Override
+    public boolean hasChanged() {
+        return false;
     }
 }
