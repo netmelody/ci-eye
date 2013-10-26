@@ -64,6 +64,10 @@ public final class SettingsInitialiser {
             includePicture("stupid.png", "picture2.png.template");
         }
         
+        if (!pluginsDir.exists()) {
+            pluginsDir.mkdir();
+        }
+        
         ensureSpecialPicturePresent("-doh-", "doh.png", "picture3.png.template");
         ensureSpecialPicturePresent("-all-green-", "all-green.gif", "picture4.gif.template");
     }
