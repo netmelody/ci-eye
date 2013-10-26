@@ -14,6 +14,7 @@ public final class SettingsInitialiser {
     private final File viewsFile;
     private final File picturesFile;
     private final File picturesDir;
+    private final File pluginsDir;
 
     public SettingsInitialiser() {
         this(new File(FileUtils.getUserDirectory(), ".ci-eye"));
@@ -24,6 +25,7 @@ public final class SettingsInitialiser {
         this.viewsFile = new File(homeDir, "views.txt");
         this.picturesFile = new File(homeDir, "pictures.txt");
         this.picturesDir = new File(homeDir, "pictures");
+        this.pluginsDir = new File(homeDir, "plugins");
         
         try {
             startLogger();
@@ -105,5 +107,9 @@ public final class SettingsInitialiser {
         } catch (IOException e) {
             throw new IllegalStateException("Unable to get settings directory", e);
         }
+    }
+
+    public File pluginDirectory() {
+        return pluginsDir;
     }
 }

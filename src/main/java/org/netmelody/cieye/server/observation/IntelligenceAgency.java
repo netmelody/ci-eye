@@ -5,6 +5,7 @@ import static com.google.common.cache.CacheLoader.from;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
+import org.netmelody.cieye.core.observation.ForeignAgents;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiSpyAllocator;
 import org.netmelody.cieye.server.CiSpyHandler;
@@ -15,7 +16,7 @@ import com.google.common.cache.LoadingCache;
 
 public final class IntelligenceAgency implements CiSpyAllocator {
 
-    private final ObservationAgencyConfiguration agencyConfiguration = new ObservationAgencyConfiguration();
+    private final ObservationAgencyConfiguration agencyConfiguration;
     private final LoadingCache<Feature, CiSpyHandler> handlers =
             CacheBuilder.newBuilder().build(from(new Function<Feature, CiSpyHandler>() {
                 @Override
@@ -27,9 +28,10 @@ public final class IntelligenceAgency implements CiSpyAllocator {
     private final CommunicationNetwork network;
     private final KnownOffendersDirectory directory;
     
-    public IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory) {
+    public IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ForeignAgents foreignAgents) {
         this.network = network;
         this.directory = directory;
+        this.agencyConfiguration = new ServiceLoaderObservationAgencyConfiguration(foreignAgents);
     }
     
     @Override

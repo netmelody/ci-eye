@@ -1,19 +1,24 @@
 package org.netmelody.cieye.server.observation.test;
 
 import static junit.framework.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.io.File;
+
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.core.observation.ForeignAgents;
+import org.netmelody.cieye.server.configuration.RecordedForeignAgents;
 import org.netmelody.cieye.server.observation.ObservationAgencyConfiguration;
+import org.netmelody.cieye.server.observation.ServiceLoaderObservationAgencyConfiguration;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+public final class ServiceLoaderObservationAgencyConfigurationTest {
 
-public final class ObservationAgencyConfigurationTest {
-
-    private final ObservationAgencyConfiguration config = new ObservationAgencyConfiguration();
+    private final ForeignAgents foreignAgents = new RecordedForeignAgents(new File("."));
+    private final ObservationAgencyConfiguration config = new ServiceLoaderObservationAgencyConfiguration(foreignAgents);
     
     @Test public void
     loadsObeservationModules() {

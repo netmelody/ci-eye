@@ -2,6 +2,7 @@ package org.netmelody.cieye.spies.jenkins;
 
 import java.text.SimpleDateFormat;
 
+import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CodeBook;
@@ -16,5 +17,10 @@ public final class JenkinsObservationAgency implements ObservationAgency {
         final CodeBook codeBook = new CodeBook(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
                                       .withCredentials(feature.username(), feature.password());
         return new JenkinsSpy(feature.endpoint(), directory, network.makeContact(codeBook));
+    }
+
+    @Override
+    public boolean canProvideSpyFor(CiServerType type) {
+        return "JENKINS".equals(type.name()) || "HUDSON".equals(type.name());
     }
 }

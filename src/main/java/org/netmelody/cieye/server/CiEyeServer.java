@@ -26,7 +26,7 @@ public final class CiEyeServer {
                                                       agency.album(),
                                                       agency.information(),
                                                       new CachedRequestOriginTracker(agency.detective()),
-                                                      new IntelligenceAgency(network, agency.detective()),
+                                                      new IntelligenceAgency(network, agency.detective(), agency.foreignAgents()),
                                                       new GovernmentReport(new GovernmentWatchdog(network))));
     private final Connection connection;
     private final InetSocketAddress address;

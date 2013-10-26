@@ -2,6 +2,7 @@ package org.netmelody.cieye.spies.teamcity;
 
 import java.text.SimpleDateFormat;
 
+import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CodeBook;
@@ -24,5 +25,10 @@ public final class TeamCityObservationAgency implements ObservationAgency {
                                       });
 
         return new TeamCitySpy(feature.endpoint(), directory, network.makeContact(codeBook));
+    }
+
+    @Override
+    public boolean canProvideSpyFor(CiServerType type) {
+        return "TEAMCITY".equals(type.name());
     }
 }
