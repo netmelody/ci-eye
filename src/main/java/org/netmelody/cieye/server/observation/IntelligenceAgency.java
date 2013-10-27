@@ -7,6 +7,7 @@ import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.ForeignAgencies;
+import org.netmelody.cieye.core.observation.ForeignAgencies.RosterChangedEvent;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.CiSpyIntermediary;
@@ -15,8 +16,17 @@ import org.netmelody.cieye.server.TargetGroupBriefing;
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.eventbus.Subscribe;
 
 public final class IntelligenceAgency implements CiSpyIntermediary {
+
+    public static IntelligenceAgency create(CommunicationNetwork network,
+                                            KnownOffendersDirectory directory, 
+                                            ForeignAgencies foreignAgencies) {
+        IntelligenceAgency agency = new IntelligenceAgency(network, directory, foreignAgencies);
+        foreignAgencies.registerInterestInChanges(agency);
+        return agency;
+    }
 
     private final LoadingCache<Feature, CiSpyHandler> handlers =
             CacheBuilder.newBuilder()
@@ -31,24 +41,14 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     private final KnownOffendersDirectory directory;
     private final ForeignAgencies foreignAgencies;
     
-    public IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ForeignAgencies foreignAgencies) {
+    private IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ForeignAgencies foreignAgencies) {
         this.network = network;
         this.directory = directory;
         this.foreignAgencies = foreignAgencies;
     }
     
     private CiSpyHandler spyFor(Feature feature) {
-    	if (foreignAgencies.hasChanged()) {
-    		recallSpies();
-    	}
         return handlers.getUnchecked(feature);
-    }
-
-    private void recallSpies() {
-        for (CiSpyHandler ciSpyHandler : handlers.asMap().values()) {
-            ciSpyHandler.endMission();
-        }
-        handlers.invalidateAll();
     }
 
     private CiSpyHandler createSpyFor(Feature feature) {
@@ -66,5 +66,13 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     public boolean passNoteOn(Feature feature, TargetId targetId, String note) {
         CiSpyHandler spy = spyFor(feature);
         return spy.takeNoteOf(targetId, note);
+    }
+
+    @Subscribe 
+    public void dismissCurrentSpies(RosterChangedEvent event) {
+        for (CiSpyHandler spyHandler : handlers.asMap().values()) {
+            spyHandler.endMission();
+        }
+        handlers.invalidateAll();
     }
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -19,16 +18,15 @@ import org.netmelody.cieye.core.observation.ObservationAgency;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 
 public final class ServiceLoadingRecordedForeignAgencies implements ForeignAgencies, Refreshable {
     private final static Logbook LOGBOOK = LogKeeper.logbookFor(ServiceLoadingRecordedForeignAgencies.class);
+    private final EventBus eventBus = new EventBus(getClass().getName());
     
     private final PluginDirectory pluginDirectory;
-    
-    private final AtomicReference<Date> lastUpdate = new AtomicReference<Date>(new Date(0L));
-    private final AtomicReference<Date> lastAsked = new AtomicReference<Date>(new Date(0L));
-    
     private final AtomicReference<ServiceLoader<ObservationAgency>> services;
+    
 
     public ServiceLoadingRecordedForeignAgencies(PluginDirectory pluginDirectory) {
         this.pluginDirectory = pluginDirectory;
@@ -91,16 +89,14 @@ public final class ServiceLoadingRecordedForeignAgencies implements ForeignAgenc
     @Override
     public void refresh() {
         if (pluginDirectory.updateAvailable()) {
-            services.set(newServiceLoader());
-            lastUpdate.set(new Date());
+            this.services.set(newServiceLoader());
+            this.eventBus.post(new RosterChangedEvent());
         }
     }
 
-
     @Override
-    public boolean hasChanged() {
-        Date lastAskedDate = lastAsked.getAndSet(new Date());
-        return lastUpdate.get().after(lastAskedDate);
+    public void registerInterestInChanges(Object interested) {
+        this.eventBus.register(interested);
     }
 
 }

@@ -21,12 +21,15 @@ public final class CiEyeServer {
 
     private final ServerConfiguration agency = new ServerConfiguration();
     private final CommunicationNetwork network = new JsonRestRequesterBuilder();
+    private final IntelligenceAgency intelligenceAgency = IntelligenceAgency.create(network, 
+                                                                                    agency.detective(), 
+                                                                                    agency.foreignAgents());
     private final Container container =
         new ResourceContainer(new CiEyeResourceEngine(agency.observationTargetDirectory(),
                                                       agency.album(),
                                                       agency.information(),
                                                       new CachedRequestOriginTracker(agency.detective()),
-                                                      new IntelligenceAgency(network, agency.detective(), agency.foreignAgents()),
+                                                      intelligenceAgency,
                                                       new GovernmentReport(new GovernmentWatchdog(network))));
     private final Connection connection;
     private final InetSocketAddress address;

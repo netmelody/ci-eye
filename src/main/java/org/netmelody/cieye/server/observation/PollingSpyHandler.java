@@ -46,6 +46,7 @@ public final class PollingSpyHandler implements CiSpyHandler {
     private final ConcurrentMap<Feature, Long> requests = new MapMaker().makeMap();
     private final ConcurrentMap<Feature, StatusResult> statuses = new MapMaker().makeMap();
 
+
     public PollingSpyHandler(CiSpy untrustedSpy, Feature feature) {
         this.trustedSpy = new TrustedSpy(untrustedSpy);
         this.executor = Executors.newSingleThreadScheduledExecutor(threadsNamed(feature, untrustedSpy));
@@ -171,5 +172,6 @@ public final class PollingSpyHandler implements CiSpyHandler {
             }
         }
     }
+
 
 }

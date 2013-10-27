@@ -4,5 +4,8 @@ import org.netmelody.cieye.core.domain.CiServerType;
 
 public interface ForeignAgencies {
     ObservationAgency agencyFor(CiServerType type);
-    boolean hasChanged();
+    
+    void registerInterestInChanges(Object interested);
+    
+    final class RosterChangedEvent {}
 }

@@ -28,7 +28,8 @@ public final class ResourceBundleObservationAgencyConfiguration implements Forei
     }
 
     @Override
-    public boolean hasChanged() {
-        return false;
+    public void registerInterestInChanges(Object interested) {
+        // No-op, never changes
     }
+
 }
