@@ -2,6 +2,7 @@ package org.netmelody.cieye.server;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetDetailGroup;
+import org.netmelody.cieye.core.domain.TargetId;
 
 public interface CiSpyHandler {
 
@@ -9,7 +10,7 @@ public interface CiSpyHandler {
 
     long millisecondsUntilNextUpdate(Feature feature);
 
-    boolean takeNoteOf(String targetId, String note);
+    boolean takeNoteOf(TargetId targetId, String note);
 
     void endMission();
 }

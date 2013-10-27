@@ -54,4 +54,5 @@ public final class TrustedSpy implements CiSpy {
     public boolean takeNoteOf(TargetId target, String note) {
         return untrustedSpy.takeNoteOf(target, note);
     }
+    
 }

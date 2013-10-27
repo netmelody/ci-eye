@@ -86,8 +86,8 @@ public final class PollingSpyHandler implements CiSpyHandler {
     }
 
     @Override
-    public boolean takeNoteOf(String targetId, String note) {
-        return trustedSpy.takeNoteOf(new TargetId(targetId), note);
+    public boolean takeNoteOf(TargetId targetId, String note) {
+        return trustedSpy.takeNoteOf(targetId, note);
     }
     
     @Override

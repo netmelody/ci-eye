@@ -29,6 +29,7 @@ public final class SettingsInitialiserTest {
                                                       "logs",
                                                       "pictures",
                                                       "pictures.txt",
+                                                      "plugins",
                                                       "views.txt")));
     }
     
