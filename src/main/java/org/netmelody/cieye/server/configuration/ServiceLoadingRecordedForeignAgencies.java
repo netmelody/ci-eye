@@ -80,7 +80,6 @@ public final class ServiceLoadingRecordedForeignAgencies implements ObservationA
     }
 
     private static void logProblems(Set<Throwable> problems) {
-        System.out.printf("Found [%d] problems obtaining plugin jars. See logs for more details.%n", problems.size());
         for (Throwable throwable : problems) {
             LOGBOOK.error("Error loading plugin.", throwable);
         }
