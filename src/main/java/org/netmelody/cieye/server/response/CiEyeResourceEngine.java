@@ -3,7 +3,7 @@ package org.netmelody.cieye.server.response;
 
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
-import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.resource.CiEyeResource;
@@ -24,7 +24,7 @@ import org.simpleframework.http.resource.ResourceEngine;
 
 public final class CiEyeResourceEngine implements ResourceEngine {
     
-    private final CiSpyAllocator allocator;
+    private final CiSpyIntermediary spyIntermediary;
     private final LandscapeFetcher landscapeFetcher;
     private final PictureFetcher pictureFetcher;
     private final CiEyeServerInformationFetcher configurationFetcher;
@@ -34,14 +34,14 @@ public final class CiEyeResourceEngine implements ResourceEngine {
 
     public CiEyeResourceEngine(LandscapeFetcher landscapeFetcher, PictureFetcher pictureFetcher,
                                CiEyeServerInformationFetcher configurationFetcher,
-                               RequestOriginTracker tracker, CiSpyAllocator allocator,
+                               RequestOriginTracker tracker, CiSpyIntermediary spyIntermediary,
                                CiEyeNewVersionChecker updateChecker) {
         
         this.landscapeFetcher = landscapeFetcher;
         this.pictureFetcher = pictureFetcher;
         this.configurationFetcher = configurationFetcher;
         this.tracker = tracker;
-        this.allocator = allocator;
+        this.spyIntermediary = spyIntermediary;
         this.updateChecker = updateChecker;
     }
 
@@ -95,11 +95,11 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         
         if (path.length == 3) {
             if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
-                return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), allocator, prison);
+                return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison);
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
-                return new TargetNotationHandler(landscapeFetcher, allocator, tracker);
+                return new TargetNotationHandler(landscapeFetcher, spyIntermediary, tracker);
             }
             
             if ("landscapes".equals(path[0]) && "doh".equals(path[2])) {

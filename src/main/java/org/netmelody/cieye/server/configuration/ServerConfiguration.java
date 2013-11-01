@@ -4,6 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.netmelody.cieye.core.observation.ForeignAgencies;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
@@ -16,6 +17,7 @@ public final class ServerConfiguration {
     private final ServerInformation information = new ServerInformation(settings.settingsLocation());
     private final RecordedKnownOffenders detective = new RecordedKnownOffenders(settings.picturesFile());
     private final RecordedObservationTargets targets = new RecordedObservationTargets(settings.viewsFile());
+    private final ServiceLoadingRecordedForeignAgencies foreignAgencies = new ServiceLoadingRecordedForeignAgencies(settings.pluginDirectory());
     private final Album album = new Album(settings.picturesDirectory());
 
     private static final class Refresher implements Runnable {
@@ -30,9 +32,10 @@ public final class ServerConfiguration {
     }
     
     public ServerConfiguration() {
-        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
         executor.scheduleWithFixedDelay(new Refresher(detective), 1L, 10L, TimeUnit.SECONDS);
         executor.scheduleWithFixedDelay(new Refresher(targets), 1L, 10L, TimeUnit.SECONDS);
+        executor.scheduleWithFixedDelay(new Refresher(foreignAgencies), 1L, 10L, TimeUnit.SECONDS);
     }
     
     public KnownOffendersDirectory detective() {
@@ -49,5 +52,9 @@ public final class ServerConfiguration {
     
     public PictureFetcher album() {
         return album;
+    }
+    
+    public ForeignAgencies foreignAgents() {
+        return foreignAgencies;
     }
 }

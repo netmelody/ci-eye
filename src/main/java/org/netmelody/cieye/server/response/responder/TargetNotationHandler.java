@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Landscape;
+import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
-import org.netmelody.cieye.server.CiSpyAllocator;
-import org.netmelody.cieye.server.CiSpyHandler;
+import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.response.CiEyeResponder;
 import org.netmelody.cieye.server.response.CiEyeResponse;
@@ -20,23 +20,22 @@ public final class TargetNotationHandler implements CiEyeResponder {
     
     private final RequestOriginTracker tracker;
     private final LandscapeFetcher landscapeFetcher;
-    private final CiSpyAllocator spyAllocator;
+    private final CiSpyIntermediary spyIntermediary;
 
-    public TargetNotationHandler(LandscapeFetcher landscapeFetcher, CiSpyAllocator spyAllocator, RequestOriginTracker tracker) {
+    public TargetNotationHandler(LandscapeFetcher landscapeFetcher, CiSpyIntermediary spyIntermediary, RequestOriginTracker tracker) {
         this.landscapeFetcher = landscapeFetcher;
-        this.spyAllocator = spyAllocator;
+        this.spyIntermediary = spyIntermediary;
         this.tracker = tracker;
     }
 
-    private void makeNote(final String landscapeName, final String targetId, final String note) {
-        if (targetId == null || targetId.isEmpty()) {
+    private void makeNote(final String landscapeName, final TargetId targetId, final String note) {
+        if (targetId.id() == null || targetId.id().isEmpty()) {
             return;
         }
 
         final Landscape landscape = landscapeFetcher.landscapeNamed(landscapeName);
         for (Feature feature : landscape.features()) {
-            final CiSpyHandler spy = spyAllocator.spyFor(feature);
-            if (spy.takeNoteOf(targetId, note)) {
+            if (spyIntermediary.passNoteOn(feature, targetId, note)) {
                 return;
             }
         }
@@ -49,7 +48,7 @@ public final class TargetNotationHandler implements CiEyeResponder {
             final String note = request.getForm().get("note") + " by " + tracker.originOf(request);
             final String[] segments = request.getAddress().getPath().getSegments();
             final String landscapeName = segments[segments.length - 2];
-            makeNote(landscapeName, targetId, note);
+            makeNote(landscapeName, new TargetId(targetId), note);
         } catch (Exception e) {
             LOG.error("Failed to handle request to note a build", e);
         }

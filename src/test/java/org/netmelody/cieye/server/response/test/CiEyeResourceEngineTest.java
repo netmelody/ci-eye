@@ -8,7 +8,7 @@ import org.jmock.Mockery;
 import org.junit.Test;
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
-import org.netmelody.cieye.server.CiSpyAllocator;
+import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 import org.netmelody.cieye.server.response.CiEyeResourceEngine;
@@ -31,11 +31,11 @@ public final class CiEyeResourceEngineTest {
     private final PictureFetcher pictureFetcher = context.mock(PictureFetcher.class);
     private final CiEyeServerInformationFetcher configurationFetcher = context.mock(CiEyeServerInformationFetcher.class);
     private final RequestOriginTracker tracker = context.mock(RequestOriginTracker.class);
-    private final CiSpyAllocator allocator = context.mock(CiSpyAllocator.class);
+    private final CiSpyIntermediary intermediary = context.mock(CiSpyIntermediary.class);
     private final CiEyeNewVersionChecker updateChecker = context.mock(CiEyeNewVersionChecker.class);
     
     private final CiEyeResourceEngine engine = new CiEyeResourceEngine(landscapeFetcher, pictureFetcher, configurationFetcher,
-                                                                       tracker, allocator, updateChecker);
+                                                                       tracker, intermediary, updateChecker);
     
     @Test public void
     resolvesWelcomePage() {

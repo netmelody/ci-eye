@@ -1,0 +1,3 @@
+org.netmelody.cieye.spies.jenkins.JenkinsObservationAgency
+org.netmelody.cieye.spies.teamcity.TeamCityObservationAgency
+org.netmelody.cieye.spies.demo.DemoModeObservationAgency
