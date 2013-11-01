@@ -2,11 +2,15 @@ package org.netmelody.cieye.server.observation;
 
 import static com.google.common.cache.CacheLoader.from;
 
+import java.util.Map;
+
+import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
+import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.ObservationAgencyFetcher;
 import org.netmelody.cieye.server.ObservationAgencyFetcher.RosterChangedEvent;
@@ -15,6 +19,9 @@ import org.netmelody.cieye.server.TargetGroupBriefing;
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
 
 public final class IntelligenceAgency implements CiSpyIntermediary {
@@ -27,8 +34,15 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
         return agency;
     }
 
+    private final Map<CiServerType, ObservationAgency> agencies = Maps.newHashMap();
+
     private final LoadingCache<Feature, PollingSpyHandler> handlers =
-            CacheBuilder.newBuilder().build(from(new Function<Feature, PollingSpyHandler>() {
+            CacheBuilder.newBuilder().removalListener(new RemovalListener<Feature, PollingSpyHandler>() {
+                @Override
+                public void onRemoval(RemovalNotification<Feature, PollingSpyHandler> notification) {
+                    notification.getValue().endMission();
+                }
+            }).build(from(new Function<Feature, PollingSpyHandler>() {
                 @Override
                 public PollingSpyHandler apply(Feature feature) {
                     return createSpyFor(feature);
@@ -44,13 +58,21 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
         this.directory = directory;
         this.foreignAgencies = foreignAgencies;
     }
-    
+
     private PollingSpyHandler spyFor(Feature feature) {
+        ObservationAgency latestAgency = foreignAgencies.agencyFor(feature.type());
+        ObservationAgency currentAgency = agencies.get(feature.type());
+
+        if (currentAgency != latestAgency) {
+            handlers.invalidate(feature);
+        }
+
         return handlers.getUnchecked(feature);
     }
 
     private PollingSpyHandler createSpyFor(Feature feature) {
-        final CiSpy spy = foreignAgencies.agencyFor(feature.type()).provideSpyFor(feature, network, directory);
+        final ObservationAgency agency = foreignAgencies.agencyFor(feature.type());
+        final CiSpy spy = agency.provideSpyFor(feature, network, directory);
         return new PollingSpyHandler(spy, feature);
     }
 
@@ -68,9 +90,6 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
 
     @Subscribe 
     public void dismissCurrentSpies(RosterChangedEvent event) {
-        for (PollingSpyHandler spyHandler : handlers.asMap().values()) {
-            spyHandler.endMission();
-        }
         handlers.invalidateAll();
     }
 }
