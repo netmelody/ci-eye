@@ -2,6 +2,7 @@ package org.netmelody.cieye.server.configuration;
 
 import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -29,8 +30,8 @@ public final class ServiceLoadingRecordedForeignAgenciesTest {
             foreignAgencies.agencyFor(new CiServerType("SAUSAGE"));
             fail("Expected an IllegalStateException");
         }
-        catch (IllegalStateException e) {
-            assertThat(e.getMessage(), is("No CI Observation Module for SAUSAGE"));
+        catch (Exception e) {
+            assertThat(e.getMessage(), containsString("No CI Observation Module for SAUSAGE"));
         }
     }
 

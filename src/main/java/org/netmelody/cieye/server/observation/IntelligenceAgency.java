@@ -28,18 +28,17 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     }
 
     private final LoadingCache<Feature, PollingSpyHandler> handlers =
-            CacheBuilder.newBuilder()
-                .build(from(new Function<Feature, PollingSpyHandler>() {
+            CacheBuilder.newBuilder().build(from(new Function<Feature, PollingSpyHandler>() {
                 @Override
                 public PollingSpyHandler apply(Feature feature) {
                     return createSpyFor(feature);
                 }
             }));
-    
+
     private final CommunicationNetwork network;
     private final KnownOffendersDirectory directory;
     private final ObservationAgencyFetcher foreignAgencies;
-    
+
     private IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ObservationAgencyFetcher foreignAgencies) {
         this.network = network;
         this.directory = directory;

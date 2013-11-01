@@ -1,5 +1,7 @@
 package org.netmelody.cieye.server.configuration;
 
+import static com.google.common.cache.CacheLoader.from;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,6 +17,9 @@ import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.ObservationAgencyFetcher;
 
+import com.google.common.base.Function;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -26,15 +31,26 @@ public final class ServiceLoadingRecordedForeignAgencies implements ObservationA
     
     private final PluginDirectory pluginDirectory;
     private final AtomicReference<ServiceLoader<ObservationAgency>> services;
-    
+
+    private final LoadingCache<CiServerType, ObservationAgency> agencies =
+            CacheBuilder.newBuilder().build(from(new Function<CiServerType, ObservationAgency>() {
+                @Override
+                public ObservationAgency apply(CiServerType type) {
+                    return makeAgencyFor(type);
+                }
+            }));
 
     public ServiceLoadingRecordedForeignAgencies(PluginDirectory pluginDirectory) {
         this.pluginDirectory = pluginDirectory;
         this.services = new AtomicReference<ServiceLoader<ObservationAgency>>(newServiceLoader());
     }
-    
+
     @Override
     public ObservationAgency agencyFor(CiServerType type) {
+        return agencies.getUnchecked(type);
+    }
+
+    public ObservationAgency makeAgencyFor(CiServerType type) {
         final String typeName = type.name();
         Iterator<ObservationAgency> agencies = available();
         
@@ -90,6 +106,7 @@ public final class ServiceLoadingRecordedForeignAgencies implements ObservationA
         if (pluginDirectory.updateAvailable()) {
             this.services.set(newServiceLoader());
             this.eventBus.post(new RosterChangedEvent());
+            this.agencies.invalidateAll();
         }
     }
 
