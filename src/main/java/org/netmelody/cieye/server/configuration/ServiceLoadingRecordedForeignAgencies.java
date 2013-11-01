@@ -23,11 +23,9 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 public final class ServiceLoadingRecordedForeignAgencies implements ObservationAgencyFetcher, Refreshable {
     private final static Logbook LOGBOOK = LogKeeper.logbookFor(ServiceLoadingRecordedForeignAgencies.class);
-    private final EventBus eventBus = new EventBus(getClass().getName());
     
     private final PluginDirectory pluginDirectory;
     private final AtomicReference<ServiceLoader<ObservationAgency>> services;
@@ -50,7 +48,15 @@ public final class ServiceLoadingRecordedForeignAgencies implements ObservationA
         return agencies.getUnchecked(type);
     }
 
-    public ObservationAgency makeAgencyFor(CiServerType type) {
+    @Override
+    public void refresh() {
+        if (pluginDirectory.updateAvailable()) {
+            this.services.set(newServiceLoader());
+            this.agencies.invalidateAll();
+        }
+    }
+
+    private ObservationAgency makeAgencyFor(CiServerType type) {
         final String typeName = type.name();
         Iterator<ObservationAgency> agencies = available();
         
@@ -100,19 +106,4 @@ public final class ServiceLoadingRecordedForeignAgencies implements ObservationA
             LOGBOOK.error("Error loading plugin.", throwable);
         }
     }
-
-    @Override
-    public void refresh() {
-        if (pluginDirectory.updateAvailable()) {
-            this.services.set(newServiceLoader());
-            this.eventBus.post(new RosterChangedEvent());
-            this.agencies.invalidateAll();
-        }
-    }
-
-    @Override
-    public void registerInterestInChanges(Object interested) {
-        this.eventBus.register(interested);
-    }
-
 }

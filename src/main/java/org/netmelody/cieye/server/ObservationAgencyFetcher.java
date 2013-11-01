@@ -5,8 +5,4 @@ import org.netmelody.cieye.core.observation.ObservationAgency;
 
 public interface ObservationAgencyFetcher {
     ObservationAgency agencyFor(CiServerType type);
-
-    void registerInterestInChanges(Object interested);
-
-    final class RosterChangedEvent {}
 }

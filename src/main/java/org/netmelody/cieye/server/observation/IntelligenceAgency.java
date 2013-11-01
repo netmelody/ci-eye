@@ -13,7 +13,6 @@ import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.core.observation.ObservationAgency;
 import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.ObservationAgencyFetcher;
-import org.netmelody.cieye.server.ObservationAgencyFetcher.RosterChangedEvent;
 import org.netmelody.cieye.server.TargetGroupBriefing;
 
 import com.google.common.base.Function;
@@ -22,7 +21,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Maps;
-import com.google.common.eventbus.Subscribe;
 
 public final class IntelligenceAgency implements CiSpyIntermediary {
 
@@ -30,7 +28,6 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
                                             KnownOffendersDirectory directory, 
                                             ObservationAgencyFetcher foreignAgencies) {
         IntelligenceAgency agency = new IntelligenceAgency(network, directory, foreignAgencies);
-        foreignAgencies.registerInterestInChanges(agency);
         return agency;
     }
 
@@ -86,10 +83,5 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     public boolean passNoteOn(Feature feature, TargetId targetId, String note) {
         PollingSpyHandler spy = spyFor(feature);
         return spy.takeNoteOf(targetId, note);
-    }
-
-    @Subscribe 
-    public void dismissCurrentSpies(RosterChangedEvent event) {
-        handlers.invalidateAll();
     }
 }
