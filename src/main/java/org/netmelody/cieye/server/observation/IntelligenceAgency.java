@@ -6,12 +6,12 @@ import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
-import org.netmelody.cieye.core.observation.ForeignAgencies;
-import org.netmelody.cieye.core.observation.ForeignAgencies.RosterChangedEvent;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.CiSpyIntermediary;
+import org.netmelody.cieye.server.ObservationAgencyFetcher;
 import org.netmelody.cieye.server.TargetGroupBriefing;
+import org.netmelody.cieye.server.ObservationAgencyFetcher.RosterChangedEvent;
 
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
@@ -22,7 +22,7 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
 
     public static IntelligenceAgency create(CommunicationNetwork network,
                                             KnownOffendersDirectory directory, 
-                                            ForeignAgencies foreignAgencies) {
+                                            ObservationAgencyFetcher foreignAgencies) {
         IntelligenceAgency agency = new IntelligenceAgency(network, directory, foreignAgencies);
         foreignAgencies.registerInterestInChanges(agency);
         return agency;
@@ -39,9 +39,9 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     
     private final CommunicationNetwork network;
     private final KnownOffendersDirectory directory;
-    private final ForeignAgencies foreignAgencies;
+    private final ObservationAgencyFetcher foreignAgencies;
     
-    private IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ForeignAgencies foreignAgencies) {
+    private IntelligenceAgency(CommunicationNetwork network, KnownOffendersDirectory directory, ObservationAgencyFetcher foreignAgencies) {
         this.network = network;
         this.directory = directory;
         this.foreignAgencies = foreignAgencies;

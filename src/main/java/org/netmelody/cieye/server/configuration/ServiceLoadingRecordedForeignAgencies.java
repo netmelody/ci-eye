@@ -12,15 +12,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.netmelody.cieye.core.domain.CiServerType;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
-import org.netmelody.cieye.core.observation.ForeignAgencies;
 import org.netmelody.cieye.core.observation.ObservationAgency;
+import org.netmelody.cieye.server.ObservationAgencyFetcher;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 
-public final class ServiceLoadingRecordedForeignAgencies implements ForeignAgencies, Refreshable {
+public final class ServiceLoadingRecordedForeignAgencies implements ObservationAgencyFetcher, Refreshable {
     private final static Logbook LOGBOOK = LogKeeper.logbookFor(ServiceLoadingRecordedForeignAgencies.class);
     private final EventBus eventBus = new EventBus(getClass().getName());
     

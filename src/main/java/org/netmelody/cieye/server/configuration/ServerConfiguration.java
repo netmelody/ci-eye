@@ -4,9 +4,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.netmelody.cieye.core.observation.ForeignAgencies;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
+import org.netmelody.cieye.server.ObservationAgencyFetcher;
 import org.netmelody.cieye.server.LandscapeFetcher;
 import org.netmelody.cieye.server.PictureFetcher;
 
@@ -54,7 +54,7 @@ public final class ServerConfiguration {
         return album;
     }
     
-    public ForeignAgencies foreignAgents() {
+    public ObservationAgencyFetcher foreignAgents() {
         return foreignAgencies;
     }
 }
