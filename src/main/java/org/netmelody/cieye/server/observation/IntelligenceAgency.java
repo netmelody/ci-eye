@@ -7,11 +7,10 @@ import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.observation.CiSpy;
 import org.netmelody.cieye.core.observation.CommunicationNetwork;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
-import org.netmelody.cieye.server.CiSpyHandler;
 import org.netmelody.cieye.server.CiSpyIntermediary;
 import org.netmelody.cieye.server.ObservationAgencyFetcher;
-import org.netmelody.cieye.server.TargetGroupBriefing;
 import org.netmelody.cieye.server.ObservationAgencyFetcher.RosterChangedEvent;
+import org.netmelody.cieye.server.TargetGroupBriefing;
 
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
@@ -28,11 +27,11 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
         return agency;
     }
 
-    private final LoadingCache<Feature, CiSpyHandler> handlers =
+    private final LoadingCache<Feature, PollingSpyHandler> handlers =
             CacheBuilder.newBuilder()
-                .build(from(new Function<Feature, CiSpyHandler>() {
+                .build(from(new Function<Feature, PollingSpyHandler>() {
                 @Override
-                public CiSpyHandler apply(Feature feature) {
+                public PollingSpyHandler apply(Feature feature) {
                     return createSpyFor(feature);
                 }
             }));
@@ -47,30 +46,30 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
         this.foreignAgencies = foreignAgencies;
     }
     
-    private CiSpyHandler spyFor(Feature feature) {
+    private PollingSpyHandler spyFor(Feature feature) {
         return handlers.getUnchecked(feature);
     }
 
-    private CiSpyHandler createSpyFor(Feature feature) {
+    private PollingSpyHandler createSpyFor(Feature feature) {
         final CiSpy spy = foreignAgencies.agencyFor(feature.type()).provideSpyFor(feature, network, directory);
         return new PollingSpyHandler(spy, feature);
     }
 
     @Override
     public TargetGroupBriefing briefingOn(Feature feature) {
-        CiSpyHandler spy = spyFor(feature);
+        PollingSpyHandler spy = spyFor(feature);
         return new TargetGroupBriefing(spy.statusOf(feature), spy.millisecondsUntilNextUpdate(feature));
     }
 
     @Override
     public boolean passNoteOn(Feature feature, TargetId targetId, String note) {
-        CiSpyHandler spy = spyFor(feature);
+        PollingSpyHandler spy = spyFor(feature);
         return spy.takeNoteOf(targetId, note);
     }
 
     @Subscribe 
     public void dismissCurrentSpies(RosterChangedEvent event) {
-        for (CiSpyHandler spyHandler : handlers.asMap().values()) {
+        for (PollingSpyHandler spyHandler : handlers.asMap().values()) {
             spyHandler.endMission();
         }
         handlers.invalidateAll();

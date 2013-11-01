@@ -1,5 +1,11 @@
 package org.netmelody.cieye.server.observation;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +24,6 @@ import org.netmelody.cieye.core.domain.TargetId;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
 import org.netmelody.cieye.core.observation.CiSpy;
-import org.netmelody.cieye.server.CiSpyHandler;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -27,13 +32,7 @@ import com.google.common.collect.MapMaker;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
-
-public final class PollingSpyHandler implements CiSpyHandler {
+public final class PollingSpyHandler {
 
     private static final Logbook LOG = LogKeeper.logbookFor(PollingSpyHandler.class);
 
@@ -61,7 +60,6 @@ public final class PollingSpyHandler implements CiSpyHandler {
         return new ThreadFactoryBuilder().setNameFormat(threadPrefix + "-%d").build();
     }
 
-    @Override
     public TargetDetailGroup statusOf(Feature feature) {
         final long currentTimeMillis = currentTimeMillis();
         requests.put(feature, currentTimeMillis);
@@ -77,7 +75,6 @@ public final class PollingSpyHandler implements CiSpyHandler {
         return digest;
     }
 
-    @Override
     public long millisecondsUntilNextUpdate(Feature feature) {
         final StatusResult statusResult = statuses.get(feature);
         if (null != statusResult) {
@@ -86,12 +83,10 @@ public final class PollingSpyHandler implements CiSpyHandler {
         return 0L;
     }
 
-    @Override
     public boolean takeNoteOf(TargetId targetId, String note) {
         return trustedSpy.takeNoteOf(targetId, note);
     }
     
-    @Override
     public void endMission() {
         this.executor.shutdown();
     }
