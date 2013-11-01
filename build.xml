@@ -34,6 +34,7 @@
             <copy todir="@{destdir}">
                 <fileset dir="@{srcdir}/java" excludes="**/*.java"/>
                 <fileset dir="@{srcdir}/webapp"/>
+                <fileset dir="@{srcdir}/resources"/>
             </copy>
         </sequential>
     </macrodef>
@@ -79,8 +80,7 @@
                 <attribute name="Implementation-Title" value="${ant.project.name}"/>
                 <attribute name="Implementation-Version" value="${version.label}"/>
                 <attribute name="Built-Date" value="${build.timestamp}"/>
-        	</manifest>
-            <fileset dir="${basedir}/src/main/resources" includes="**/META-INF/**"/>
+            </manifest>
         </jar>
     </target>
 
