@@ -1,24 +1,18 @@
 package org.netmelody.cieye.spies.teamcity;
 
-import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
+import org.netmelody.cieye.core.domain.RunningBuild;
+import org.netmelody.cieye.core.domain.Sponsor;
+import org.netmelody.cieye.core.domain.Status;
+import org.netmelody.cieye.core.domain.TargetDetail;
+import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
+import org.netmelody.cieye.spies.teamcity.jsondomain.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.netmelody.cieye.core.domain.RunningBuild;
-import org.netmelody.cieye.core.domain.Sponsor;
-import org.netmelody.cieye.core.domain.Status;
-import org.netmelody.cieye.core.domain.TargetDetail;
-import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Build;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildType;
-import org.netmelody.cieye.spies.teamcity.jsondomain.BuildTypeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Change;
-import org.netmelody.cieye.spies.teamcity.jsondomain.ChangeDetail;
-import org.netmelody.cieye.spies.teamcity.jsondomain.Investigation;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
 public final class BuildTypeAnalyser {
 
@@ -33,7 +27,7 @@ public final class BuildTypeAnalyser {
     public TargetDetail targetFrom(BuildType buildType) {
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(buildType);
         
-        if (buildTypeDetail.paused) {
+        if (buildTypeDetail.paused || buildTypeDetail.externalStatusDisabled()) {
             return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, Status.DISABLED, 0L);
         }
         

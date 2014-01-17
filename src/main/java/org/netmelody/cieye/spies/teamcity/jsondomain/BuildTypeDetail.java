@@ -6,6 +6,11 @@ public final class BuildTypeDetail extends BuildType {
     public boolean paused;
     public Project project;
     public BuildsHref builds;
+    public BuildSettings settings;
+
+    public boolean externalStatusDisabled() {
+        return settings.externalStatusDisabled();
+    }
     //vcs-root
     //parameters
     //runParameters
