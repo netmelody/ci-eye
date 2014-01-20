@@ -9,7 +9,7 @@ public final class BuildTypeDetail extends BuildType {
     public BuildSettings settings;
 
     public boolean externalStatusDisabled() {
-        return settings.externalStatusDisabled();
+        return settings != null && settings.externalStatusDisabled();
     }
     //vcs-root
     //parameters
