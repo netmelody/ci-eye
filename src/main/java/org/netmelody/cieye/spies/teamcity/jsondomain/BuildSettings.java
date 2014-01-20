@@ -6,6 +6,8 @@ import com.google.common.collect.Iterables;
 
 import java.util.List;
 
+import static java.lang.Boolean.parseBoolean;
+
 public class BuildSettings {
     public List<BuildSettingsProperty> property;
 
@@ -18,7 +20,7 @@ public class BuildSettings {
         });
 
         if (allowExternalStatus.isPresent()) {
-            return Boolean.parseBoolean(allowExternalStatus.get().value);
+            return !Boolean.parseBoolean(allowExternalStatus.get().value);
         } else {
             return false;
         }
