@@ -37,11 +37,13 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
             CacheBuilder.newBuilder().removalListener(new RemovalListener<Feature, PollingSpyHandler>() {
                 @Override
                 public void onRemoval(RemovalNotification<Feature, PollingSpyHandler> notification) {
+                    System.out.println("Destroying spy for " + notification.getKey().name());
                     notification.getValue().endMission();
                 }
             }).build(from(new Function<Feature, PollingSpyHandler>() {
                 @Override
                 public PollingSpyHandler apply(Feature feature) {
+                    System.out.println("Creating spy for " + feature.name());
                     return createSpyFor(feature);
                 }
             }));
@@ -70,6 +72,7 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     private PollingSpyHandler createSpyFor(Feature feature) {
         final ObservationAgency agency = foreignAgencies.agencyFor(feature.type());
         final CiSpy spy = agency.provideSpyFor(feature, network, directory);
+        agencies.put(feature.type(), agency);
         return new PollingSpyHandler(spy, feature);
     }
 
