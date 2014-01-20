@@ -280,10 +280,18 @@ ORG.NETMELODY.CIEYE.newRadiatorWidget = function() {
         }
         
         var result = true;
-        $.each(targetsJson, function(index, targetJson) {
-            if (targetJson.builds.length !== 0 || (targetJson.status !== "GREEN" && targetJson.status !== "DISABLED")) {
+        $.each(targetsJson, function(i, targetJson) {
+            if (targetJson.status !== "GREEN" && targetJson.status !== "DISABLED") {
                 result = false;
                 return false;
+            }
+            if (targetJson.builds.length > 0) {
+                $.each(targetJson.builds, function (i2, build) {
+                    if (build.status !== "GREEN") {
+                        result = false;
+                        return false;
+                    }
+                });
             }
         });
         return result;
