@@ -1,0 +1,77 @@
+import org.gradle.plugins.ide.eclipse.model.AccessRule
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'fatjar'
+
+sourceCompatibility = 1.6
+version = '0.4.1-SNAPSHOT'
+mainClassName = 'org.netmelody.cieye.CiEye'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+    }
+}
+
+fatJar {
+    manifest.attributes("Main-class": mainClassName)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+        'com.google.guava:guava:13.0',
+        'com.google.code.gson:gson:2.2.2',
+        'commons-codec:commons-codec:1.6',
+        'commons-io:commons-io:2.4',
+        'commons-logging:commons-logging:1.1.1',
+        'org.apache.httpcomponents:httpclient:4.2.1',
+        'org.apache.httpcomponents:httpcore:4.2.1',
+        'org.simpleframework:simple:4.1.21'
+    )
+
+    testCompile(
+        'org.jmock:jmock-junit4:2.5.1',
+        'org.hamcrest:hamcrest-library:1.3',
+        'junit:junit:4.10',
+        files('libs/menodora-0.0.5.jar')
+    )
+}
+
+sourceSets {
+    main {
+        resources.srcDirs = [ 'src/main/resources', 
+                              'src/main/webapp', 
+                              'vendor/jslib']
+    }
+}
+
+eclipse {
+    project {
+        buildCommand 'org.eclipse.wst.jsdt.core.javascriptValidator'
+        buildCommand 'org.eclipse.jdt.core.javabuilder'
+
+        natures = [ 'org.eclipse.jdt.core.javanature', 
+                    'org.eclipse.wst.jsdt.core.jsNature' ]
+    }
+
+    classpath {
+        file {
+            whenMerged { classpath ->
+                // As far as I can tell there's no DSL command for this, so doing
+                classpath.entries.find { it.path.contains("menodora") }.accessRules =
+                    [ new AccessRule( "lib", "**/wrapped/**" ) ]
+            }
+        }
+    }
+}
