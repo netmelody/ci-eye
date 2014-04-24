@@ -37,7 +37,7 @@ public final class TeamCityCommunicator {
     public TeamCityCommunicator(Contact contact, String endpoint) {
         this.contact = contact;
         this.endpoint = endpoint;
-        this.prefix = (contact.privileged() ? "/httpAuth" : "/guestAuth") + "/app/rest";
+        this.prefix = (contact.privileged() ? "/httpAuth" : "/guestAuth") + "/app/rest/7.0";
     }
 
     public String endpoint() {
@@ -91,18 +91,18 @@ public final class TeamCityCommunicator {
     public List<Change> changesOf(BuildDetail buildDetail) {
         final JsonElement json = contact.makeJsonRestCall(endpoint + buildDetail.changes.href);
         final JsonElement change = json.isJsonObject() ? json.getAsJsonObject().get("change") : JsonNull.INSTANCE;
-        
+
         if (null == change || !(change.isJsonArray() || change.isJsonObject())) {
             return ImmutableList.of();
         }
-        
+
         final Gson gson = new Gson();
         final List<Change> changes = new ArrayList<Change>();
         final Iterable<JsonElement> changesJson = change.isJsonArray() ? change.getAsJsonArray() : ImmutableList.of(change);
         for (JsonElement jsonElement : changesJson) {
             changes.add(gson.fromJson(jsonElement, Change.class));
         }
-        
+
         return changes;
     }
 
