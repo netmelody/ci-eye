@@ -5,7 +5,6 @@ import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.TargetDetail;
 import org.netmelody.cieye.core.observation.KnownOffendersDirectory;
-import org.netmelody.cieye.core.utility.ProjectAbbreviator;
 import org.netmelody.cieye.spies.teamcity.jsondomain.*;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.utility.ProjectAbbreviator.nameWithProjectAbbreviation;
 
 public final class BuildTypeAnalyser {
 
@@ -25,15 +25,11 @@ public final class BuildTypeAnalyser {
         this.detective = detective;
     }
 
-    public String nameWithProjectAbbreviation(BuildType buildType) {
-        return new ProjectAbbreviator().abbreviate(buildType.projectName) + ": " + buildType.name;
-    }
-
     public TargetDetail targetFrom(BuildType buildType) {
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(buildType);
         
         if (buildTypeDetail.paused || buildTypeDetail.externalStatusDisabled()) {
-            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), nameWithProjectAbbreviation(buildType), Status.DISABLED, 0L);
+            return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), nameWithProjectAbbreviation(buildType.projectName, buildType.name), Status.DISABLED, 0L);
         }
         
         final Set<Sponsor> sponsors = new HashSet<Sponsor>();
@@ -66,7 +62,7 @@ public final class BuildTypeAnalyser {
             }
         }
         
-        return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), nameWithProjectAbbreviation(buildType), currentStatus, startTime, runningBuilds, sponsors);
+        return new TargetDetail(communicator.endpoint() + buildType.href, buildType.webUrl(), nameWithProjectAbbreviation(buildType.projectName, buildType.name), currentStatus, startTime, runningBuilds, sponsors);
     }
 
     private Set<Sponsor> sponsorsOf(BuildDetail build) {

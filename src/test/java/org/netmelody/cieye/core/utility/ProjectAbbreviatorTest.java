@@ -16,4 +16,9 @@ public class ProjectAbbreviatorTest {
     public void abbreviatesToFirstLettersOfWordsIfThereAreSpaces() throws Throwable {
         Assert.assertThat("MpN", equalTo(new ProjectAbbreviator().abbreviate("My project Name")));
     }
+
+    @Test
+    public void abbreviatesToFirstLettersOfWordsIfThereAreHyphens() throws Throwable {
+        Assert.assertThat("MpNh", equalTo(new ProjectAbbreviator().abbreviate("My-project Name-hyphens")));
+    }
 }
