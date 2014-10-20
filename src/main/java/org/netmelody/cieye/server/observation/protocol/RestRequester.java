@@ -134,7 +134,7 @@ public final class RestRequester implements GrapeVine {
             final HttpEntity entity = response.getEntity();
             final int statusCode = response.getStatusLine().getStatusCode();
             try {
-                if (statusCode >= 300) {
+                if (statusCode >= 300 && statusCode != 302) {
                     LOG.error("Failed to PUT/POST\n" + EntityUtils.toString(entity));
                 }
                 EntityUtils.consume(entity);
