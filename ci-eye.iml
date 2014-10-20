@@ -61,11 +61,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/guava-13.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/guava-18.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/guava-13.0-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/guava-18.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
