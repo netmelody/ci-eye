@@ -61,6 +61,7 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
         ObservationAgency currentAgency = agencies.get(feature.type());
 
         if (currentAgency != latestAgency) {
+            agencies.put(feature.type(), latestAgency);
             handlers.invalidate(feature);
         }
 
