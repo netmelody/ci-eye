@@ -17,11 +17,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/commons-codec-1.6.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/commons-codec-1.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/commons-codec-1.6-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/commons-codec-1.9-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
