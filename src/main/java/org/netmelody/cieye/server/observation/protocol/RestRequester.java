@@ -9,25 +9,21 @@ import org.apache.http.auth.AuthScheme;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.netmelody.cieye.core.logging.LogKeeper;
 import org.netmelody.cieye.core.logging.Logbook;
@@ -35,26 +31,29 @@ import org.netmelody.cieye.core.logging.Logbook;
 public final class RestRequester implements GrapeVine {
 
     private static final Logbook LOG = LogKeeper.logbookFor(RestRequester.class);
-    
-    private final DefaultHttpClient client;
+
     private final boolean privileged;
+    private final CloseableHttpClient client;
+    private final HttpClientContext context;
 
     public RestRequester(String username, String password) {
-        final SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-        schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
-        
-        final PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager(schemeRegistry);
-        connectionManager.setMaxTotal(200);
-        connectionManager.setDefaultMaxPerRoute(20);
-        
-        final HttpParams params = new BasicHttpParams();
-        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 30000);
-        
         privileged = !username.isEmpty();
-        
-        client = new DefaultHttpClient(connectionManager, params);
-        client.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
+
+        final PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+        connManager.setMaxTotal(200);
+        connManager.setDefaultMaxPerRoute(20);
+
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).build();
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        if (privileged) {
+            credsProvider.setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(username, password));
+        }
+        client = HttpClients.custom().setConnectionManager(connManager)
+                                     .setDefaultRequestConfig(requestConfig)
+                                     .setDefaultCredentialsProvider(credsProvider)
+                                     .build();
+        context = HttpClientContext.create();
+        context.setAuthCache(new SingleAuthCache(new BasicScheme()));
     }
 
     @Override
@@ -70,7 +69,7 @@ public final class RestRequester implements GrapeVine {
             httpget.setHeader("Accept", "application/json");
 
             final ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            return client.execute(httpget, responseHandler);
+            return client.execute(httpget, responseHandler, context);
         }
         catch (HttpResponseException e) {
             if (e.getStatusCode() == 404) {
@@ -89,37 +88,31 @@ public final class RestRequester implements GrapeVine {
     public void doPost(String url) {
         LOG.info(url);
         try {
-            final BasicHttpContext localcontext = new BasicHttpContext();
-            localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
-            
-            client.execute(new HttpPost(url), new ConsumingResponseHandler(), localcontext);
+            client.execute(new HttpPost(url), new ConsumingResponseHandler(), context);
         }
         catch (Exception e) {
             LOG.error(url, e);
         }
     }
-    
+
     @Override
     public void doPut(String url, String content) {
         LOG.info(url);
         try {
-            final BasicHttpContext localcontext = new BasicHttpContext();
-            localcontext.setAttribute(ClientContext.AUTH_CACHE, new SingleAuthCache(new BasicScheme()));
-            
             final HttpPut put = new HttpPut(url);
             put.setEntity(new StringEntity(content));
             
-            client.execute(put, new ConsumingResponseHandler(), localcontext);
+            client.execute(put, new ConsumingResponseHandler(), context);
         }
         catch (Exception e) {
             LOG.error(url, e);
         }
     }
-    
+
     @Override
     public void shutdown() {
         try {
-            client.getConnectionManager().shutdown();
+            client.close();
         }
         catch (Exception e) {
             LOG.error("error shutting down", e);
