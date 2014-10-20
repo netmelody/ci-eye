@@ -39,11 +39,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/vendor/lib/commons-logging-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/vendor/lib/commons-logging-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/vendor/src/commons-logging-1.1.1-src.zip!/" />
+          <root url="jar://$MODULE_DIR$/vendor/src/commons-logging-1.2-src.zip!/" />
         </SOURCES>
       </library>
     </orderEntry>
