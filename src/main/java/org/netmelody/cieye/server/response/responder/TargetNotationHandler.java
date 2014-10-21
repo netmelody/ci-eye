@@ -38,6 +38,7 @@ public final class TargetNotationHandler implements CiEyeResponder {
             if (spyIntermediary.passNoteOn(feature, targetId, note)) {
                 return;
             }
+            LOG.error("Failed to handle request to note target " + targetId.id());
         }
     }
 
