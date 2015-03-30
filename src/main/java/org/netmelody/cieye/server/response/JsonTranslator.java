@@ -1,7 +1,9 @@
 package org.netmelody.cieye.server.response;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import com.google.common.base.Optional;
 import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.TargetId;
 
@@ -14,7 +16,7 @@ import com.google.gson.JsonSerializer;
 public final class JsonTranslator {
 
     private final Gson gson;
-    
+
     public JsonTranslator() {
         final GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Percentage.class, new JsonSerializer<Percentage>() {
@@ -29,7 +31,18 @@ public final class JsonTranslator {
                 return context.serialize(src.id());
             }
         });
-        
+        builder.registerTypeAdapter(Optional.class, new JsonSerializer<Optional<?>>() {
+            @Override
+            public JsonElement serialize(Optional<?> src, Type typeOfSrc, JsonSerializationContext context) {
+                if (src.isPresent()) {
+                    Type innerType = ((ParameterizedType) typeOfSrc).getActualTypeArguments()[0];
+                    return context.serialize(src.get(), innerType);
+                } else {
+                    return context.serialize(null);
+                }
+            }
+        });
+
         gson = builder.create();
     }
 

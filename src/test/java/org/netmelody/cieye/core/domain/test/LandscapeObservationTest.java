@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
 
+import com.google.common.base.Optional;
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.core.domain.RunningBuild;
@@ -20,22 +21,23 @@ public class LandscapeObservationTest {
     @Test public void
     translatesToAppropriateJsonRepresentationWhenEmpty() {
         final LandscapeObservation observation = new LandscapeObservation();
-        
+
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[]}"));
     }
-    
+
     @Test public void
     translatesToAppropriateJsonRepresentationWithSimpleTargets() {
-        final LandscapeObservation observation = new LandscapeObservation(TargetDetailGroup.of(newArrayList(new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN, 0L),
-                                                                                                            new TargetDetail("T2ID", "T2URL", "T2", Status.BROKEN, 0L))));
-        
+        final LandscapeObservation observation = new LandscapeObservation(TargetDetailGroup.of(newArrayList(new TargetDetail("T1ID", "T1URL", Optional.of("F1"), "T1", Status.GREEN, 0L),
+                                                                                                            new TargetDetail("T2ID", "T2URL", Optional.<String>absent(), "T2", Status.BROKEN, 0L))));
+
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
                                                                     "{\"lastStartTime\":0," +
                                                                      "\"sponsors\":[]," +
                                                                      "\"builds\":[]," +
                                                                      "\"id\":\"T1ID\"," +
                                                                      "\"webUrl\":\"T1URL\"," +
-                                                                     "\"name\":\"T1\"," + 
+                                                                     "\"featureName\":\"F1\"," +
+                                                                     "\"name\":\"T1\"," +
                                                                      "\"status\":\"GREEN\"}," +
                                                                     "{\"lastStartTime\":0," +
                                                                      "\"sponsors\":[]," +
@@ -46,15 +48,15 @@ public class LandscapeObservationTest {
                                                                      "\"status\":\"BROKEN\"}" +
                                                                 "]}"));
     }
-    
+
     @Test public void
     translatesToAppropriateJsonRepresentationWithComplexTarget() {
         final LandscapeObservation observation = new LandscapeObservation(TargetDetailGroup.of(newArrayList(
-                new TargetDetail("T1ID", "T1URL", "T1", Status.GREEN, 123,
+                new TargetDetail("T1ID", "T1URL", Optional.of("F1"), "T1", Status.GREEN, 123,
                            newArrayList(new RunningBuild(percentageOf(1), Status.GREEN),
                                         new RunningBuild(percentageOf(60), Status.BROKEN)),
                            newHashSet(new Sponsor("S1", "P1"))))));
-        
+
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[" +
                                                                     "{\"lastStartTime\":123," +
                                                                      "\"sponsors\":[{\"name\":\"S1\",\"picture\":\"P1\"}]," +
@@ -64,16 +66,17 @@ public class LandscapeObservationTest {
                                                                      "]," +
                                                                      "\"id\":\"T1ID\"," +
                                                                      "\"webUrl\":\"T1URL\"," +
-                                                                     "\"name\":\"T1\"," + 
+                                                                     "\"featureName\":\"F1\"," +
+                                                                     "\"name\":\"T1\"," +
                                                                      "\"status\":\"BROKEN\"" +
                                                                     "}" +
                                                                 "]}"));
     }
-    
+
     @Test public void
     translatesToAppropriateJsonRepresentationWithDohList() {
         final LandscapeObservation observation = new LandscapeObservation().withDoh(newHashSet(new Sponsor("S1", "P1")));
-        
+
         assertThat(new JsonTranslator().toJson(observation), is("{\"targets\":[],\"dohGroup\":[{\"name\":\"S1\",\"picture\":\"P1\"}]}"));
     }
 }

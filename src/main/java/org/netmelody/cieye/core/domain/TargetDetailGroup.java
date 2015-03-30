@@ -12,11 +12,11 @@ import static com.google.common.collect.Iterables.concat;
 public final class TargetDetailGroup implements Iterable<TargetDetail>{
 
     private final Iterable<TargetDetail> targets;
-    
+
     public TargetDetailGroup() {
         this(ImmutableList.<TargetDetail>of());
     }
-    
+
     public TargetDetailGroup(TargetDigestGroup targetsConstituting) {
         this(copyOf(transform(targetsConstituting.targets(), toTargets())));
     }
@@ -24,7 +24,7 @@ public final class TargetDetailGroup implements Iterable<TargetDetail>{
     public static TargetDetailGroup of(Iterable<TargetDetail> targets) {
         return (null == targets) ? new TargetDetailGroup() : new TargetDetailGroup(copyOf(targets));
     }
-    
+
     private TargetDetailGroup(Iterable<TargetDetail> targets) {
         this.targets = targets;
     }
@@ -39,11 +39,11 @@ public final class TargetDetailGroup implements Iterable<TargetDetail>{
     public Iterable<TargetDetail> targets() {
         return targets;
     }
-    
+
     private static Function<TargetDigest, TargetDetail> toTargets() {
         return new Function<TargetDigest, TargetDetail>() {
             @Override public TargetDetail apply(TargetDigest digest) {
-                return new TargetDetail(digest.id().id(), digest.webUrl(), digest.name(), digest.status(), 0L);
+                return new TargetDetail(digest.id().id(), digest.webUrl(), digest.featureName(), digest.name(), digest.status(), 0L);
             }
         };
     }

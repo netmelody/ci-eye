@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.TargetDetail;
@@ -30,7 +31,7 @@ public final class TeamCitySpy implements CiSpy {
     private final BuildTypeAnalyser buildTypeAnalyser;
 
     private final Map<TargetId, BuildType> recognisedBuildTypes = newHashMap();
-    
+
     public TeamCitySpy(String endpoint, KnownOffendersDirectory detective, Contact contact) {
         this.communicator = new TeamCityCommunicator(contact, endpoint);
         this.buildTypeAnalyser = new BuildTypeAnalyser(this.communicator, detective);
@@ -40,13 +41,13 @@ public final class TeamCitySpy implements CiSpy {
     public TargetDigestGroup targetsConstituting(Feature feature) {
         final Collection<BuildType> buildTypes = buildTypesFor(feature);
         final List<TargetDigest> digests = newArrayList();
-        
+
         for (BuildType buildType : buildTypes) {
-            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, UNKNOWN);
+            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), Optional.of(buildType.projectName), buildType.name, UNKNOWN);
             digests.add(targetDigest);
             recognisedBuildTypes.put(targetDigest.id(), buildType);
         }
-        
+
         return new TargetDigestGroup(digests);
     }
 
@@ -58,13 +59,13 @@ public final class TeamCitySpy implements CiSpy {
         }
         return buildTypeAnalyser.targetFrom(buildType);
     }
-    
+
     @Override
     public boolean takeNoteOf(TargetId target, String note) {
         if (!recognisedBuildTypes.containsKey(target)) {
             return false;
         }
-        
+
         final BuildTypeDetail buildTypeDetail = communicator.detailsFor(recognisedBuildTypes.get(target));
         final Build lastCompletedBuild = communicator.lastCompletedBuildFor(buildTypeDetail);
         if (null != lastCompletedBuild && Status.BROKEN.equals(lastCompletedBuild.status())) {
@@ -78,12 +79,12 @@ public final class TeamCitySpy implements CiSpy {
         if (!communicator.canSpeakFor(feature)) {
             return newArrayList();
         }
-        
+
         final Collection<BuildType> buildTypes = communicator.buildTypes();
         if (feature.name().isEmpty()) {
             return buildTypes;
         }
-        
+
         return filter(buildTypes, withFeatureName(feature.name()));
     }
 

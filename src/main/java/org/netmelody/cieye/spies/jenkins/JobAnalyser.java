@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Optional;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
@@ -31,7 +32,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public final class JobAnalyser {
-    
+
     private final JenkinsCommunicator communicator;
     private final String jobEndpoint;
     private final Map<String, Set<Sponsor>> sponsorCache = new HashMap<String, Set<Sponsor>>();
@@ -48,25 +49,25 @@ public final class JobAnalyser {
         this.buildDurationFetcher = new BuildDurationFetcher(this.buildDetailFetcher);
         this.buildStartTimeFetcher = new BuildStartTimeFetcher(this.buildDetailFetcher);
     }
-    
+
     public TargetDetail analyse(Job jobDigest) {
         if (!jobDigest.url.equals(jobEndpoint)) {
             throw new IllegalArgumentException("Incorrect job digest");
         }
-        
+
         final JobDetail job = communicator.jobDetailFor(jobEndpoint);
         if (!job.building() && Status.BROKEN != job.status()) {
             sponsorCache.clear();
-            return new TargetDetail(job.url, job.url, job.name, job.status(), startTimeOf(job));
+            return new TargetDetail(job.url, job.url, Optional.<String>absent(), job.name, job.status(), startTimeOf(job));
         }
-        
-        return new TargetDetail(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
+
+        return new TargetDetail(job.url, job.url, Optional.<String>absent(), job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
     public String lastBadBuildUrl() {
         return communicator.lastBadBuildFor(jobEndpoint);
     }
-    
+
     private long startTimeOf(JobDetail job) {
         return buildStartTimeFetcher.lastStartTimeOf(job);
     }
@@ -75,70 +76,70 @@ public final class JobAnalyser {
         if (job.lastBuild == null) {
             return job.status();
         }
-        
+
         if (!Status.BROKEN.equals(job.status())) {
             return job.status();
         }
-        
+
         final String lastBadBuildDesc = this.buildDetailFetcher.detailsOf(job.lastBadBuildUrl()).description;
         if (null == lastBadBuildDesc || lastBadBuildDesc.length() == 0) {
             return job.status();
         }
         return Status.UNDER_INVESTIGATION;
     }
-    
+
     private Set<Sponsor> sponsorsOf(JobDetail job) {
         final Set<Sponsor> result = new HashSet<Sponsor>();
-        
+
         if (job.lastBuild == null) {
             return result;
         }
-        
+
         long lastSuccessNumber = (job.lastStableBuild == null) ? -1 : job.lastStableBuild.number;
         for (Build build : job.builds()) {
             if (build.number > lastSuccessNumber) {
                 result.addAll(sponsorsOf(build.url));
             }
         }
-        
+
         return result;
     }
-    
+
     private Set<Sponsor> sponsorsOf(String buildUrl) {
         if (null == buildUrl || buildUrl.length() == 0) {
             return new HashSet<Sponsor>();
         }
-        
+
         if (sponsorCache.containsKey(buildUrl)) {
             return sponsorCache.get(buildUrl);
         }
-        
+
         final BuildDetail buildData = this.buildDetailFetcher.detailsOf(buildUrl);
         if (null == buildData) {
             return new HashSet<Sponsor>();
         }
-        
+
         final Set<Sponsor> sponsors = new HashSet<Sponsor>(detective.search(commitMessagesOf(buildData)));
-        
+
         if (sponsors.isEmpty()) {
             for (String upstreamBuildUrl : buildData.upstreamBuildUrls()) {
                 sponsors.addAll(sponsorsOf(communicator.endpoint() + "/" + upstreamBuildUrl));
             }
         }
-        
+
         final Set<Sponsor> result = unmodifiableSet(sponsors);
         if (!buildData.building) {
             sponsorCache.put(buildUrl, result);
         }
-        
+
         return result;
     }
-    
+
     private String commitMessagesOf(BuildDetail build) {
         if (null == build.changeSet || null == build.changeSet.items) {
             return "";
         }
-        
+
         final StringBuilder result = new StringBuilder();
         for (ChangeSetItem changeSetItem : build.changeSet.items) {
             result.append(changeSetItem.user);
@@ -146,36 +147,36 @@ public final class JobAnalyser {
             result.append(changeSetItem.msg);
             result.append(' ');
         }
-        
+
         for (User user : build.culprits()) {
             result.append(user.fullName);
             result.append(' ');
         }
-        
+
         return result.toString();
     }
-    
+
     private List<RunningBuild> buildsFor(final JobDetail job) {
         if (!job.building() || job.lastBuild == null) {
             return newArrayList();
         }
-        
+
         final long lastCompletedJobNumber = (job.lastCompletedBuild == null) ? 0L : job.lastCompletedBuild.number;
         final Collection<Build> builds = newArrayList(filter(job.builds(), after(lastCompletedJobNumber)));
         if (builds.isEmpty()) {
             builds.add(job.lastBuild);
         }
-        
+
         final long duration = this.buildDurationFetcher.lastGoodDurationOf(job);
         return newArrayList(transform(filter(transform(builds, toBuildDetail()), building()), toRunningBuild(duration)));
     }
-    
+
     private Predicate<Build> after(final long lastCompletedJobNumber) {
         return new Predicate<Build>() {
             @Override public boolean apply(Build build) { return build.number > lastCompletedJobNumber; }
         };
     }
-    
+
     private Function<Build, BuildDetail> toBuildDetail() {
         return new Function<Build, BuildDetail>() {
             @Override public BuildDetail apply(Build build) {
@@ -189,7 +190,7 @@ public final class JobAnalyser {
             @Override public boolean apply(BuildDetail build) { return build.building; }
         };
     }
-    
+
     private Function<BuildDetail, RunningBuild> toRunningBuild(final long duration) {
         return new Function<BuildDetail, RunningBuild>() {
             @Override public RunningBuild apply(BuildDetail buildDetail) {

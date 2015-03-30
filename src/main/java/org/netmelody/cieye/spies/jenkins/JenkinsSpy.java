@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.netmelody.cieye.core.domain.Feature;
@@ -26,14 +27,14 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
 public final class JenkinsSpy implements CiSpy {
-    
+
     private static final Logbook LOG = LogKeeper.logbookFor(JenkinsSpy.class);
-    
+
     private final JenkinsCommunicator communicator;
     private final JobLaboratory laboratory;
-    
+
     private final Map<TargetId, Job> recognisedJobs = newHashMap();
-    
+
     public JenkinsSpy(String endpoint, KnownOffendersDirectory detective, Contact contact) {
         this.communicator = new JenkinsCommunicator(endpoint, contact);
         this.laboratory = new JobLaboratory(communicator, detective);
@@ -43,13 +44,13 @@ public final class JenkinsSpy implements CiSpy {
     public TargetDigestGroup targetsConstituting(Feature feature) {
         final Collection<Job> jobs = jobsFor(feature);
         final List<TargetDigest> digests = newArrayList();
-        
+
         for (Job job : jobs) {
-            final TargetDigest targetDigest = new TargetDigest(job.url, job.url, job.name, job.status());
+            final TargetDigest targetDigest = new TargetDigest(job.url, job.url, Optional.<String>absent(), job.name, job.status());
             digests.add(targetDigest);
             recognisedJobs.put(targetDigest.id(), job);
         }
-        
+
         return new TargetDigestGroup(digests);
     }
 
@@ -67,32 +68,32 @@ public final class JenkinsSpy implements CiSpy {
         if (!recognisedJobs.containsKey(target)) {
             return false;
         }
-        
+
         final Job job = this.recognisedJobs.get(target);
         final String buildUrl = this.laboratory.lastBadBuildUrlFor(job);
-        
+
         if (buildUrl.isEmpty()) {
             return true;
         }
-        
+
         communicator.doJenkinsPost(buildUrl +
                                    "submitDescription?" +
                                    URLEncodedUtils.format(newArrayList(new BasicNameValuePair("description", note)), "UTF-8"));
         return true;
     }
-    
+
     private Collection<Job> jobsFor(final Feature feature) {
         if (!communicator.canSpeakFor(feature)) {
             return newArrayList();
         }
-        
+
         final String name = feature.name().isEmpty() ? "All" : feature.name();
         final View viewDigest = find(communicator.views(), withName(name), null);
         if (null == viewDigest) {
             LOG.error("No view named <" + name + "> found");
             return newArrayList();
         }
-        
+
         return communicator.jobsFor(viewDigest);
     }
 
