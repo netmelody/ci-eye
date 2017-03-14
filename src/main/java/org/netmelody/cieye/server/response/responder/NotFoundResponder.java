@@ -12,11 +12,22 @@ public final class NotFoundResponder implements CiEyeResponder {
     private static final String CONTENT =
             "<!DOCTYPE html>" +
             "<html>" +
-            "<body>Page Not Found. Try <a href=\"/\">starting from the top<a></body>" +
+            "<body>%s</body>" +
             "</html>";
+
+    private static final String BODY = "Page Not Found. Try <a href=\"/\">starting from the top<a>";
+    private final String content;
+
+    public NotFoundResponder() {
+        this(BODY);
+    }
+
+    public NotFoundResponder(String body) {
+        this.content = String.format(CONTENT, body);
+    }
 
     @Override
     public CiEyeResponse respond(Request request) throws IOException {
-        return CiEyeResponse.withHtml(CONTENT).withStatus(Status.NOT_FOUND);
+        return CiEyeResponse.withHtml(content).withStatus(Status.NOT_FOUND);
     }
 }

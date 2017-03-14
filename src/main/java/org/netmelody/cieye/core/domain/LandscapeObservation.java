@@ -1,12 +1,15 @@
 package org.netmelody.cieye.core.domain;
 
-import static com.google.common.collect.Lists.newArrayList;
+import com.google.common.base.Predicate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
 
 public final class LandscapeObservation {
 
@@ -46,4 +49,18 @@ public final class LandscapeObservation {
     public LandscapeObservation withDoh(Set<Sponsor> dohGroup) {
         return new LandscapeObservation(this.targets, dohGroup);
     }
+
+    public LandscapeObservation forSponsor(final Sponsor sponsor) {
+        return new LandscapeObservation(filter(targets, onSponsor(sponsor)), dohGroup);
+    }
+
+    private Predicate<TargetDetail> onSponsor(final Sponsor sponsor) {
+        return new Predicate<TargetDetail>() {
+            @Override
+            public boolean apply(TargetDetail input) {
+                return input.sponsors().contains(sponsor);
+            }
+        };
+    }
+
 }
