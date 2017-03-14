@@ -15,7 +15,7 @@ import org.netmelody.cieye.server.response.JsonTranslator;
 import org.netmelody.cieye.server.response.Prison;
 import org.simpleframework.http.Request;
 
-public final class LandscapeObservationResponder implements CiEyeResponder {
+public class LandscapeObservationResponder implements CiEyeResponder {
 
     private final CiSpyIntermediary spyIntermediary;
     private final Landscape landscape;
@@ -27,7 +27,6 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
         this.prison = prison;
     }
 
-    @Override
     public CiEyeResponse respond(Request request) throws IOException {
         LandscapeObservation result = new LandscapeObservation();
         long timeToLiveMillis = Long.MAX_VALUE;
@@ -36,11 +35,15 @@ public final class LandscapeObservationResponder implements CiEyeResponder {
             result = result.add(briefing.status);
             timeToLiveMillis = min(timeToLiveMillis, briefing.millisecondsUntilNextUpdate);
         }
-        
+
         if (prison.crimeReported(landscape)) {
             result = result.withDoh(prison.prisonersFor(landscape));
         }
-        
-        return CiEyeResponse.withJson(new JsonTranslator().toJson(result)).expiringInMillis(timeToLiveMillis);
+
+        return CiEyeResponse.withJson(new JsonTranslator().toJson(filter(result))).expiringInMillis(timeToLiveMillis);
+    }
+
+    protected LandscapeObservation filter(LandscapeObservation result) {
+        return result;
     }
 }

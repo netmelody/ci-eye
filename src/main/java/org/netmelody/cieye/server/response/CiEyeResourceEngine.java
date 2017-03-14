@@ -10,6 +10,7 @@ import org.netmelody.cieye.server.response.resource.CiEyeResource;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.DohHandler;
 import org.netmelody.cieye.server.response.responder.FileResponder;
+import org.netmelody.cieye.server.response.responder.FilteredLandscapeObservationResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeListResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeObservationResponder;
 import org.netmelody.cieye.server.response.responder.NotFoundResponder;
@@ -94,6 +95,13 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         }
         
         if (path.length == 3) {
+            if ("filteredLandscapes".equals(path[0])) {
+                if (!target.getPath().getPath().endsWith("/")) {
+                    return new RedirectResponder(target.getPath().getPath() + "/");
+                }
+                return new FileResponder("/resources/cieye.html");
+            }
+
             if ("landscapes".equals(path[0]) && "landscapeobservation.json".equals(path[2])) {
                 return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison);
             }
@@ -107,6 +115,12 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
         }
         
+        if (path.length == 4) {
+            if ("filteredLandscapes".equals(path[0]) && "landscapeobservation.json".equals(path[3])) {
+                return new FilteredLandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison, tracker.sponsorWith(path[2]));
+            }
+        }
+
         return new NotFoundResponder();
     }
 }
