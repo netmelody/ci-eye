@@ -2,6 +2,7 @@ package org.netmelody.cieye.server.configuration.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
 import java.io.File;
@@ -69,8 +70,8 @@ public final class RecordedKnownOffendersTest {
     
     @Test public void
     looksUpMultipleOffenders() {
-        assertThat(offenders.search("vlad/stupid:"), contains(new Sponsor("", "/pictures/vlad.png"),
-                                                              new Sponsor("", "/pictures/stupid.png")));
+        assertThat(offenders.search("vlad/stupid:"), containsInAnyOrder(new Sponsor("", "/pictures/vlad.png"),
+                                                                        new Sponsor("", "/pictures/stupid.png")));
     }
     
     @Test public void
