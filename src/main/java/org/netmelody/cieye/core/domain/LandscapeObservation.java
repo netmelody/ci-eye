@@ -51,15 +51,16 @@ public final class LandscapeObservation {
     }
 
     public LandscapeObservation forSponsor(final Sponsor sponsor) {
-        return new LandscapeObservation(onSponsor(sponsor), dohGroup);
+        return new LandscapeObservation(filter(targets, onSponsor(sponsor)), dohGroup);
     }
 
-    private Collection<TargetDetail> onSponsor(final Sponsor sponsor) {
-        return filter(targets, new Predicate<TargetDetail>() {
+    private Predicate<TargetDetail> onSponsor(final Sponsor sponsor) {
+        return new Predicate<TargetDetail>() {
             @Override
             public boolean apply(TargetDetail input) {
                 return input.sponsors().contains(sponsor);
             }
-        });
+        };
     }
+
 }

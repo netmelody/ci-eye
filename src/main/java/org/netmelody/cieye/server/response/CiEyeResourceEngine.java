@@ -1,6 +1,8 @@
 package org.netmelody.cieye.server.response;
 
 
+import com.google.common.base.Function;
+import org.netmelody.cieye.core.domain.LandscapeObservation;
 import org.netmelody.cieye.server.CiEyeNewVersionChecker;
 import org.netmelody.cieye.server.CiEyeServerInformationFetcher;
 import org.netmelody.cieye.server.CiSpyIntermediary;
@@ -10,7 +12,6 @@ import org.netmelody.cieye.server.response.resource.CiEyeResource;
 import org.netmelody.cieye.server.response.responder.CiEyeVersionResponder;
 import org.netmelody.cieye.server.response.responder.DohHandler;
 import org.netmelody.cieye.server.response.responder.FileResponder;
-import org.netmelody.cieye.server.response.responder.FilteredLandscapeObservationResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeListResponder;
 import org.netmelody.cieye.server.response.responder.LandscapeObservationResponder;
 import org.netmelody.cieye.server.response.responder.NotFoundResponder;
@@ -95,7 +96,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         }
         
         if (path.length == 3) {
-            if ("filteredLandscapes".equals(path[0])) {
+            if ("filteredlandscapes".equals(path[0])) {
                 if (!target.getPath().getPath().endsWith("/")) {
                     return new RedirectResponder(target.getPath().getPath() + "/");
                 }
@@ -116,11 +117,20 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         }
         
         if (path.length == 4) {
-            if ("filteredLandscapes".equals(path[0]) && "landscapeobservation.json".equals(path[3])) {
-                return new FilteredLandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison, tracker.sponsorWith(path[2]));
+            if ("filteredlandscapes".equals(path[0]) && "landscapeobservation.json".equals(path[3])) {
+                return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison, filteringOnSponsor(path[2]));
             }
         }
 
         return new NotFoundResponder();
+    }
+
+    private Function<LandscapeObservation, LandscapeObservation> filteringOnSponsor(final String fingerprint) {
+        return new Function<LandscapeObservation, LandscapeObservation>() {
+            @Override
+            public LandscapeObservation apply(LandscapeObservation input) {
+                return input.forSponsor(tracker.sponsorWith(fingerprint));
+            }
+        };
     }
 }
