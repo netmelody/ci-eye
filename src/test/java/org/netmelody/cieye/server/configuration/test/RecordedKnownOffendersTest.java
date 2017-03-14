@@ -71,7 +71,7 @@ public final class RecordedKnownOffendersTest {
     @Test public void
     looksUpMultipleOffenders() {
         assertThat(offenders.search("vlad/stupid:"), containsInAnyOrder(new Sponsor("", "/pictures/vlad.png"),
-                                                              new Sponsor("", "/pictures/stupid.png")));
+                                                                        new Sponsor("", "/pictures/stupid.png")));
     }
     
     @Test public void
