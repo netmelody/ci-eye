@@ -124,11 +124,27 @@ public final class CiEyeResourceEngineTest {
     }
     
     @Test public void
-    handlesAddNoteRequest() {
+    handlesAddNoteRequest() throws IOException {
+        context.checking(new Expectations() {{
+            oneOf(landscapeFetcher).landscapeNamed("myLandscape");
+        }});
+
         final Resource resource = engine.resolve(new AddressParser("http://ci-eye/landscapes/myLandscape/addNote"));
+        context.assertIsSatisfied();
         assertThat(resource, is(instanceOf(CiEyeResource.class)));
     }
     
+    @Test public void
+    handlesAddNoteRequestForFilteredlandscapes() throws IOException {
+        context.checking(new Expectations() {{
+            oneOf(landscapeFetcher).landscapeNamed("myLandscape");
+        }});
+
+        final Resource resource = engine.resolve(new AddressParser("http://ci-eye/filteredlandscapes/myLandscape/user/addNote"));
+        context.assertIsSatisfied();
+        assertThat(resource, is(instanceOf(CiEyeResource.class)));
+    }
+
     @Test public void
     handlesDohRequest() {
         context.checking(new Expectations() {{
@@ -137,6 +153,18 @@ public final class CiEyeResourceEngineTest {
         
         final Resource resource = engine.resolve(new AddressParser("http://ci-eye/landscapes/myLandscape/doh"));
         
+        context.assertIsSatisfied();
+        assertThat(resource, is(instanceOf(CiEyeResource.class)));
+    }
+
+    @Test public void
+    handlesDohRequestForFilteredlandscapes() {
+        context.checking(new Expectations() {{
+            oneOf(landscapeFetcher).landscapeNamed("myLandscape");
+        }});
+
+        final Resource resource = engine.resolve(new AddressParser("http://ci-eye/filteredlandscapes/myLandscape/user/doh"));
+
         context.assertIsSatisfied();
         assertThat(resource, is(instanceOf(CiEyeResource.class)));
     }

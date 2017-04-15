@@ -59,7 +59,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
         if (path.length == 0) {
             return new FileResponder("/resources/welcome.html");
         }
-        
+
         if (path.length == 1) {
             if ("mugshotconfig.html".equals(path[0])) {
                 return new FileResponder("/resources/mugshotconfig.html");
@@ -113,7 +113,7 @@ public final class CiEyeResourceEngine implements ResourceEngine {
             }
             
             if ("landscapes".equals(path[0]) && "addNote".equals(path[2])) {
-                return new TargetNotationHandler(landscapeFetcher, spyIntermediary, tracker);
+                return new TargetNotationHandler(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, tracker);
             }
             
             if ("landscapes".equals(path[0]) && "doh".equals(path[2])) {
@@ -128,6 +128,13 @@ public final class CiEyeResourceEngine implements ResourceEngine {
                     return new NotFoundResponder("Cannot find user " + path[2]);
                 }
                 return new LandscapeObservationResponder(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, prison, filteringOnSponsor(sponsor));
+            }
+            if ("filteredlandscapes".equals(path[0]) && "addNote".equals(path[3])) {
+                return new TargetNotationHandler(landscapeFetcher.landscapeNamed(path[1]), spyIntermediary, tracker);
+            }
+
+            if ("filteredlandscapes".equals(path[0]) && "doh".equals(path[3])) {
+                return new DohHandler(landscapeFetcher.landscapeNamed(path[1]), prison, tracker);
             }
         }
 
