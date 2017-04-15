@@ -71,6 +71,7 @@ public final class IntelligenceAgency implements CiSpyIntermediary {
     private PollingSpyHandler createSpyFor(Feature feature) {
         final ObservationAgency agency = foreignAgencies.agencyFor(feature.type());
         final CiSpy spy = agency.provideSpyFor(feature, network, directory);
+        agencies.put(feature.type(), agency);
         return new PollingSpyHandler(spy, feature);
     }
 

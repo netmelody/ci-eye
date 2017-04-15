@@ -4,6 +4,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static org.netmelody.cieye.core.domain.Status.UNKNOWN;
+import static org.netmelody.cieye.core.utility.ProjectAbbreviator.nameWithProjectAbbreviation;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +43,7 @@ public final class TeamCitySpy implements CiSpy {
         final List<TargetDigest> digests = newArrayList();
         
         for (BuildType buildType : buildTypes) {
-            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), buildType.name, UNKNOWN);
+            final TargetDigest targetDigest = new TargetDigest(communicator.endpoint() + buildType.href, buildType.webUrl(), nameWithProjectAbbreviation(buildType.projectName, buildType.name), UNKNOWN);
             digests.add(targetDigest);
             recognisedBuildTypes.put(targetDigest.id(), buildType);
         }
