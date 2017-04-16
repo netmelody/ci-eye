@@ -58,6 +58,9 @@ div.target.DISABLED {
     color: #444444;
     display: none;
 }
+div.title div.feature-name {
+    font-size: 0.75em;
+}
 div.sponsors {
     float: right;
     margin: 5px 5px 0 0;

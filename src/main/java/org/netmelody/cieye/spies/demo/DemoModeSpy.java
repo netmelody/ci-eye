@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Percentage;
 import org.netmelody.cieye.core.domain.RunningBuild;
@@ -35,7 +36,7 @@ public final class DemoModeSpy implements CiSpy {
                 return new DemoModeFakeCiServer(featureName);
             }
         }));
-    
+
     private final KnownOffendersDirectory detective;
 
     private static final class TargetInfo {
@@ -46,27 +47,27 @@ public final class DemoModeSpy implements CiSpy {
             this.targetName = targetName;
         }
     }
-    
+
     private final Map<TargetId, TargetInfo> recognisedTargets = newHashMap();
-    
+
     public DemoModeSpy(final KnownOffendersDirectory detective) {
         this.detective = detective;
     }
-    
+
     @Override
     public TargetDigestGroup targetsConstituting(Feature feature) {
         final String featureName = feature.name();
         final List<TargetDigest> digests = newArrayList();
-        
+
         for (String targetName : demoCiServers.getUnchecked(featureName).getTargetNames()) {
-            TargetDigest digest = new TargetDigest(featureName+targetName, "http://www.example.com/", targetName, UNKNOWN);
+            TargetDigest digest = new TargetDigest(featureName+targetName, "http://www.example.com/", Optional.of(featureName), targetName, UNKNOWN);
             digests.add(digest);
             recognisedTargets.put(digest.id(), new TargetInfo(featureName, targetName));
         }
-        
+
         return new TargetDigestGroup(digests);
     }
-    
+
     @Override
     public TargetDetail statusOf(final TargetId target) {
         final TargetInfo targetInfo = recognisedTargets.get(target);
@@ -80,16 +81,16 @@ public final class DemoModeSpy implements CiSpy {
         final DemoModeFakeCiServer ciServer = demoCiServers.getUnchecked(featureName);
         final TargetData data = ciServer.getDataFor(targetName);
         final List<RunningBuild> builds = new ArrayList<RunningBuild>();
-        
+
         final StringBuilder commentry = new StringBuilder();
         for (BuildData buildData : data.builds) {
             builds.add(new RunningBuild(Percentage.percentageOf(buildData.progress),
                                  buildData.green ? Status.GREEN : data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION));
             commentry.append(buildData.checkinComments);
         }
-        
+
         Status status = data.green ? Status.GREEN : (data.note.isEmpty() ? Status.BROKEN : Status.UNDER_INVESTIGATION);
-        return new TargetDetail(featureName+targetName, data.url, targetName, status, 0L, builds, detective.search(commentry.toString()));
+        return new TargetDetail(featureName+targetName, data.url, Optional.<String>absent(), targetName, status, 0L, builds, detective.search(commentry.toString()));
     }
 
     @Override
@@ -97,7 +98,7 @@ public final class DemoModeSpy implements CiSpy {
         if (!recognisedTargets.containsKey(target)) {
             return false;
         }
-        
+
         final TargetInfo targetInfo = recognisedTargets.get(target);
         demoCiServers.getUnchecked(targetInfo.featureName).addNote(targetInfo.targetName, note);
         return true;

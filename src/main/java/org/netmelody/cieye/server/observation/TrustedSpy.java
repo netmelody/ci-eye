@@ -2,6 +2,7 @@ package org.netmelody.cieye.server.observation;
 
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import org.netmelody.cieye.core.domain.Feature;
 import org.netmelody.cieye.core.domain.Status;
 import org.netmelody.cieye.core.domain.TargetDetail;
@@ -27,12 +28,12 @@ public final class TrustedSpy implements CiSpy {
     public TargetDigestGroup targetsConstituting(Feature feature) {
         final TargetDigestGroup untrustedResult = untrustedSpy.targetsConstituting(feature);
         final TargetDigestGroup result = (untrustedResult == null) ? new TargetDigestGroup() : untrustedResult;
-        
+
         if (result.isEmpty()) {
             final TargetId noTargetId = new TargetId("UNK_" + feature.endpoint() + feature.name());
             TargetDigest noTarget = emptyFeatureTargets.get(noTargetId);
             if (null == noTarget) {
-                noTarget = new TargetDigest(noTargetId.id(), feature.endpoint(), "EMPTY: " + feature.name(), Status.BROKEN);
+                noTarget = new TargetDigest(noTargetId.id(), feature.endpoint(), Optional.<String>absent(), "EMPTY: " + feature.name(), Status.BROKEN);
                 emptyFeatureTargets.put(noTargetId, noTarget);
             }
             return new TargetDigestGroup(ImmutableList.of(noTarget));
@@ -44,10 +45,10 @@ public final class TrustedSpy implements CiSpy {
     public TargetDetail statusOf(TargetId targetId) {
         if (emptyFeatureTargets.containsKey(targetId)) {
             final TargetDigest noTarget = emptyFeatureTargets.get(targetId);
-            return new TargetDetail(targetId.id(), noTarget.webUrl(), noTarget.name(), noTarget.status(), 0L);
+            return new TargetDetail(targetId.id(), noTarget.webUrl(), noTarget.featureName(), noTarget.name(), noTarget.status(), 0L);
         }
         final TargetDetail untrustedResult = untrustedSpy.statusOf(targetId);
-        return (untrustedResult == null) ? new TargetDetail(targetId.id(), "", "", Status.UNKNOWN, 0L) : untrustedResult;
+        return (untrustedResult == null) ? new TargetDetail(targetId.id(), "", Optional.<String>absent(), "", Status.UNKNOWN, 0L) : untrustedResult;
     }
 
     @Override
