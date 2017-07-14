@@ -17,12 +17,8 @@ import org.netmelody.cieye.server.observation.test.StubGrapeVine;
 import org.netmelody.cieye.spies.jenkins.JenkinsCommunicator;
 import org.netmelody.cieye.spies.jenkins.JobAnalyser;
 import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
-import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
-import org.netmelody.cieye.spies.jenkins.jsondomain.Server;
-import org.netmelody.cieye.spies.jenkins.jsondomain.ViewDetail;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
