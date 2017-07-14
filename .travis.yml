@@ -1,5 +1,6 @@
+before_install:
+  - echo "$(ant -version)"
 language: java
-dist: trusty
 jdk:
   - openjdk8
   - openjdk7
