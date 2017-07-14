@@ -1,91 +1,78 @@
 {
-  "_class": "hudson.model.FreeStyleBuild",
+  "_class": "hudson.model.FreeStyleProject",
   "actions": [
+    {},
+    {},
     {
-      "_class": "hudson.model.CauseAction",
-      "causes": [
-        {
-          "_class": "hudson.model.Cause$UserIdCause",
-          "shortDescription": "Started by user admin",
-          "userId": "admin",
-          "userName": "admin"
-        }
-      ]
-    },
-    {
-      "_class": "hudson.plugins.git.util.BuildData",
-      "buildsByBranchName": {
-        "refs\/remotes\/origin\/master": {
-          "_class": "hudson.plugins.git.util.Build",
-          "buildNumber": 1,
-          "buildResult": null,
-          "marked": {
-            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-            "branch": [
-              {
-                "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-                "name": "refs\/remotes\/origin\/master"
-              }
-            ]
-          },
-          "revision": {
-            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-            "branch": [
-              {
-                "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-                "name": "refs\/remotes\/origin\/master"
-              }
-            ]
-          }
-        }
-      },
-      "lastBuiltRevision": {
-        "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-        "branch": [
-          {
-            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
-            "name": "refs\/remotes\/origin\/master"
-          }
-        ]
-      },
-      "remoteUrls": [
-        "git@github.com:netmelody\/ci-eye.git"
-      ],
-      "scmName": ""
-    },
-    {
-      "_class": "hudson.plugins.git.GitTagAction"
-    },
-    {
-
-    },
-    {
-
+      "_class": "com.cloudbees.plugins.credentials.ViewCredentialsAction"
     }
   ],
-  "artifacts": [
-
+  "description": "",
+  "displayName": "foo",
+  "displayNameOrNull": null,
+  "fullDisplayName": "foo",
+  "fullName": "foo",
+  "name": "foo",
+  "url": "http://localhost:8080/job/foo/",
+  "buildable": true,
+  "builds": [
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 2,
+      "url": "http://localhost:8080/job/foo/2/"
+    },
+    {
+      "_class": "hudson.model.FreeStyleBuild",
+      "number": 1,
+      "url": "http://localhost:8080/job/foo/1/"
+    }
   ],
-  "building": false,
-  "description": null,
-  "displayName": "#1",
-  "duration": 14052,
-  "estimatedDuration": 14052,
-  "executor": null,
-  "fullDisplayName": "foo #1",
-  "id": "1",
-  "keepLog": false,
-  "number": 1,
-  "queueId": 1,
-  "result": "SUCCESS",
-  "timestamp": 1500023778296,
-  "url": "http:\/\/localhost:8080\/job\/foo\/1\/",
-  "builtOn": "",
-  "changeSet": {
-    "_class": "hudson.plugins.git.GitChangeSetList",
-    "items": [
-
-    ],
-    "kind": "git"
-  }
+  "color": "blue",
+  "firstBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 1,
+    "url": "http://localhost:8080/job/foo/1/"
+  },
+  "healthReport": [
+    {
+      "description": "Build stability: No recent builds failed.",
+      "iconClassName": "icon-health-80plus",
+      "iconUrl": "health-80plus.png",
+      "score": 100
+    }
+  ],
+  "inQueue": false,
+  "keepDependencies": false,
+  "lastBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://localhost:8080/job/foo/2/"
+  },
+  "lastCompletedBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://localhost:8080/job/foo/2/"
+  },
+  "lastFailedBuild": null,
+  "lastStableBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://localhost:8080/job/foo/2/"
+  },
+  "lastSuccessfulBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://localhost:8080/job/foo/2/"
+  },
+  "lastUnstableBuild": null,
+  "lastUnsuccessfulBuild": null,
+  "nextBuildNumber": 3,
+  "property": [],
+  "queueItem": null,
+  "concurrentBuild": false,
+  "downstreamProjects": [],
+  "scm": {
+    "_class": "hudson.plugins.git.GitSCM"
+  },
+  "upstreamProjects": []
 }

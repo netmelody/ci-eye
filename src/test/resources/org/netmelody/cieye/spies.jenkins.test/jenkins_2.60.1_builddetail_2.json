@@ -1,0 +1,106 @@
+{
+  "_class": "hudson.model.FreeStyleBuild",
+  "actions": [
+    {
+      "_class": "hudson.model.CauseAction",
+      "causes": [
+        {
+          "_class": "hudson.triggers.SCMTrigger$SCMTriggerCause",
+          "shortDescription": "Started by an SCM change"
+        }
+      ]
+    },
+    {},
+    {
+      "_class": "hudson.plugins.git.util.BuildData",
+      "buildsByBranchName": {
+        "refs/remotes/origin/master": {
+          "_class": "hudson.plugins.git.util.Build",
+          "buildNumber": 2,
+          "buildResult": null,
+          "marked": {
+            "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+            "branch": [
+              {
+                "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+                "name": "refs/remotes/origin/master"
+              }
+            ]
+          },
+          "revision": {
+            "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+            "branch": [
+              {
+                "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+                "name": "refs/remotes/origin/master"
+              }
+            ]
+          }
+        }
+      },
+      "lastBuiltRevision": {
+        "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+        "branch": [
+          {
+            "SHA1": "cd90b94b651158d2ce923067bad99738b741228c",
+            "name": "refs/remotes/origin/master"
+          }
+        ]
+      },
+      "remoteUrls": [
+        "git@github.com:netmelody/ci-eye.git"
+      ],
+      "scmName": ""
+    },
+    {
+      "_class": "hudson.plugins.git.GitTagAction"
+    },
+    {},
+    {}
+  ],
+  "artifacts": [],
+  "building": false,
+  "description": null,
+  "displayName": "#2",
+  "duration": 1599,
+  "estimatedDuration": 7826,
+  "executor": null,
+  "fullDisplayName": "foo #2",
+  "id": "2",
+  "keepLog": false,
+  "number": 2,
+  "queueId": 2,
+  "result": "SUCCESS",
+  "timestamp": 1500024430269,
+  "url": "http://localhost:8080/job/foo/2/",
+  "builtOn": "",
+  "changeSet": {
+    "_class": "hudson.plugins.git.GitChangeSetList",
+    "items": [
+      {
+        "_class": "hudson.plugins.git.GitChangeSet",
+        "affectedPaths": [
+          "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_jobdetail_1.json"
+        ],
+        "commitId": "cd90b94b651158d2ce923067bad99738b741228c",
+        "timestamp": 1500024223000,
+        "author": {
+          "absoluteUrl": "http://localhost:8080/user/tom.denley",
+          "fullName": "tom.denley"
+        },
+        "authorEmail": "tom.denley@timgroup.com",
+        "comment": "add some example json from jenkins for testing\n",
+        "date": "2017-07-14 10:23:43 +0100",
+        "id": "cd90b94b651158d2ce923067bad99738b741228c",
+        "msg": "add some example json from jenkins for testing",
+        "paths": [
+          {
+            "editType": "add",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_jobdetail_1.json"
+          }
+        ]
+      }
+    ],
+    "kind": "git"
+  }
+}
