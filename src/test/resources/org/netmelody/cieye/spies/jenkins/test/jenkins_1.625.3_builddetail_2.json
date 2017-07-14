@@ -1,0 +1,73 @@
+{
+  "actions": [
+    {
+      "causes": [
+        {
+          "shortDescription": "Started by an SCM change"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "artifacts": [],
+  "building": false,
+  "description": null,
+  "displayName": "#2",
+  "duration": 4325,
+  "estimatedDuration": 5008,
+  "executor": null,
+  "fullDisplayName": "tomd_test_svn #2",
+  "id": "2",
+  "keepLog": false,
+  "number": 2,
+  "queueId": 82000,
+  "result": "SUCCESS",
+  "timestamp": 1500028480116,
+  "url": "http://jenkins.youdevise.com/job/tomd_test_svn/2/",
+  "builtOn": "ci-jenkinsslavee-002",
+  "changeSet": {
+    "items": [
+      {
+        "affectedPaths": [
+          "README.md"
+        ],
+        "author": {
+          "absoluteUrl": "http://jenkins.youdevise.com/user/tdenley",
+          "fullName": "tdenley"
+        },
+        "commitId": "133042",
+        "timestamp": 1500028427046,
+        "date": "2017-07-14T10:33:47.046407Z",
+        "msg": "tomd: add readme",
+        "paths": [
+          {
+            "editType": "add",
+            "file": "/developers/tdenley/dojo_apocalypse/README.md"
+          }
+        ],
+        "revision": 133042,
+        "user": "tdenley"
+      }
+    ],
+    "kind": "svn",
+    "revisions": [
+      {
+        "module": "http://srcctrl/opt/repo/projects/developers/tdenley/dojo_apocalypse",
+        "revision": 133042
+      }
+    ]
+  },
+  "culprits": [
+    {
+      "absoluteUrl": "http://jenkins.youdevise.com/user/tdenley",
+      "fullName": "tdenley"
+    }
+  ]
+}

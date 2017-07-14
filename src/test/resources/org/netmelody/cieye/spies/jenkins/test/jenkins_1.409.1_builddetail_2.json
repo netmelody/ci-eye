@@ -1,0 +1,95 @@
+{
+  "actions": [
+    {
+      "causes": [
+        {
+          "shortDescription": "Started by an SCM change"
+        }
+      ]
+    },
+    {},
+    {
+      "buildsByBranchName": {
+        "origin/master": {
+          "buildNumber": 2,
+          "buildResult": null,
+          "revision": {
+            "SHA1": "7cf0804fc8d428c842785b514fccfbba13677698",
+            "branch": [
+              {
+                "SHA1": "7cf0804fc8d428c842785b514fccfbba13677698",
+                "name": "origin/master"
+              }
+            ]
+          }
+        }
+      },
+      "lastBuiltRevision": {
+        "SHA1": "7cf0804fc8d428c842785b514fccfbba13677698",
+        "branch": [
+          {
+            "SHA1": "7cf0804fc8d428c842785b514fccfbba13677698",
+            "name": "origin/master"
+          }
+        ]
+      },
+      "scmName": ""
+    },
+    {}
+  ],
+  "artifacts": [],
+  "building": false,
+  "description": null,
+  "duration": 1198,
+  "fullDisplayName": "foo #2",
+  "id": "2017-07-14_10-55-52",
+  "keepLog": false,
+  "number": 2,
+  "result": "SUCCESS",
+  "timestamp": 1500026152671,
+  "url": "http://localhost:8080/job/foo/2/",
+  "builtOn": "",
+  "changeSet": {
+    "items": [
+      {
+        "author": {
+          "absoluteUrl": "http://localhost:8080/user/tom.denley",
+          "fullName": "tom.denley"
+        },
+        "comment": "add some example json from jenkins for testing\n",
+        "date": "2017-07-14 10:55:20 +0100",
+        "id": "7cf0804fc8d428c842785b514fccfbba13677698",
+        "msg": "add some example json from jenkins for testing",
+        "paths": [
+          {
+            "editType": "add",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_1.409.1_builddetail_1.json"
+          },
+          {
+            "editType": "add",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_builddetail_2.json"
+          },
+          {
+            "editType": "add",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_builddetail_1.json"
+          },
+          {
+            "editType": "edit",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_jobdetail_1.json"
+          },
+          {
+            "editType": "add",
+            "file": "src/test/resources/org/netmelody/cieye/spies.jenkins.test/jenkins_2.60.1_view_1.json"
+          }
+        ]
+      }
+    ],
+    "kind": null
+  },
+  "culprits": [
+    {
+      "absoluteUrl": "http://localhost:8080/user/tom.denley",
+      "fullName": "tom.denley"
+    }
+  ]
+}

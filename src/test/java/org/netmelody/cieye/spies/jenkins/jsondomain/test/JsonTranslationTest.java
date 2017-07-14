@@ -1,8 +1,9 @@
-package org.netmelody.cieye.spies.jenkins.jsondomain;
+package org.netmelody.cieye.spies.jenkins.jsondomain.test;
 
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import org.netmelody.cieye.spies.jenkins.jsondomain.Server;
 
 public final class JsonTranslationTest {
 
