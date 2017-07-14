@@ -73,7 +73,7 @@
   "queueId": 1,
   "result": "SUCCESS",
   "timestamp": 1500023778296,
-  "url": "http://localhost:8080/job/foo/1/",
+  "url": "http://jenkins/job/foo/1/",
   "builtOn": "",
   "changeSet": {
     "_class": "hudson.plugins.git.GitChangeSetList",

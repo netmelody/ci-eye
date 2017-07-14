@@ -47,13 +47,13 @@
   "number": 2,
   "result": "SUCCESS",
   "timestamp": 1500026152671,
-  "url": "http://localhost:8080/job/foo/2/",
+  "url": "http://jenkins/job/foo/2/",
   "builtOn": "",
   "changeSet": {
     "items": [
       {
         "author": {
-          "absoluteUrl": "http://localhost:8080/user/tom.denley",
+          "absoluteUrl": "http://jenkins/user/tom.denley",
           "fullName": "tom.denley"
         },
         "comment": "add some example json from jenkins for testing\n",
@@ -88,7 +88,7 @@
   },
   "culprits": [
     {
-      "absoluteUrl": "http://localhost:8080/user/tom.denley",
+      "absoluteUrl": "http://jenkins/user/tom.denley",
       "fullName": "tom.denley"
     }
   ]

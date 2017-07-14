@@ -47,7 +47,7 @@
   "number": 1,
   "result": "SUCCESS",
   "timestamp": 1500026020084,
-  "url": "http://localhost:8080/job/foo/1/",
+  "url": "http://jenkins/job/foo/1/",
   "builtOn": "",
   "changeSet": {
     "items": [],

@@ -5,11 +5,11 @@
     {
       "_class": "hudson.model.FreeStyleProject",
       "name": "foo",
-      "url": "http://localhost:8080/job/foo/",
+      "url": "http://jenkins/job/foo/",
       "color": "blue"
     }
   ],
   "name": "baz",
   "property": [],
-  "url": "http://localhost:8080/view/baz/"
+  "url": "http://jenkins/view/baz/"
 }

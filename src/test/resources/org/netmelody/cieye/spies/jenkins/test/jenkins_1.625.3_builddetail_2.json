@@ -30,7 +30,7 @@
   "queueId": 82000,
   "result": "SUCCESS",
   "timestamp": 1500028480116,
-  "url": "http://jenkins.youdevise.com/job/tomd_test_svn/2/",
+  "url": "http://jenkins/job/tomd_test_svn/2/",
   "builtOn": "ci-jenkinsslavee-002",
   "changeSet": {
     "items": [
@@ -39,7 +39,7 @@
           "README.md"
         ],
         "author": {
-          "absoluteUrl": "http://jenkins.youdevise.com/user/tdenley",
+          "absoluteUrl": "http://jenkins/user/tdenley",
           "fullName": "tdenley"
         },
         "commitId": "133042",
@@ -66,7 +66,7 @@
   },
   "culprits": [
     {
-      "absoluteUrl": "http://jenkins.youdevise.com/user/tdenley",
+      "absoluteUrl": "http://jenkins/user/tdenley",
       "fullName": "tdenley"
     }
   ]

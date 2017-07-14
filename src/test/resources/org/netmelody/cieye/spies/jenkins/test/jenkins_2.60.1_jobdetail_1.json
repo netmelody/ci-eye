@@ -13,25 +13,25 @@
   "fullDisplayName": "foo",
   "fullName": "foo",
   "name": "foo",
-  "url": "http://localhost:8080/job/foo/",
+  "url": "http://jenkins/job/foo/",
   "buildable": true,
   "builds": [
     {
       "_class": "hudson.model.FreeStyleBuild",
       "number": 2,
-      "url": "http://localhost:8080/job/foo/2/"
+      "url": "http://jenkins/job/foo/2/"
     },
     {
       "_class": "hudson.model.FreeStyleBuild",
       "number": 1,
-      "url": "http://localhost:8080/job/foo/1/"
+      "url": "http://jenkins/job/foo/1/"
     }
   ],
-  "color": "blue",
+  "color": "red",
   "firstBuild": {
     "_class": "hudson.model.FreeStyleBuild",
     "number": 1,
-    "url": "http://localhost:8080/job/foo/1/"
+    "url": "http://jenkins/job/foo/1/"
   },
   "healthReport": [
     {
@@ -46,26 +46,34 @@
   "lastBuild": {
     "_class": "hudson.model.FreeStyleBuild",
     "number": 2,
-    "url": "http://localhost:8080/job/foo/2/"
+    "url": "http://jenkins/job/foo/2/"
   },
   "lastCompletedBuild": {
     "_class": "hudson.model.FreeStyleBuild",
     "number": 2,
-    "url": "http://localhost:8080/job/foo/2/"
+    "url": "http://jenkins/job/foo/2/"
   },
   "lastFailedBuild": null,
   "lastStableBuild": {
     "_class": "hudson.model.FreeStyleBuild",
-    "number": 2,
-    "url": "http://localhost:8080/job/foo/2/"
+    "number": 1,
+    "url": "http://jenkins/job/foo/1/"
   },
   "lastSuccessfulBuild": {
     "_class": "hudson.model.FreeStyleBuild",
-    "number": 2,
-    "url": "http://localhost:8080/job/foo/2/"
+    "number": 1,
+    "url": "http://jenkins/job/foo/1/"
   },
-  "lastUnstableBuild": null,
-  "lastUnsuccessfulBuild": null,
+  "lastUnstableBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://jenkins/job/foo/2/"
+  },
+  "lastUnsuccessfulBuild": {
+    "_class": "hudson.model.FreeStyleBuild",
+    "number": 2,
+    "url": "http://jenkins/job/foo/2/"
+  },
   "nextBuildNumber": 3,
   "property": [],
   "queueItem": null,

@@ -35,7 +35,7 @@
   "queueId": 81942,
   "result": "SUCCESS",
   "timestamp": 1500028059527,
-  "url": "http://jenkins.youdevise.com/job/tomd_test_svn/1/",
+  "url": "http://jenkins/job/tomd_test_svn/1/",
   "builtOn": "ci-jenkinsslavea-004",
   "changeSet": {
     "items": [],

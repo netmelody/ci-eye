@@ -63,10 +63,6 @@ public final class JobAnalyser {
         return new TargetDetail(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
     }
 
-    public String lastBadBuildUrl() {
-        return communicator.lastBadBuildFor(jobEndpoint);
-    }
-    
     private long startTimeOf(JobDetail job) {
         return buildStartTimeFetcher.lastStartTimeOf(job);
     }
@@ -141,20 +137,25 @@ public final class JobAnalyser {
         
         final StringBuilder result = new StringBuilder();
         for (ChangeSetItem changeSetItem : build.changeSet.items) {
-            result.append(changeSetItem.user);
-            result.append(' ');
-            result.append(changeSetItem.msg);
-            result.append(' ');
+            appendIfNotNull(result, changeSetItem.user);
+            appendIfNotNull(result, changeSetItem.msg);
+            appendIfNotNull(result, changeSetItem.comment);
         }
         
         for (User user : build.culprits()) {
-            result.append(user.fullName);
-            result.append(' ');
+            appendIfNotNull(result, user.fullName);
         }
         
         return result.toString();
     }
-    
+
+    private static void appendIfNotNull(StringBuilder buffer, String string) {
+        if (string != null) {
+            buffer.append(string);
+            buffer.append(' ');
+        }
+    }
+
     private List<RunningBuild> buildsFor(final JobDetail job) {
         if (!job.building() || job.lastBuild == null) {
             return newArrayList();
