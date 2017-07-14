@@ -53,7 +53,7 @@ public final class JenkinsCommunicatorTest {
 
         assertThat(changes, is(Matchers.<ChangeSetItem>iterableWithSize(1)));
         assertThat(changes.get(0).msg, is("add some example json from jenkins for testing"));
-        assertThat(changes.get(0).comment, is("add some example json from jenkins for testing\n"));
+        assertThat(changes.get(0).comment, is("add some example json from jenkins for testing\nand a second line of magic\n"));
     }
 
     private String contentFrom(String resourceName) {

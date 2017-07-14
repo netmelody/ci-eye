@@ -1,20 +1,7 @@
 package org.netmelody.cieye.spies.jenkins;
 
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Collections2.transform;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Collections.unmodifiableSet;
-import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
-import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import org.netmelody.cieye.core.domain.RunningBuild;
 import org.netmelody.cieye.core.domain.Sponsor;
 import org.netmelody.cieye.core.domain.Status;
@@ -27,8 +14,20 @@ import org.netmelody.cieye.spies.jenkins.jsondomain.Job;
 import org.netmelody.cieye.spies.jenkins.jsondomain.JobDetail;
 import org.netmelody.cieye.spies.jenkins.jsondomain.User;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.unmodifiableSet;
+import static org.netmelody.cieye.core.domain.Percentage.percentageOf;
+import static org.netmelody.cieye.core.domain.RunningBuild.buildAt;
 
 public final class JobAnalyser {
     
@@ -61,6 +60,10 @@ public final class JobAnalyser {
         }
         
         return new TargetDetail(job.url, job.url, job.name, statusOf(job), startTimeOf(job), buildsFor(job), sponsorsOf(job));
+    }
+
+    String lastBadBuildUrl() {
+        return communicator.lastBadBuildFor(jobEndpoint);
     }
 
     private long startTimeOf(JobDetail job) {
