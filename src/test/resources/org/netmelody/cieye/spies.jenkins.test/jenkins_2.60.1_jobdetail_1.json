@@ -1,0 +1,91 @@
+{
+  "_class": "hudson.model.FreeStyleBuild",
+  "actions": [
+    {
+      "_class": "hudson.model.CauseAction",
+      "causes": [
+        {
+          "_class": "hudson.model.Cause$UserIdCause",
+          "shortDescription": "Started by user admin",
+          "userId": "admin",
+          "userName": "admin"
+        }
+      ]
+    },
+    {
+      "_class": "hudson.plugins.git.util.BuildData",
+      "buildsByBranchName": {
+        "refs\/remotes\/origin\/master": {
+          "_class": "hudson.plugins.git.util.Build",
+          "buildNumber": 1,
+          "buildResult": null,
+          "marked": {
+            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+            "branch": [
+              {
+                "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+                "name": "refs\/remotes\/origin\/master"
+              }
+            ]
+          },
+          "revision": {
+            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+            "branch": [
+              {
+                "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+                "name": "refs\/remotes\/origin\/master"
+              }
+            ]
+          }
+        }
+      },
+      "lastBuiltRevision": {
+        "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+        "branch": [
+          {
+            "SHA1": "b252dc4dde0e2ebf2d1597162a925bd761902849",
+            "name": "refs\/remotes\/origin\/master"
+          }
+        ]
+      },
+      "remoteUrls": [
+        "git@github.com:netmelody\/ci-eye.git"
+      ],
+      "scmName": ""
+    },
+    {
+      "_class": "hudson.plugins.git.GitTagAction"
+    },
+    {
+
+    },
+    {
+
+    }
+  ],
+  "artifacts": [
+
+  ],
+  "building": false,
+  "description": null,
+  "displayName": "#1",
+  "duration": 14052,
+  "estimatedDuration": 14052,
+  "executor": null,
+  "fullDisplayName": "foo #1",
+  "id": "1",
+  "keepLog": false,
+  "number": 1,
+  "queueId": 1,
+  "result": "SUCCESS",
+  "timestamp": 1500023778296,
+  "url": "http:\/\/localhost:8080\/job\/foo\/1\/",
+  "builtOn": "",
+  "changeSet": {
+    "_class": "hudson.plugins.git.GitChangeSetList",
+    "items": [
+
+    ],
+    "kind": "git"
+  }
+}
