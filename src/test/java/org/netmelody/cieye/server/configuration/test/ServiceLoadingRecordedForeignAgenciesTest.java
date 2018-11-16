@@ -1,4 +1,4 @@
-package org.netmelody.cieye.server.configuration;
+package org.netmelody.cieye.server.configuration.test;
 
 import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,6 +11,8 @@ import java.io.File;
 
 import org.junit.Test;
 import org.netmelody.cieye.core.domain.CiServerType;
+import org.netmelody.cieye.server.configuration.PluginDirectory;
+import org.netmelody.cieye.server.configuration.ServiceLoadingRecordedForeignAgencies;
 
 public final class ServiceLoadingRecordedForeignAgenciesTest {
 
